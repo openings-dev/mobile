@@ -1,0 +1,66 @@
+{
+  "expo": {
+    "name": "Openings",
+    "slug": "openings",
+    "scheme": "openings",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "platforms": ["android", "ios"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.openings.mobile",
+      "buildNumber": "1"
+    },
+    "android": {
+      "package": "dev.openings.mobile",
+      "versionCode": 1,
+      "predictiveBackGestureEnabled": true
+    },
+    "plugins": [
+      [
+        "expo-router",
+        {
+          "root": "src/app/routes"
+        }
+      ],
+      "expo-localization",
+      [
+        "expo-font",
+        {
+          "android": {
+            "fonts": [
+              {
+                "fontFamily": "Figtree",
+                "fontDefinitions": [
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/400Regular/Figtree_400Regular.ttf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/500Medium/Figtree_500Medium.ttf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/figtree/600SemiBold/Figtree_600SemiBold.ttf",
+                    "weight": 600
+                  }
+                ]
+              }
+            ]
+          },
+          "ios": {
+            "fonts": [
+              "./node_modules/@expo-google-fonts/figtree/400Regular/Figtree_400Regular.ttf",
+              "./node_modules/@expo-google-fonts/figtree/500Medium/Figtree_500Medium.ttf",
+              "./node_modules/@expo-google-fonts/figtree/600SemiBold/Figtree_600SemiBold.ttf"
+            ]
+          }
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
