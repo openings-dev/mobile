@@ -8,10 +8,10 @@ Openings Mobile is an Expo SDK 57 bare-workflow application. Expo Router scans
 `src/app/routes`, while the committed `android` and `ios` projects provide the
 native build surfaces. The root layout imports NativeWind CSS, resolves the device
 locale, resolves the system color scheme, installs theme variables, mounts the
-localized error boundary, and renders the native stack.
-
-The current route tree contains only `/`. Its route file re-exports the screen from
-`src/app/home`, keeping navigation declarations separate from screen behavior.
+localized error boundary, TanStack Query client, candidate-state storage provider,
+public-catalog provider, and native stack. The root redirects to Jobs. A bottom tab
+bar owns Jobs, Communities, and Authors, while their detail destinations use the
+root native stack.
 
 ## Source map
 
@@ -19,12 +19,19 @@ The current route tree contains only `/`. Its route file re-exports the screen f
 src/
 ├── app/
 │   ├── home/                    # Home screen implementation
-│   └── routes/                  # Expo Router root and route entries
+│   ├── jobs/                    # Job directory, filters, and details
+│   ├── communities/             # Community directory and profile
+│   ├── authors/                 # Author directory and profile
+│   └── routes/                  # Thin Expo Router tabs and stack entries
 ├── components/
-│   └── app-error-boundary/      # Application-wide recovery boundary
+│   └── */                       # Reused native discovery primitives
 ├── contexts/
+│   ├── candidate-state/         # Saved/viewed device-local state
 │   ├── locale/                  # Device locale and typed messages
+│   ├── openings-catalog/        # Query-backed progressive catalog state
 │   └── theme/                   # System theme and NativeWind variables
+├── domain/                      # Validated contracts and pure discovery logic
+├── services/                    # Public transport and native external actions
 ├── i18n/                        # Catalog contract, catalogs, and locale resolver
 └── theme/                       # Shared design-token bridge
 tests/
@@ -35,8 +42,8 @@ android/                         # Generated native Android project
 ios/                             # Generated native iOS project
 ```
 
-Create future screen-owned `components`, `hooks`, `helpers`, `constants`,
-`schemas`, and `types` directly under the owning `src/app/<entity>/` folder.
+Create screen-owned `components`, `hooks`, `helpers`, `constants`, `schemas`, and
+`types` directly under the owning `src/app/<entity>/` folder.
 Application-wide primitives belong in `src/components`; cross-cutting providers
 belong in `src/contexts`; remote access belongs in `src/services` when introduced.
 

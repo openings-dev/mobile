@@ -20,8 +20,10 @@ Openings web application while using native mobile interaction patterns.
 - typed `en`, `pt-BR`, `es`, `it`, `fr`, and `de` message catalogs
 - npm for dependency and script management
 
-The current repository is a tested foundation. Do not document an intended
-feature as implemented until its source and tests exist.
+The current repository implements Jobs, Communities, and Authors as the complete
+mobile product scope. Do not add other web areas, including comparison, unless the
+user explicitly expands that scope. Do not document an intended feature as
+implemented until its source and tests exist.
 
 ## Product boundaries
 
@@ -94,8 +96,9 @@ older Expo or React Native release.
 
 - Keep ephemeral state at its lowest coherent owner and derive values during
   render.
-- Use context only for stable cross-cutting state with distant consumers. It is
-  not a remote-data cache.
+- Use context only for stable cross-cutting state with distant consumers. Remote
+  caching belongs to TanStack Query; the catalog context exposes that query-backed
+  contract and progressive loading state.
 - Use effects only to synchronize with an external system and always clean up
   subscriptions, timers, and requests.
 - Keep public URL construction, fetch, unknown-data validation, normalization,
@@ -132,8 +135,8 @@ older Expo or React Native release.
   dark mode, keyboard avoidance, and a minimum 44-point interactive target.
 - Use `Pressable` for actions and Expo Router links or navigation actions for
   destinations. Give icon-only controls an accessible label.
-- Keep loading, empty, error, offline, and success states explicit when remote
-  opportunity experiences are implemented.
+- Keep loading, incremental, refresh, empty, error, and success states explicit in
+  remote opportunity experiences.
 
 ## Native safety and quality
 

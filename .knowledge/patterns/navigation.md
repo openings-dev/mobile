@@ -4,12 +4,12 @@
 
 ## Router root
 
-Expo Router scans only `src/app/routes`, configured through `app.json`. The current
-tree contains `_layout.tsx` and `index.tsx`. `src/app/routes/index.tsx` re-exports
-`HomeScreen` from `src/app/home` and owns no product behavior.
+Expo Router scans only `src/app/routes`, configured through `app.json`. The root
+redirects to `/jobs`. The `(tabs)` group contains Jobs, Communities, and Authors.
+Root stack routes contain job, community, and author details.
 
-Future route entries should follow the same contract: declare the route, receive
-and validate parameters, and compose or export the screen implementation. Screen UI,
+Route entries declare the route, receive parameters, and compose or export the
+screen implementation. Screen UI,
 queries, and interaction behavior remain under `src/app/<entity>/`.
 
 ## Route rules
@@ -29,7 +29,6 @@ modal dismissal, and focus restoration. A full-screen detail experience may requ
 a different native presentation from the web dialog while preserving the same
 information hierarchy and source-of-truth action.
 
-Deep links and outbound GitHub links are security boundaries. Validate recognized
-internal routes and allow only deliberate supported external schemes. The current
-foundation defines the `openings` application scheme but does not yet implement a
-deep-link product contract.
+Deep links and outbound GitHub links are security boundaries. Internal routes encode
+stable IDs, repositories, and handles. External actions accept deliberate HTTPS
+destinations only. The application scheme is `openings`.

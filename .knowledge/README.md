@@ -4,8 +4,8 @@
 
 This knowledge base documents the current private React Native application and
 the durable Openings contracts it must preserve as the product grows. The mobile
-repository currently contains the native foundation, not the complete web feature
-set. Each document distinguishes implemented behavior from future product scope.
+repository contains the native Jobs, Communities, and Authors discovery product.
+Other web areas are intentionally outside the mobile scope.
 
 ## Documentation map
 

@@ -4,13 +4,15 @@
 
 ## Current state
 
-The foundation has no global store or remote-data cache. `LocaleProvider` owns the
+`LocaleProvider` owns the
 resolved device locale and its typed messages. `ThemeProvider` owns the current
 system-derived light or dark theme and installs the corresponding NativeWind runtime
-variables. Both values are derived from native platform state and are not persisted.
+variables. `OpeningsCatalogProvider` exposes a TanStack Query-backed catalog shared
+by the three tabs, including progressive batches and refresh state.
 
-The home screen is presentational. The root error boundary owns only whether its
-child tree failed and clears that state when the user selects the localized retry.
+`CandidateStateProvider` owns version-2 saved IDs, viewed IDs, and the previous
+visit timestamp. It validates AsyncStorage content before hydration and persists
+only device-local state. The root error boundary owns only tree recovery.
 
 ## Ownership order
 
@@ -19,7 +21,8 @@ child tree failed and clears that state when the user selects the localized retr
 3. Lift state only to the nearest shared owner when siblings must coordinate.
 4. Use context for stable cross-cutting values consumed by distant descendants.
 5. Introduce persisted storage only for an approved durable user need.
-6. Keep fetched opportunity state in the feature boundary that requested it.
+6. Keep fetched opportunity state in TanStack Query and expose the single catalog
+   contract to its three distant consumers.
 
 Context is not a replacement for a query cache or a general global store. Do not
 introduce a state library before the product has a concrete state lifecycle that
@@ -36,17 +39,15 @@ storage, native subscriptions, timers, or abortable requests. Include every reac
 dependency and clean up every subscription, timer, or request. Event-driven state
 changes belong in event handlers rather than effects.
 
-## Future device-local state
+## Device-local state
 
-The web product currently keeps saved jobs, viewed timestamps, previous-visit state,
-and preferences in the browser. Equivalent mobile features should remain local to
-the device unless an approved specification introduces accounts and synchronization.
-The storage adapter must be versioned, validated at the boundary, and resilient to
-malformed or missing values before any UI depends on it.
+Saved jobs, viewed timestamps, and previous-visit state remain local to the device.
+Malformed, missing, or unsupported storage versions resolve to the safe empty state.
+There is no account or synchronization path.
 
-## Future remote state
+## Remote state
 
-Opportunity features must represent initial loading, incremental loading, refresh,
+Opportunity features represent initial loading, incremental loading, refresh,
 empty, offline, error, and success explicitly. Request owners must cancel obsolete
 work and prevent stale responses from overwriting a newer query. Do not fabricate
 fallback opportunities when the public data source fails.

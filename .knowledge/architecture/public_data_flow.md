@@ -1,6 +1,6 @@
 # Public Data Flow
 
-> Define the public Openings dataset boundary that future mobile features must consume.
+> Define the public Openings dataset boundary consumed by mobile discovery.
 
 ## Source of truth
 
@@ -10,25 +10,24 @@ source for Openings clients. The original GitHub issue, discussion, or community
 listing remains the authoritative destination for requirements, availability, and
 application instructions.
 
-The current mobile foundation does not fetch this data yet. When the integration is
-implemented, match the verified data-pipeline schema and endpoint configuration used
-by the Openings product at that time instead of freezing assumptions from this
-document.
+Mobile reads the schema-6 manifest, its declared opportunity pages, communities,
+and repository status from the public raw GitHub snapshot. The configured root is
+`https://raw.githubusercontent.com/openings-dev/data-pipeline/main/snapshots/opportunities`.
 
 ## Intended request boundary
 
 ```text
-Screen controller or feature hook
-  -> domain query function
-    -> URL builder and native fetch
+OpeningsCatalogProvider
+  -> TanStack Query
+    -> bounded-batch catalog service and HTTPS URL builder
       -> public generated JSON
         -> unknown-data validation and normalization
-          -> typed screen state
+          -> progressive typed catalog state
 ```
 
-Transport, parsing, validation, and domain queries live outside React components.
-Screen code coordinates query inputs and explicit UI states but does not build remote
-paths or cast network responses directly to domain types.
+`src/services/openings-catalog.ts` owns transport and bounded batches.
+`src/domain/openings/validation.ts` owns safe paths and schema narrowing. Screens
+receive typed state and use pure discovery functions; they never cast responses.
 
 ## Required rules
 

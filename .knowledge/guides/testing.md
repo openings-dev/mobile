@@ -13,8 +13,14 @@ The current Jest suite covers:
 - exact, regional, Portuguese, and fallback locale resolution;
 - runtime loading of both public sibling packages;
 - semantic token and NativeWind preset contracts;
-- localized home-screen rendering;
+- localized foundation rendering;
 - error-boundary recovery through an accessible retry action.
+- public manifest, page, community, and URL validation;
+- bounded progressive catalog loading and HTTP failures;
+- job filtering, sorting, author derivation, and similar-job ranking;
+- versioned saved/viewed state and AsyncStorage hydration;
+- Jobs, Communities, Authors, job details, and profile behavior;
+- native HTTPS linking and sharing.
 
 ## JavaScript verification
 
