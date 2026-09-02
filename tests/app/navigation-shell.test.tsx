@@ -2,22 +2,30 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { render } from "@testing-library/react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import TabsLayout from "@/app/routes/(tabs)/_layout";
+import AppShellLayout from "@/app/routes/(tabs)/_layout";
 import { LocaleProvider } from "@/contexts/locale";
 import { ThemeProvider } from "@/contexts/theme";
 
-let mockCapturedScreenOptions: Record<string, unknown> = {};
+let mockCapturedStackOptions: Record<string, unknown> = {};
 let mockCapturedScreens: Record<string, Record<string, unknown>> = {};
+let mockUsedStack = false;
+let mockUsedTabs = false;
 
 jest.mock("expo-router", () => {
   const React = jest.requireActual<typeof import("react")>("react");
   const { Text, View } = jest.requireActual<typeof import("react-native")>("react-native");
 
-  function MockTabs({
+  function MockStack({
     children,
     screenOptions,
   }: React.PropsWithChildren<{ screenOptions: Record<string, unknown> }>) {
-    mockCapturedScreenOptions = screenOptions;
+    mockCapturedStackOptions = screenOptions;
+    mockUsedStack = true;
+    return React.createElement(View, null, children);
+  }
+
+  function MockTabs({ children }: React.PropsWithChildren) {
+    mockUsedTabs = true;
     return React.createElement(View, null, children);
   }
 
@@ -32,9 +40,11 @@ jest.mock("expo-router", () => {
     return React.createElement(Text, null, `${name}:${options.title}`);
   }
 
+  MockStack.Screen = MockScreen;
   MockTabs.Screen = MockScreen;
 
   return {
+    Stack: MockStack,
     Tabs: MockTabs,
     useRouter: () => ({ replace: jest.fn() }),
   };
@@ -47,18 +57,20 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
 
 describe("native navigation shell", () => {
   beforeEach(() => {
-    mockCapturedScreenOptions = {};
+    mockCapturedStackOptions = {};
     mockCapturedScreens = {};
+    mockUsedStack = false;
+    mockUsedTabs = false;
     jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
     jest.mocked(AsyncStorage.setItem).mockResolvedValue();
   });
 
-  it("exposes only the three product destinations with production tab sizing", async () => {
+  it("keeps the three product destinations in a header-only stack", async () => {
     const screen = await render(
       <SafeAreaProvider initialMetrics={{ frame: { height: 844, width: 390, x: 0, y: 0 }, insets: { bottom: 0, left: 0, right: 0, top: 0 } }}>
         <LocaleProvider>
           <ThemeProvider>
-            <TabsLayout />
+            <AppShellLayout />
           </ThemeProvider>
         </LocaleProvider>
       </SafeAreaProvider>,
@@ -68,31 +80,15 @@ describe("native navigation shell", () => {
     expect(screen.getByText("communities:Communities")).toBeTruthy();
     expect(screen.getByText("authors:Authors")).toBeTruthy();
     expect(screen.queryByText(/compare/i)).toBeNull();
-    expect(mockCapturedScreenOptions).toEqual(expect.objectContaining({
-      tabBarHideOnKeyboard: true,
-      tabBarLabelStyle: expect.objectContaining({
-        fontFamily: "Figtree",
-        fontSize: 11,
-        fontWeight: "500",
-      }),
-      tabBarStyle: expect.objectContaining({
-        height: 64,
-        paddingBottom: 6,
-        paddingTop: 6,
-      }),
+    expect(mockUsedTabs).toBe(false);
+    expect(mockUsedStack).toBe(true);
+    expect(mockCapturedStackOptions).toEqual(expect.objectContaining({
+      contentStyle: expect.objectContaining({ backgroundColor: expect.any(String) }),
+      headerShown: true,
     }));
 
-    for (const route of ["jobs", "communities", "authors"]) {
-      const tabBarIcon = mockCapturedScreens[route]?.tabBarIcon as (props: {
-        color: string;
-        focused: boolean;
-        size: number;
-      }) => React.ReactElement;
-      const icon = await render(
-        tabBarIcon({ color: "#153C31", focused: route === "jobs", size: 22 }),
-      );
-
-      expect(JSON.stringify(icon.toJSON())).toContain("RNSVGSvgView");
-    }
+    const renderHeader = mockCapturedStackOptions.header as () => React.ReactElement;
+    const header = await render(renderHeader());
+    expect(header.getByLabelText("Open navigation menu")).toBeTruthy();
   });
 });
