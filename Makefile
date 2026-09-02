@@ -4,6 +4,8 @@ PM ?= npm
 EXEC ?= npx
 RUN := $(PM) run
 MAKE_NO_PRINT := $(MAKE) --no-print-directory
+BUNDLE ?= bundle
+FASTLANE := $(BUNDLE) exec fastlane
 
 CORE_DIR ?= ../core
 DESIGN_TOKENS_DIR ?= ../design-tokens
@@ -19,12 +21,16 @@ UNAME ?= uname
 NODE_BINARY ?= node
 POD ?= pod
 XCODEBUILD ?= xcodebuild
+ANDROID_KEYSTORE_PROPERTIES ?= android/keystore.properties
+ANDROID_KEYSTORE ?= android/app/keystore.jks
 
 .PHONY: help setup packages-install packages-build packages-check install
 .PHONY: start start-localhost start-lan start-tunnel
 .PHONY: lint typecheck test test-watch doctor check check-all config export
 .PHONY: prebuild ios-pods ios-run ios-debug ios-build
 .PHONY: android-run android-debug android-build
+.PHONY: fastlane-install android-release-lanes android-release-check
+.PHONY: android-release-bundle android-release-internal android-release-production
 
 help: ## Show the available Openings Mobile commands
 	@awk 'BEGIN {FS = ":.*## "; printf "Openings Mobile commands:\n\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -130,3 +136,31 @@ android-build: ## Compile the Android Debug APK with Gradle
 		[ -x "$(ANDROID_DIR)/gradlew" ] || { printf '%s\n' "Android Gradle wrapper not found at $(ANDROID_DIR)/gradlew." >&2; exit 1; }; \
 		[ -d "$(ANDROID_SDK)" ] || { printf '%s\n' "Android SDK not found. Set ANDROID_HOME, ANDROID_SDK_ROOT, or ANDROID_SDK." >&2; exit 1; }
 	cd "$(ANDROID_DIR)" && ANDROID_HOME="$(ANDROID_SDK)" ANDROID_SDK_ROOT="$(ANDROID_SDK)" ./gradlew :app:assembleDebug
+
+fastlane-install: ## Install the pinned Ruby release dependencies
+	$(BUNDLE) install
+
+android-release-lanes: ## List the available Android Fastlane lanes
+	$(FASTLANE) lanes
+
+android-release-check: ## Run the mobile quality gate through Fastlane
+	$(FASTLANE) android check
+
+android-release-bundle: ## Build a signed Android App Bundle without uploading it
+	@set -eu; \
+		[ -f "$(ANDROID_KEYSTORE_PROPERTIES)" ] || { printf '%s\n' "Missing $(ANDROID_KEYSTORE_PROPERTIES)." >&2; exit 2; }; \
+		[ -f "$(ANDROID_KEYSTORE)" ] || { printf '%s\n' "Missing $(ANDROID_KEYSTORE)." >&2; exit 2; }
+	$(FASTLANE) android bundle_release
+
+android-release-internal: ## Build and upload an explicit version to Google Play internal testing
+	@set -eu; \
+		[ -n "$(ANDROID_VERSION_CODE)" ] || { printf '%s\n' "ANDROID_VERSION_CODE is required." >&2; exit 2; }; \
+		[ -n "$(ANDROID_VERSION_NAME)" ] || { printf '%s\n' "ANDROID_VERSION_NAME is required." >&2; exit 2; }; \
+		[ -f "$(ANDROID_KEYSTORE_PROPERTIES)" ] || { printf '%s\n' "Missing $(ANDROID_KEYSTORE_PROPERTIES)." >&2; exit 2; }; \
+		[ -f "$(ANDROID_KEYSTORE)" ] || { printf '%s\n' "Missing $(ANDROID_KEYSTORE)." >&2; exit 2; }
+	$(FASTLANE) android internal version_code:"$(ANDROID_VERSION_CODE)" version_name:"$(ANDROID_VERSION_NAME)"
+
+android-release-production: ## Promote an explicit internal version to Google Play production
+	@set -eu; \
+		[ -n "$(ANDROID_VERSION_CODE)" ] || { printf '%s\n' "ANDROID_VERSION_CODE is required." >&2; exit 2; }
+	$(FASTLANE) android production version_code:"$(ANDROID_VERSION_CODE)"
