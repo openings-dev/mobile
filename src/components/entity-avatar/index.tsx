@@ -3,13 +3,17 @@ import { Image, Text, View } from "react-native";
 
 interface EntityAvatarProps {
   name: string;
-  size?: "medium" | "large";
+  size?: "small" | "medium" | "large";
   uri: string | null | undefined;
 }
 
 export function EntityAvatar({ name, size = "medium", uri }: EntityAvatarProps): React.ReactNode {
   const [failed, setFailed] = useState(false);
-  const frame = size === "large" ? "h-20 w-20" : "h-12 w-12";
+  const frame = size === "large"
+    ? "h-20 w-20"
+    : size === "small"
+      ? "h-7 w-7"
+      : "h-12 w-12";
   if (uri && !failed) {
     return (
       <Image
@@ -23,7 +27,10 @@ export function EntityAvatar({ name, size = "medium", uri }: EntityAvatarProps):
   }
   return (
     <View className={`${frame} items-center justify-center rounded-pill bg-primary-soft`}>
-      <Text className="font-display text-card-title font-semibold text-primary-deep">
+      <Text className={size === "small"
+        ? "font-display text-metadata font-semibold text-primary-deep"
+        : "font-display text-card-title font-semibold text-primary-deep"}
+      >
         {name.trim().charAt(0).toLocaleUpperCase() || "#"}
       </Text>
     </View>

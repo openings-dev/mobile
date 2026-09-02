@@ -72,10 +72,12 @@ export interface FoundationMessages {
     employmentTypes: string;
     freshness: string;
     languages: string;
+    moreTags: string;
     newBadge: string;
     newOnly: string;
     noDescription: string;
     oldest: string;
+    olderBadge: string;
     openOriginal: string;
     posted: string;
     regions: string;
@@ -87,8 +89,11 @@ export interface FoundationMessages {
     searchPlaceholder: string;
     seniority: string;
     share: string;
+    showAuthorJobs: string;
+    showCommunityJobs: string;
     similar: string;
     sortLabel: string;
+    sourcesCount: string;
     technologies: string;
     title: string;
     unsave: string;

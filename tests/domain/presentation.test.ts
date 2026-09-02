@@ -1,5 +1,6 @@
 import {
   buildOpportunityCardPresentation,
+  formatOpportunityTag,
   formatVisibleResultRange,
   plainTextExcerpt,
 } from "@/domain/openings/presentation";
@@ -59,6 +60,15 @@ describe("opportunity presentation", () => {
     });
 
     expect(buildOpportunityCardPresentation(item).sourceCount).toBe(3);
+  });
+
+  it("formats canonical product tags for the active locale", () => {
+    expect(formatOpportunityTag("remote", "pt-BR")).toBe("Remoto");
+    expect(formatOpportunityTag("React Native", "en")).toBe("React Native");
+    expect(formatOpportunityTag("especialista", "de")).toBe("Spezialist");
+    expect(formatOpportunityTag("product-design", "en")).toBe(
+      "Product Design",
+    );
   });
 
   it("describes the visible range without inventing a first result", () => {

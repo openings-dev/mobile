@@ -22,6 +22,148 @@ export interface VisibleResultRange {
   start: number;
 }
 
+const LOCALIZED_TAG_LABELS = {
+  de: {
+    especialista: "Spezialist",
+    estagio: "Praktikum / Trainee",
+    hybrid: "Hybrid",
+    junior: "Junior",
+    lead: "Lead",
+    "on-site": "Vor Ort",
+    pleno: "Mid-Level",
+    principal: "Principal",
+    remote: "Remote",
+    senior: "Senior",
+    staff: "Staff",
+  },
+  en: {
+    especialista: "Specialist",
+    estagio: "Internship / trainee",
+    hybrid: "Hybrid",
+    junior: "Junior",
+    lead: "Lead",
+    "on-site": "On-site",
+    pleno: "Mid-level",
+    principal: "Principal",
+    remote: "Remote",
+    senior: "Senior",
+    staff: "Staff",
+  },
+  es: {
+    especialista: "Especialista",
+    estagio: "Pasantía / Trainee",
+    hybrid: "Híbrido",
+    junior: "Junior",
+    lead: "Líder",
+    "on-site": "Presencial",
+    pleno: "Semi Senior",
+    principal: "Principal",
+    remote: "Remoto",
+    senior: "Senior",
+    staff: "Staff",
+  },
+  fr: {
+    especialista: "Spécialiste",
+    estagio: "Stage / Trainee",
+    hybrid: "Hybride",
+    junior: "Junior",
+    lead: "Lead",
+    "on-site": "Sur site",
+    pleno: "Intermédiaire",
+    principal: "Principal",
+    remote: "Télétravail",
+    senior: "Senior",
+    staff: "Staff",
+  },
+  it: {
+    especialista: "Specialista",
+    estagio: "Stage / Trainee",
+    hybrid: "Ibrido",
+    junior: "Junior",
+    lead: "Lead",
+    "on-site": "In sede",
+    pleno: "Intermedio",
+    principal: "Principal",
+    remote: "Remoto",
+    senior: "Senior",
+    staff: "Staff",
+  },
+  pt: {
+    especialista: "Especialista",
+    estagio: "Estágio / Trainee",
+    hybrid: "Híbrido",
+    junior: "Júnior",
+    lead: "Lead",
+    "on-site": "Presencial",
+    pleno: "Pleno",
+    principal: "Principal",
+    remote: "Remoto",
+    senior: "Sênior",
+    staff: "Staff",
+  },
+} as const;
+
+const UNIVERSAL_TAG_LABELS: Record<string, string> = {
+  ai: "AI",
+  angular: "Angular",
+  aws: "AWS",
+  azure: "Azure",
+  backend: "Back end",
+  csharp: "C#",
+  "data-engineering": "Data Engineering",
+  "data-science": "Data Science",
+  django: "Django",
+  docker: "Docker",
+  dotnet: ".NET",
+  fastapi: "FastAPI",
+  flask: "Flask",
+  frontend: "Front end",
+  fullstack: "Full stack",
+  gcp: "GCP",
+  go: "Go",
+  java: "Java",
+  javascript: "JavaScript",
+  kotlin: "Kotlin",
+  kubernetes: "Kubernetes",
+  laravel: "Laravel",
+  ml: "Machine Learning",
+  mobile: "Mobile",
+  mongodb: "MongoDB",
+  mysql: "MySQL",
+  nextjs: "Next.js",
+  nodejs: "Node.js",
+  php: "PHP",
+  postgres: "PostgreSQL",
+  python: "Python",
+  qa: "QA",
+  react: "React",
+  "react-native": "React Native",
+  redis: "Redis",
+  ruby: "Ruby",
+  "ruby-on-rails": "Ruby on Rails",
+  rust: "Rust",
+  spring: "Spring",
+  terraform: "Terraform",
+  typescript: "TypeScript",
+  vue: "Vue",
+};
+
+const TAG_ALIASES: Record<string, string> = {
+  "back-end": "backend",
+  "front-end": "frontend",
+  hibrido: "hybrid",
+  híbrido: "hybrid",
+  intern: "estagio",
+  internship: "estagio",
+  mid: "pleno",
+  "on-site": "on-site",
+  onsite: "on-site",
+  presencial: "on-site",
+  remoto: "remote",
+  specialist: "especialista",
+  trainee: "estagio",
+};
+
 function tagKey(value: string): string {
   return value
     .trim()
@@ -29,6 +171,30 @@ function tagKey(value: string): string {
     .normalize("NFD")
     .replace(/\p{Diacritic}/gu, "")
     .replace(/[\s_]+/g, "-");
+}
+
+export function formatOpportunityTag(value: string, locale: string): string {
+  const normalized = tagKey(value);
+  const canonical = TAG_ALIASES[normalized] ?? normalized;
+  const localeKey = locale.toLocaleLowerCase().startsWith("pt")
+    ? "pt"
+    : locale.toLocaleLowerCase().split("-")[0];
+  const labels = LOCALIZED_TAG_LABELS[
+    localeKey as keyof typeof LOCALIZED_TAG_LABELS
+  ] ?? LOCALIZED_TAG_LABELS.en;
+  const localized = labels[canonical as keyof typeof labels];
+
+  if (localized) return localized;
+  if (UNIVERSAL_TAG_LABELS[canonical]) {
+    return UNIVERSAL_TAG_LABELS[canonical];
+  }
+
+  return canonical
+    .split("-")
+    .filter(Boolean)
+    .map((part) =>
+      `${part.charAt(0).toLocaleUpperCase(locale)}${part.slice(1)}`)
+    .join(" ");
 }
 
 export function plainTextExcerpt(value: string): string {
