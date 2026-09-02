@@ -15,17 +15,17 @@
 **Files:**
 - Modify: `tests/app/navigation-shell.test.tsx`
 
-- [ ] **Step 1: Write the failing behavior test**
+- [x] **Step 1: Write the failing behavior test**
 
 Replace the tab-specific assertions with a shell contract that captures `Stack` and `Tabs` renders, expects `Tabs` never to render, expects a single stack with the three catalog routes, and renders the configured branded header to verify that its menu action remains accessible.
 
-- [ ] **Step 2: Run the focused test and verify the red state**
+- [x] **Step 2: Run the focused test and verify the red state**
 
 Run: `npm test -- --runInBand tests/app/navigation-shell.test.tsx`
 
 Expected: FAIL because the current layout renders `Tabs` instead of `Stack`.
 
-- [ ] **Step 3: Commit the test contract**
+- [x] **Step 3: Commit the test contract**
 
 Run:
 
@@ -41,21 +41,21 @@ git commit -m "test: define drawer-only navigation shell"
 - Modify: `src/app/routes/(app)/_layout.tsx`
 - Modify: `tests/app/navigation-shell.test.tsx`
 
-- [ ] **Step 1: Rename the invisible route group**
+- [x] **Step 1: Rename the invisible route group**
 
 Rename `(tabs)` to `(app)`. Expo Router groups are omitted from public URLs, so `/jobs`, `/communities`, and `/authors` remain stable.
 
-- [ ] **Step 2: Implement the minimal stack shell**
+- [x] **Step 2: Implement the minimal stack shell**
 
 Use `Stack` from `expo-router`, keep `AppHeader` as its shared header, use the semantic canvas background from the active theme, and declare only the `jobs`, `communities`, and `authors` screens. Do not configure or render a tab bar.
 
-- [ ] **Step 3: Update the test import and run the focused test**
+- [x] **Step 3: Update the test import and run the focused test**
 
 Run: `npm test -- --runInBand tests/app/navigation-shell.test.tsx`
 
 Expected: PASS with zero tab renders, one stack render, all three product routes, and the accessible menu control.
 
-- [ ] **Step 4: Commit the behavior**
+- [x] **Step 4: Commit the behavior**
 
 Run:
 
@@ -71,17 +71,17 @@ git commit -m "feat: navigate catalog from hamburger menu"
 - Modify: `.knowledge/patterns/navigation.md`
 - Modify: `.knowledge/project_overview.md`
 
-- [ ] **Step 1: Document the current navigation contract**
+- [x] **Step 1: Document the current navigation contract**
 
 Describe the `(app)` group as a header-only stack, the drawer as the sole top-level catalog navigator, and detail routes as root-stack destinations.
 
-- [ ] **Step 2: Run complete verification**
+- [x] **Step 2: Run complete verification**
 
 Run: `npm run check`
 
 Expected: lint, strict typecheck, all Jest suites, and Expo Doctor pass.
 
-- [ ] **Step 3: Commit and push the verified result**
+- [x] **Step 3: Commit and push the verified result**
 
 Run:
 
@@ -90,4 +90,3 @@ git add .knowledge
 git commit -m "docs: describe drawer-only navigation"
 git push origin main
 ```
-

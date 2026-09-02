@@ -61,7 +61,7 @@ native accessibility state.
 
 ## Content patterns
 
-The global tab header uses the canonical monochrome Openings wordmark geometry and
+The global application header uses the canonical monochrome Openings wordmark geometry and
 a 44-point menu trigger. The right-side drawer contains only Jobs, Communities,
 Authors, the public GitHub support card, and compact appearance and language
 controls. Preferences open as bounded popovers above the drawer footer. Wordmark

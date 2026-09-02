@@ -18,11 +18,12 @@ areas are intentionally excluded from the mobile product.
 The repository currently provides a tested native discovery application:
 
 - generated Android and iOS projects for an Expo SDK 57 bare workflow;
-- bottom-tab routes for Jobs, Communities, and Authors plus stack detail routes;
+- header-only routes for Jobs, Communities, and Authors plus root-stack detail routes;
 - persisted system, light, and dark appearance selection;
 - persisted six-language selection with device detection and English fallback;
-- a canonical branded tab header with a right-side menu drawer, GitHub support
-  card, and compact language and appearance popovers;
+- a canonical branded application header with a right-side menu drawer as the sole
+  catalog navigator, GitHub support card, and compact language and appearance
+  popovers;
 - complete typed product messages for six locales;
 - a localized application error boundary with an accessible retry;
 - validated, bounded-batch loading of the public schema-6 snapshot;

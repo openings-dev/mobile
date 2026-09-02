@@ -9,8 +9,9 @@ Openings Mobile is an Expo SDK 57 bare-workflow application. Expo Router scans
 native build surfaces. The root layout imports NativeWind CSS, resolves the device
 locale, resolves the system color scheme, installs theme variables, mounts the
 localized error boundary, TanStack Query client, candidate-state storage provider,
-public-catalog provider, and native stack. The root redirects to Jobs. A bottom tab
-bar owns Jobs, Communities, and Authors, while their detail destinations use the
+public-catalog provider, and native stack. The root redirects to Jobs. A header-only
+application stack owns Jobs, Communities, and Authors, and its hamburger drawer is
+the sole navigator between those catalog areas. Their detail destinations use the
 root native stack.
 
 ## Source map
@@ -22,7 +23,7 @@ src/
 │   ├── jobs/                    # Job directory, filters, and details
 │   ├── communities/             # Community directory and profile
 │   ├── authors/                 # Author directory and profile
-│   └── routes/                  # Thin Expo Router tabs and stack entries
+│   └── routes/                  # Thin Expo Router shell and stack entries
 ├── components/
 │   └── */                       # Reused native discovery primitives
 ├── contexts/
