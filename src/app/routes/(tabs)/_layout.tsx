@@ -13,11 +13,24 @@ export default function TabsLayout(): React.ReactNode {
       screenOptions={{
         header: () => <AppHeader />,
         headerShown: true,
+        sceneStyle: {
+          backgroundColor: theme.colors.canvas,
+        },
         tabBarActiveTintColor: theme.colors["primary-deep"],
+        tabBarAllowFontScaling: true,
+        tabBarHideOnKeyboard: true,
         tabBarInactiveTintColor: theme.colors["muted-foreground"],
+        tabBarLabelStyle: {
+          fontFamily: "Figtree",
+          fontSize: 11,
+          fontWeight: "500",
+        },
         tabBarStyle: {
           backgroundColor: theme.colors.paper,
           borderTopColor: theme.colors.line,
+          height: 72,
+          paddingBottom: 8,
+          paddingTop: 6,
         },
       }}
     >
