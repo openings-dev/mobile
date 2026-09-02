@@ -21,21 +21,39 @@ export function DirectoryCard(props: DirectoryCardProps): React.ReactNode {
     <Pressable
       accessibilityLabel={`${props.actionLabel}: ${props.title}`}
       accessibilityRole="button"
-      className="mx-5 mb-3 min-h-44 gap-4 rounded-card border border-line bg-paper p-5 active:bg-surface-muted"
+      className="mx-4 mb-3 gap-4 rounded-card border border-line bg-surface p-4 active:bg-surface-elevated"
       onPress={props.onPress}
     >
-      <View className="flex-row items-start gap-4">
+      <View className="flex-row items-center gap-3">
         <EntityAvatar name={props.title} uri={props.avatarUrl} />
         <View className="min-w-0 flex-1 gap-1">
           <Text className="font-display text-card-title font-semibold text-foreground" numberOfLines={2}>{props.title}</Text>
           <Text className="font-mono text-metadata text-muted-foreground" numberOfLines={1}>{props.subtitle}</Text>
         </View>
-        <Feather name="chevron-right" size={20} color={theme.colors["muted-foreground"]} accessibilityElementsHidden />
       </View>
-      <View className="gap-2 border-t border-line pt-3">
-        {props.location ? <Text className="font-body text-metadata text-muted-foreground">⌖ {props.location}</Text> : null}
-        {props.latestActivity ? <Text className="font-body text-metadata text-muted-foreground">◷ {props.latestActivity}</Text> : null}
-        <Text className="font-body text-label font-semibold text-primary-deep">{props.countLabel}</Text>
+      <View className="gap-2.5">
+        {props.location ? (
+          <View className="flex-row items-center gap-2">
+            <Feather name="map-pin" size={15} color={theme.colors["muted-foreground"]} />
+            <Text className="min-w-0 flex-1 font-body text-metadata text-muted-foreground" numberOfLines={2}>{props.location}</Text>
+          </View>
+        ) : null}
+        {props.latestActivity ? (
+          <View className="flex-row items-center gap-2">
+            <Feather name="calendar" size={15} color={theme.colors["muted-foreground"]} />
+            <Text className="font-body text-metadata text-muted-foreground">{props.latestActivity}</Text>
+          </View>
+        ) : null}
+      </View>
+      <View className="min-h-11 flex-row items-center justify-between gap-3 border-t border-line pt-3">
+        <View className="flex-row items-center gap-2">
+          <Feather name="briefcase" size={16} color={theme.colors["primary-deep"]} />
+          <Text className="font-body text-label font-semibold text-primary-deep">{props.countLabel}</Text>
+        </View>
+        <View className="flex-row items-center gap-1.5">
+          <Text className="font-body text-label font-semibold text-primary-deep">{props.actionLabel}</Text>
+          <Feather name="arrow-up-right" size={15} color={theme.colors["primary-deep"]} />
+        </View>
       </View>
     </Pressable>
   );
