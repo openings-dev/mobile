@@ -1,5 +1,218 @@
 import type { MessageCatalog } from "./types";
 
+const webNativeMessages = {
+  en: {
+    header: {
+      closeMenu: "Close navigation menu",
+      menu: "Open navigation menu",
+      support: {
+        action: "Star on GitHub",
+        ariaLabel: "Open openings.dev on GitHub to give the project a star",
+        description: "Star the project on GitHub and help more communities find it.",
+        title: "Support openings.dev",
+      },
+    },
+    jobs: {
+      dataConfidence: {
+        description: "See which details came from the listing, which were inferred, and when its sources were checked.",
+        fields: { location: "Location", salary: "Salary", seniority: "Seniority", workModel: "Work model" },
+        incompleteWarning: "Some important details are unavailable and this listing is older.",
+        lastVerified: "Sources last verified",
+        originalAuthority: "The original listing remains the authoritative source for current details and application instructions.",
+        published: "Originally published",
+        sources: "Published sources",
+        staleWarning: "This is an older listing. Confirm that it is still open before applying.",
+        states: { declared: "Declared in source", inferred: "Inferred", unknown: "Not identified" },
+        title: "Data confidence",
+        verificationUnavailable: "Verification time unavailable",
+      },
+      newMatches: {
+        action: "Show new matches",
+        description: "See jobs posted since your last visit that match the location, work model, stack, and seniority saved on this device.",
+        dismiss: "Dismiss new matches suggestion",
+        privacy: "Your preferences and visit history stay on this device.",
+        title: "New matches for you",
+      },
+      reportProblem: "Report a problem",
+    },
+  },
+  "pt-BR": {
+    header: {
+      closeMenu: "Fechar menu de navegação",
+      menu: "Abrir menu de navegação",
+      support: {
+        action: "Dar uma estrela",
+        ariaLabel: "Abrir o openings.dev no GitHub para dar uma estrela ao projeto",
+        description: "Dê uma estrela no GitHub e ajude mais comunidades a encontrar o projeto.",
+        title: "Apoie o openings.dev",
+      },
+    },
+    jobs: {
+      dataConfidence: {
+        description: "Veja quais detalhes vieram da publicação, quais foram inferidos e quando as fontes foram verificadas.",
+        fields: { location: "Localização", salary: "Salário", seniority: "Senioridade", workModel: "Modalidade" },
+        incompleteWarning: "Alguns detalhes importantes estão indisponíveis e esta vaga é antiga.",
+        lastVerified: "Fontes verificadas pela última vez",
+        originalAuthority: "A publicação original continua sendo a fonte oficial para detalhes atuais e instruções de candidatura.",
+        published: "Publicada originalmente",
+        sources: "Fontes publicadas",
+        staleWarning: "Esta é uma vaga antiga. Confirme se ela ainda está aberta antes de se candidatar.",
+        states: { declared: "Declarado na fonte", inferred: "Inferido", unknown: "Não identificado" },
+        title: "Confiança dos dados",
+        verificationUnavailable: "Data da verificação indisponível",
+      },
+      newMatches: {
+        action: "Ver novas vagas",
+        description: "Veja as vagas publicadas desde sua última visita que combinam com localização, modalidade, stack e senioridade salvas neste dispositivo.",
+        dismiss: "Dispensar sugestão de novas vagas",
+        privacy: "Suas preferências e seu histórico de visitas ficam somente neste dispositivo.",
+        title: "Novas vagas para você",
+      },
+      reportProblem: "Reportar problema",
+    },
+  },
+  es: {
+    header: {
+      closeMenu: "Cerrar menú de navegación",
+      menu: "Abrir menú de navegación",
+      support: {
+        action: "Dar una estrella",
+        ariaLabel: "Abrir openings.dev en GitHub para dar una estrella al proyecto",
+        description: "Da una estrella al proyecto en GitHub y ayuda a más comunidades a encontrarlo.",
+        title: "Apoya openings.dev",
+      },
+    },
+    jobs: {
+      dataConfidence: {
+        description: "Consulta qué datos proceden de la publicación, cuáles se infirieron y cuándo se verificaron sus fuentes.",
+        fields: { location: "Ubicación", salary: "Salario", seniority: "Experiencia", workModel: "Modalidad" },
+        incompleteWarning: "Faltan algunos datos importantes y esta publicación es antigua.",
+        lastVerified: "Última verificación de las fuentes",
+        originalAuthority: "La publicación original sigue siendo la fuente oficial para los detalles actuales y las instrucciones de solicitud.",
+        published: "Publicada originalmente",
+        sources: "Fuentes publicadas",
+        staleWarning: "Esta publicación es antigua. Confirma que sigue abierta antes de postularte.",
+        states: { declared: "Declarado en la fuente", inferred: "Inferido", unknown: "No identificado" },
+        title: "Confianza de los datos",
+        verificationUnavailable: "Hora de verificación no disponible",
+      },
+      newMatches: {
+        action: "Ver nuevas coincidencias",
+        description: "Consulta las vacantes publicadas desde tu última visita que coinciden con la ubicación, modalidad, stack y nivel guardados en este dispositivo.",
+        dismiss: "Descartar sugerencia de nuevas coincidencias",
+        privacy: "Tus preferencias y tu historial de visitas permanecen en este dispositivo.",
+        title: "Nuevas coincidencias para ti",
+      },
+      reportProblem: "Informar de un problema",
+    },
+  },
+  it: {
+    header: {
+      closeMenu: "Chiudi menu di navigazione",
+      menu: "Apri menu di navigazione",
+      support: {
+        action: "Aggiungi una stella",
+        ariaLabel: "Apri openings.dev su GitHub per aggiungere una stella al progetto",
+        description: "Aggiungi una stella al progetto su GitHub e aiuta altre community a trovarlo.",
+        title: "Sostieni openings.dev",
+      },
+    },
+    jobs: {
+      dataConfidence: {
+        description: "Scopri quali dettagli provengono dall'annuncio, quali sono stati dedotti e quando sono state verificate le fonti.",
+        fields: { location: "Località", salary: "Stipendio", seniority: "Esperienza", workModel: "Modalità" },
+        incompleteWarning: "Alcuni dettagli importanti non sono disponibili e questo annuncio è meno recente.",
+        lastVerified: "Ultima verifica delle fonti",
+        originalAuthority: "L'annuncio originale resta la fonte ufficiale per i dettagli attuali e le istruzioni di candidatura.",
+        published: "Pubblicato originariamente",
+        sources: "Fonti pubblicate",
+        staleWarning: "Questo annuncio è meno recente. Verifica che sia ancora aperto prima di candidarti.",
+        states: { declared: "Dichiarato nella fonte", inferred: "Dedotto", unknown: "Non identificato" },
+        title: "Affidabilità dei dati",
+        verificationUnavailable: "Ora di verifica non disponibile",
+      },
+      newMatches: {
+        action: "Mostra nuove corrispondenze",
+        description: "Scopri le offerte pubblicate dalla tua ultima visita che corrispondono a località, modalità, stack e livello salvati su questo dispositivo.",
+        dismiss: "Ignora il suggerimento di nuove corrispondenze",
+        privacy: "Le preferenze e la cronologia delle visite restano su questo dispositivo.",
+        title: "Nuove corrispondenze per te",
+      },
+      reportProblem: "Segnala un problema",
+    },
+  },
+  fr: {
+    header: {
+      closeMenu: "Fermer le menu de navigation",
+      menu: "Ouvrir le menu de navigation",
+      support: {
+        action: "Ajouter une étoile",
+        ariaLabel: "Ouvrir openings.dev sur GitHub pour ajouter une étoile au projet",
+        description: "Ajoutez une étoile au projet sur GitHub et aidez davantage de communautés à le découvrir.",
+        title: "Soutenir openings.dev",
+      },
+    },
+    jobs: {
+      dataConfidence: {
+        description: "Découvrez quels détails proviennent de l'annonce, lesquels ont été déduits et quand les sources ont été vérifiées.",
+        fields: { location: "Localisation", salary: "Salaire", seniority: "Expérience", workModel: "Mode de travail" },
+        incompleteWarning: "Certains détails importants sont indisponibles et cette annonce est ancienne.",
+        lastVerified: "Dernière vérification des sources",
+        originalAuthority: "L'annonce originale reste la source officielle pour les détails actuels et les instructions de candidature.",
+        published: "Publication originale",
+        sources: "Sources publiées",
+        staleWarning: "Cette annonce est ancienne. Vérifiez qu'elle est toujours ouverte avant de postuler.",
+        states: { declared: "Déclaré dans la source", inferred: "Déduit", unknown: "Non identifié" },
+        title: "Fiabilité des données",
+        verificationUnavailable: "Heure de vérification indisponible",
+      },
+      newMatches: {
+        action: "Afficher les nouvelles correspondances",
+        description: "Découvrez les offres publiées depuis votre dernière visite qui correspondent au lieu, au mode de travail, aux technologies et au niveau enregistrés sur cet appareil.",
+        dismiss: "Ignorer la suggestion de nouvelles correspondances",
+        privacy: "Vos préférences et votre historique de visites restent sur cet appareil.",
+        title: "De nouvelles correspondances pour vous",
+      },
+      reportProblem: "Signaler un problème",
+    },
+  },
+  de: {
+    header: {
+      closeMenu: "Navigationsmenü schließen",
+      menu: "Navigationsmenü öffnen",
+      support: {
+        action: "Stern auf GitHub geben",
+        ariaLabel: "Openings.dev auf GitHub öffnen und dem Projekt einen Stern geben",
+        description: "Gib dem Projekt auf GitHub einen Stern und hilf weiteren Communitys, es zu finden.",
+        title: "Openings.dev unterstützen",
+      },
+    },
+    jobs: {
+      dataConfidence: {
+        description: "Sieh, welche Details aus der Anzeige stammen, welche abgeleitet wurden und wann die Quellen geprüft wurden.",
+        fields: { location: "Standort", salary: "Gehalt", seniority: "Erfahrung", workModel: "Arbeitsmodell" },
+        incompleteWarning: "Einige wichtige Details fehlen und diese Anzeige ist älter.",
+        lastVerified: "Quellen zuletzt geprüft",
+        originalAuthority: "Die Originalanzeige bleibt die maßgebliche Quelle für aktuelle Details und Bewerbungshinweise.",
+        published: "Ursprünglich veröffentlicht",
+        sources: "Veröffentlichte Quellen",
+        staleWarning: "Dies ist eine ältere Anzeige. Prüfe vor der Bewerbung, ob sie noch offen ist.",
+        states: { declared: "In der Quelle angegeben", inferred: "Abgeleitet", unknown: "Nicht identifiziert" },
+        title: "Datenzuverlässigkeit",
+        verificationUnavailable: "Prüfzeitpunkt nicht verfügbar",
+      },
+      newMatches: {
+        action: "Neue Treffer anzeigen",
+        description: "Sieh dir Stellen seit deinem letzten Besuch an, die zu den auf diesem Gerät gespeicherten Angaben zu Ort, Arbeitsmodell, Technologien und Level passen.",
+        dismiss: "Vorschlag für neue Treffer schließen",
+        privacy: "Deine Einstellungen und dein Besuchsverlauf bleiben auf diesem Gerät.",
+        title: "Neue Treffer für dich",
+      },
+      reportProblem: "Problem melden",
+    },
+  },
+} as const;
+
 export const messages = {
   en: {
     authors: { description: "People sharing open roles through GitHub communities.", github: "Open GitHub profile", latestActivity: "Latest activity", open: "View author", profileTitle: "Author", searchPlaceholder: "Search authors or handles", share: "Share author", title: "Authors" },
@@ -7,8 +220,8 @@ export const messages = {
     communities: { active: "Active", allSources: "All sources", description: "GitHub communities that publish open tech roles.", errors: "With errors", github: "Open repository", latestActivity: "Latest activity", noOpenings: "No openings", open: "View community", profileTitle: "Community", searchPlaceholder: "Search communities or repositories", share: "Share community", title: "Communities" },
     description: "Tech jobs shared by GitHub communities, made easier to discover.",
     errorMessage: "Please try loading Openings again.", errorTitle: "Openings could not start", eyebrow: "Mobile foundation", localeLabel: "Language", retry: "Try again", status: "Foundation ready", title: "Openings",
-    header: { appearanceLabel: "Appearance", appearanceTitle: "Choose appearance", brandLabel: "Openings jobs", dark: "Dark", languageTitle: "Choose language", light: "Light", system: "Use device setting" },
-    jobs: { allSources: "All sources", areas: "Areas", authors: "Authors", countries: "Countries", description: "Open tech roles collected from public GitHub communities.", detailsTitle: "Job details", employmentTypes: "Employment", freshness: "Freshness", languages: "Languages", moreTags: "{count} more tags", newBadge: "New", newOnly: "New for you", noDescription: "The source did not provide a description.", oldest: "Oldest", olderBadge: "Older listing", openOriginal: "Open original listing", posted: "Posted", regions: "Regions", repositories: "Communities", salary: "Salary", salaryOnly: "Salary disclosed", save: "Save job", savedOnly: "Saved only", searchPlaceholder: "Role, stack, company, or location", seniority: "Seniority", share: "Share job", showAuthorJobs: "Show jobs from @{handle}", showCommunityJobs: "Show jobs from {name}", similar: "Similar jobs", sortLabel: "Sort", sourcesCount: "{count} sources", technologies: "Technologies", title: "Jobs", unsave: "Remove saved job", updated: "Updated", updatedSort: "Recently updated", viewDetails: "View details", workspace: { allCountries: "All countries", chooseCountry: "Choose country", chooseSort: "Choose sorting", chooseStack: "Choose stack or technology", clearFilters: "Clear filters", country: "Country", dataAi: "Data & AI", devops: "DevOps", discover: "Discover", internships: "Internships", lastDays: "Last {days} days", more: "More", newSinceVisit: "New since last visit", noOptions: "No options available", remote: "Remote", removeFilter: "Remove {filter}", resultRange: "Showing {start}–{end} of {count} jobs", savedJobs: "Saved jobs", searchLabel: "Search jobs", shareSearch: "Share search", stack: "Stack / Technology", stackSelected: "{count} selected", updatedAt: "Listings updated {date}", updatedHours: "Listings updated {count}h ago", withSalary: "With salary" }, workModels: "Work model" },
+    header: { ...webNativeMessages.en.header, appearanceLabel: "Appearance", appearanceTitle: "Choose appearance", brandLabel: "Openings jobs", dark: "Dark", languageTitle: "Choose language", light: "Light", system: "Use device setting" },
+    jobs: { ...webNativeMessages.en.jobs, allSources: "All sources", areas: "Areas", authors: "Authors", countries: "Countries", description: "Open tech roles collected from public GitHub communities.", detailsTitle: "Job details", employmentTypes: "Employment", freshness: "Freshness", languages: "Languages", moreTags: "{count} more tags", newBadge: "New", newOnly: "New for you", noDescription: "The source did not provide a description.", oldest: "Oldest", olderBadge: "Older listing", openOriginal: "Open original listing", posted: "Posted", regions: "Regions", repositories: "Communities", salary: "Salary", salaryOnly: "Salary disclosed", save: "Save job", savedOnly: "Saved only", searchPlaceholder: "Role, stack, company, or location", seniority: "Seniority", share: "Share job", showAuthorJobs: "Show jobs from @{handle}", showCommunityJobs: "Show jobs from {name}", similar: "Similar jobs", sortLabel: "Sort", sourcesCount: "{count} sources", technologies: "Technologies", title: "Jobs", unsave: "Remove saved job", updated: "Updated", updatedSort: "Recently updated", viewDetails: "View details", workspace: { allCountries: "All countries", chooseCountry: "Choose country", chooseSort: "Choose sorting", chooseStack: "Choose stack or technology", clearFilters: "Clear filters", country: "Country", dataAi: "Data & AI", devops: "DevOps", discover: "Discover", internships: "Internships", lastDays: "Last {days} days", more: "More", newSinceVisit: "New since last visit", noOptions: "No options available", remote: "Remote", removeFilter: "Remove {filter}", resultRange: "Showing {start}–{end} of {count} jobs", savedJobs: "Saved jobs", searchLabel: "Search jobs", shareSearch: "Share search", stack: "Stack / Technology", stackSelected: "{count} selected", updatedAt: "Listings updated {date}", updatedHours: "Listings updated {count}h ago", withSalary: "With salary" }, workModels: "Work model" },
   },
   "pt-BR": {
     authors: { description: "Pessoas que compartilham vagas por comunidades do GitHub.", github: "Abrir perfil no GitHub", latestActivity: "Atividade mais recente", open: "Ver autor", profileTitle: "Autor", searchPlaceholder: "Buscar autores ou usuários", share: "Compartilhar autor", title: "Autores" },
@@ -16,8 +229,8 @@ export const messages = {
     communities: { active: "Ativas", allSources: "Todas as fontes", description: "Comunidades do GitHub que publicam vagas abertas de tecnologia.", errors: "Com erros", github: "Abrir repositório", latestActivity: "Atividade mais recente", noOpenings: "Sem vagas", open: "Ver comunidade", profileTitle: "Comunidade", searchPlaceholder: "Buscar comunidades ou repositórios", share: "Compartilhar comunidade", title: "Comunidades" },
     description: "Vagas de tecnologia compartilhadas por comunidades do GitHub, mais fáceis de descobrir.",
     errorMessage: "Tente carregar o Openings novamente.", errorTitle: "O Openings não conseguiu iniciar", eyebrow: "Base mobile", localeLabel: "Idioma", retry: "Tentar novamente", status: "A base está pronta", title: "Openings",
-    header: { appearanceLabel: "Aparência", appearanceTitle: "Escolha a aparência", brandLabel: "Vagas no Openings", dark: "Escuro", languageTitle: "Escolha o idioma", light: "Claro", system: "Usar configuração do aparelho" },
-    jobs: { allSources: "Todas as fontes", areas: "Áreas", authors: "Autores", countries: "Países", description: "Vagas abertas de tecnologia reunidas de comunidades públicas do GitHub.", detailsTitle: "Detalhes da vaga", employmentTypes: "Contratação", freshness: "Publicação", languages: "Idiomas", moreTags: "Mais {count} tags", newBadge: "Nova", newOnly: "Novas para você", noDescription: "A fonte não forneceu uma descrição.", oldest: "Mais antigas", olderBadge: "Anúncio antigo", openOriginal: "Abrir vaga original", posted: "Publicada", regions: "Regiões", repositories: "Comunidades", salary: "Salário", salaryOnly: "Com salário", save: "Salvar vaga", savedOnly: "Somente salvas", searchPlaceholder: "Cargo, stack, empresa ou local", seniority: "Senioridade", share: "Compartilhar vaga", showAuthorJobs: "Ver vagas de @{handle}", showCommunityJobs: "Ver vagas de {name}", similar: "Vagas semelhantes", sortLabel: "Ordenar", sourcesCount: "{count} fontes", technologies: "Tecnologias", title: "Vagas", unsave: "Remover vaga salva", updated: "Atualizada", updatedSort: "Atualizadas recentemente", viewDetails: "Ver detalhes", workspace: { allCountries: "Todos os países", chooseCountry: "Escolher país", chooseSort: "Escolher ordenação", chooseStack: "Escolher stack ou tecnologia", clearFilters: "Limpar filtros", country: "País", dataAi: "Dados e IA", devops: "DevOps", discover: "Descobrir", internships: "Estágios", lastDays: "Últimos {days} dias", more: "Mais filtros", newSinceVisit: "Novas desde a última visita", noOptions: "Nenhuma opção disponível", remote: "Remoto", removeFilter: "Remover {filter}", resultRange: "Exibindo {start}–{end} de {count} vagas", savedJobs: "Vagas salvas", searchLabel: "Buscar vagas", shareSearch: "Compartilhar busca", stack: "Stack / Tecnologia", stackSelected: "{count} selecionadas", updatedAt: "Vagas atualizadas em {date}", updatedHours: "Vagas atualizadas há {count}h", withSalary: "Com salário" }, workModels: "Modelo de trabalho" },
+    header: { ...webNativeMessages["pt-BR"].header, appearanceLabel: "Aparência", appearanceTitle: "Escolha a aparência", brandLabel: "Vagas no Openings", dark: "Escuro", languageTitle: "Escolha o idioma", light: "Claro", system: "Usar configuração do aparelho" },
+    jobs: { ...webNativeMessages["pt-BR"].jobs, allSources: "Todas as fontes", areas: "Áreas", authors: "Autores", countries: "Países", description: "Vagas abertas de tecnologia reunidas de comunidades públicas do GitHub.", detailsTitle: "Detalhes da vaga", employmentTypes: "Contratação", freshness: "Publicação", languages: "Idiomas", moreTags: "Mais {count} tags", newBadge: "Nova", newOnly: "Novas para você", noDescription: "A fonte não forneceu uma descrição.", oldest: "Mais antigas", olderBadge: "Anúncio antigo", openOriginal: "Abrir vaga original", posted: "Publicada", regions: "Regiões", repositories: "Comunidades", salary: "Salário", salaryOnly: "Com salário", save: "Salvar vaga", savedOnly: "Somente salvas", searchPlaceholder: "Cargo, stack, empresa ou local", seniority: "Senioridade", share: "Compartilhar vaga", showAuthorJobs: "Ver vagas de @{handle}", showCommunityJobs: "Ver vagas de {name}", similar: "Vagas semelhantes", sortLabel: "Ordenar", sourcesCount: "{count} fontes", technologies: "Tecnologias", title: "Vagas", unsave: "Remover vaga salva", updated: "Atualizada", updatedSort: "Atualizadas recentemente", viewDetails: "Ver detalhes", workspace: { allCountries: "Todos os países", chooseCountry: "Escolher país", chooseSort: "Escolher ordenação", chooseStack: "Escolher stack ou tecnologia", clearFilters: "Limpar filtros", country: "País", dataAi: "Dados e IA", devops: "DevOps", discover: "Descobrir", internships: "Estágios", lastDays: "Últimos {days} dias", more: "Mais filtros", newSinceVisit: "Novas desde a última visita", noOptions: "Nenhuma opção disponível", remote: "Remoto", removeFilter: "Remover {filter}", resultRange: "Exibindo {start}–{end} de {count} vagas", savedJobs: "Vagas salvas", searchLabel: "Buscar vagas", shareSearch: "Compartilhar busca", stack: "Stack / Tecnologia", stackSelected: "{count} selecionadas", updatedAt: "Vagas atualizadas em {date}", updatedHours: "Vagas atualizadas há {count}h", withSalary: "Com salário" }, workModels: "Modelo de trabalho" },
   },
   es: {
     authors: { description: "Personas que comparten vacantes en comunidades de GitHub.", github: "Abrir perfil de GitHub", latestActivity: "Actividad reciente", open: "Ver autor", profileTitle: "Autor", searchPlaceholder: "Buscar autores o usuarios", share: "Compartir autor", title: "Autores" },
@@ -25,8 +238,8 @@ export const messages = {
     communities: { active: "Activas", allSources: "Todas las fuentes", description: "Comunidades de GitHub que publican empleos tecnológicos.", errors: "Con errores", github: "Abrir repositorio", latestActivity: "Actividad reciente", noOpenings: "Sin vacantes", open: "Ver comunidad", profileTitle: "Comunidad", searchPlaceholder: "Buscar comunidades o repositorios", share: "Compartir comunidad", title: "Comunidades" },
     description: "Empleos de tecnología compartidos por comunidades de GitHub, más fáciles de descubrir.",
     errorMessage: "Intenta cargar Openings de nuevo.", errorTitle: "Openings no pudo iniciarse", eyebrow: "Base móvil", localeLabel: "Idioma", retry: "Intentar de nuevo", status: "La base está lista", title: "Openings",
-    header: { appearanceLabel: "Apariencia", appearanceTitle: "Elegir apariencia", brandLabel: "Empleos en Openings", dark: "Oscuro", languageTitle: "Elegir idioma", light: "Claro", system: "Usar configuración del dispositivo" },
-    jobs: { allSources: "Todas las fuentes", areas: "Áreas", authors: "Autores", countries: "Países", description: "Empleos tecnológicos abiertos de comunidades públicas de GitHub.", detailsTitle: "Detalles del empleo", employmentTypes: "Contratación", freshness: "Publicación", languages: "Idiomas", moreTags: "{count} etiquetas más", newBadge: "Nuevo", newOnly: "Nuevos para ti", noDescription: "La fuente no proporcionó una descripción.", oldest: "Más antiguos", olderBadge: "Oferta antigua", openOriginal: "Abrir publicación original", posted: "Publicado", regions: "Regiones", repositories: "Comunidades", salary: "Salario", salaryOnly: "Con salario", save: "Guardar empleo", savedOnly: "Solo guardados", searchPlaceholder: "Puesto, stack, empresa o ubicación", seniority: "Experiencia", share: "Compartir empleo", showAuthorJobs: "Ver empleos de @{handle}", showCommunityJobs: "Ver empleos de {name}", similar: "Empleos similares", sortLabel: "Ordenar", sourcesCount: "{count} fuentes", technologies: "Tecnologías", title: "Empleos", unsave: "Quitar guardado", updated: "Actualizado", updatedSort: "Actualizados recientemente", viewDetails: "Ver detalles", workspace: { allCountries: "Todos los países", chooseCountry: "Elegir país", chooseSort: "Elegir orden", chooseStack: "Elegir stack o tecnología", clearFilters: "Limpiar filtros", country: "País", dataAi: "Datos e IA", devops: "DevOps", discover: "Descubrir", internships: "Prácticas", lastDays: "Últimos {days} días", more: "Más filtros", newSinceVisit: "Nuevos desde la última visita", noOptions: "No hay opciones disponibles", remote: "Remoto", removeFilter: "Quitar {filter}", resultRange: "Mostrando {start}–{end} de {count} empleos", savedJobs: "Empleos guardados", searchLabel: "Buscar empleos", shareSearch: "Compartir búsqueda", stack: "Stack / Tecnología", stackSelected: "{count} seleccionadas", updatedAt: "Ofertas actualizadas el {date}", updatedHours: "Ofertas actualizadas hace {count} h", withSalary: "Con salario" }, workModels: "Modalidad" },
+    header: { ...webNativeMessages.es.header, appearanceLabel: "Apariencia", appearanceTitle: "Elegir apariencia", brandLabel: "Empleos en Openings", dark: "Oscuro", languageTitle: "Elegir idioma", light: "Claro", system: "Usar configuración del dispositivo" },
+    jobs: { ...webNativeMessages.es.jobs, allSources: "Todas las fuentes", areas: "Áreas", authors: "Autores", countries: "Países", description: "Empleos tecnológicos abiertos de comunidades públicas de GitHub.", detailsTitle: "Detalles del empleo", employmentTypes: "Contratación", freshness: "Publicación", languages: "Idiomas", moreTags: "{count} etiquetas más", newBadge: "Nuevo", newOnly: "Nuevos para ti", noDescription: "La fuente no proporcionó una descripción.", oldest: "Más antiguos", olderBadge: "Oferta antigua", openOriginal: "Abrir publicación original", posted: "Publicado", regions: "Regiones", repositories: "Comunidades", salary: "Salario", salaryOnly: "Con salario", save: "Guardar empleo", savedOnly: "Solo guardados", searchPlaceholder: "Puesto, stack, empresa o ubicación", seniority: "Experiencia", share: "Compartir empleo", showAuthorJobs: "Ver empleos de @{handle}", showCommunityJobs: "Ver empleos de {name}", similar: "Empleos similares", sortLabel: "Ordenar", sourcesCount: "{count} fuentes", technologies: "Tecnologías", title: "Empleos", unsave: "Quitar guardado", updated: "Actualizado", updatedSort: "Actualizados recientemente", viewDetails: "Ver detalles", workspace: { allCountries: "Todos los países", chooseCountry: "Elegir país", chooseSort: "Elegir orden", chooseStack: "Elegir stack o tecnología", clearFilters: "Limpiar filtros", country: "País", dataAi: "Datos e IA", devops: "DevOps", discover: "Descubrir", internships: "Prácticas", lastDays: "Últimos {days} días", more: "Más filtros", newSinceVisit: "Nuevos desde la última visita", noOptions: "No hay opciones disponibles", remote: "Remoto", removeFilter: "Quitar {filter}", resultRange: "Mostrando {start}–{end} de {count} empleos", savedJobs: "Empleos guardados", searchLabel: "Buscar empleos", shareSearch: "Compartir búsqueda", stack: "Stack / Tecnología", stackSelected: "{count} seleccionadas", updatedAt: "Ofertas actualizadas el {date}", updatedHours: "Ofertas actualizadas hace {count} h", withSalary: "Con salario" }, workModels: "Modalidad" },
   },
   it: {
     authors: { description: "Persone che condividono ruoli nelle community GitHub.", github: "Apri profilo GitHub", latestActivity: "Attività recente", open: "Vedi autore", profileTitle: "Autore", searchPlaceholder: "Cerca autori o handle", share: "Condividi autore", title: "Autori" },
@@ -34,8 +247,8 @@ export const messages = {
     communities: { active: "Attive", allSources: "Tutte le fonti", description: "Community GitHub che pubblicano ruoli tech aperti.", errors: "Con errori", github: "Apri repository", latestActivity: "Attività recente", noOpenings: "Nessuna offerta", open: "Vedi community", profileTitle: "Community", searchPlaceholder: "Cerca community o repository", share: "Condividi community", title: "Community" },
     description: "Offerte di lavoro tech condivise dalle community GitHub, più facili da trovare.",
     errorMessage: "Prova a caricare di nuovo Openings.", errorTitle: "Openings non è riuscito ad avviarsi", eyebrow: "Base mobile", localeLabel: "Lingua", retry: "Riprova", status: "La base è pronta", title: "Openings",
-    header: { appearanceLabel: "Aspetto", appearanceTitle: "Scegli l’aspetto", brandLabel: "Offerte su Openings", dark: "Scuro", languageTitle: "Scegli la lingua", light: "Chiaro", system: "Usa impostazione del dispositivo" },
-    jobs: { allSources: "Tutte le fonti", areas: "Aree", authors: "Autori", countries: "Paesi", description: "Ruoli tech aperti raccolti da community GitHub pubbliche.", detailsTitle: "Dettagli del lavoro", employmentTypes: "Contratto", freshness: "Pubblicazione", languages: "Lingue", moreTags: "Altri {count} tag", newBadge: "Nuovo", newOnly: "Nuovi per te", noDescription: "La fonte non ha fornito una descrizione.", oldest: "Meno recenti", olderBadge: "Annuncio meno recente", openOriginal: "Apri annuncio originale", posted: "Pubblicato", regions: "Regioni", repositories: "Community", salary: "Stipendio", salaryOnly: "Con stipendio", save: "Salva lavoro", savedOnly: "Solo salvati", searchPlaceholder: "Ruolo, stack, azienda o località", seniority: "Esperienza", share: "Condividi lavoro", showAuthorJobs: "Vedi lavori di @{handle}", showCommunityJobs: "Vedi lavori di {name}", similar: "Lavori simili", sortLabel: "Ordina", sourcesCount: "{count} fonti", technologies: "Tecnologie", title: "Lavori", unsave: "Rimuovi salvataggio", updated: "Aggiornato", updatedSort: "Aggiornati di recente", viewDetails: "Vedi dettagli", workspace: { allCountries: "Tutti i paesi", chooseCountry: "Scegli il paese", chooseSort: "Scegli l’ordinamento", chooseStack: "Scegli stack o tecnologia", clearFilters: "Cancella filtri", country: "Paese", dataAi: "Dati e IA", devops: "DevOps", discover: "Scopri", internships: "Tirocini", lastDays: "Ultimi {days} giorni", more: "Altri filtri", newSinceVisit: "Nuovi dall’ultima visita", noOptions: "Nessuna opzione disponibile", remote: "Da remoto", removeFilter: "Rimuovi {filter}", resultRange: "Visualizzati {start}–{end} di {count} lavori", savedJobs: "Lavori salvati", searchLabel: "Cerca lavori", shareSearch: "Condividi ricerca", stack: "Stack / Tecnologia", stackSelected: "{count} selezionate", updatedAt: "Annunci aggiornati il {date}", updatedHours: "Annunci aggiornati {count} h fa", withSalary: "Con stipendio" }, workModels: "Modalità" },
+    header: { ...webNativeMessages.it.header, appearanceLabel: "Aspetto", appearanceTitle: "Scegli l’aspetto", brandLabel: "Offerte su Openings", dark: "Scuro", languageTitle: "Scegli la lingua", light: "Chiaro", system: "Usa impostazione del dispositivo" },
+    jobs: { ...webNativeMessages.it.jobs, allSources: "Tutte le fonti", areas: "Aree", authors: "Autori", countries: "Paesi", description: "Ruoli tech aperti raccolti da community GitHub pubbliche.", detailsTitle: "Dettagli del lavoro", employmentTypes: "Contratto", freshness: "Pubblicazione", languages: "Lingue", moreTags: "Altri {count} tag", newBadge: "Nuovo", newOnly: "Nuovi per te", noDescription: "La fonte non ha fornito una descrizione.", oldest: "Meno recenti", olderBadge: "Annuncio meno recente", openOriginal: "Apri annuncio originale", posted: "Pubblicato", regions: "Regioni", repositories: "Community", salary: "Stipendio", salaryOnly: "Con stipendio", save: "Salva lavoro", savedOnly: "Solo salvati", searchPlaceholder: "Ruolo, stack, azienda o località", seniority: "Esperienza", share: "Condividi lavoro", showAuthorJobs: "Vedi lavori di @{handle}", showCommunityJobs: "Vedi lavori di {name}", similar: "Lavori simili", sortLabel: "Ordina", sourcesCount: "{count} fonti", technologies: "Tecnologie", title: "Lavori", unsave: "Rimuovi salvataggio", updated: "Aggiornato", updatedSort: "Aggiornati di recente", viewDetails: "Vedi dettagli", workspace: { allCountries: "Tutti i paesi", chooseCountry: "Scegli il paese", chooseSort: "Scegli l’ordinamento", chooseStack: "Scegli stack o tecnologia", clearFilters: "Cancella filtri", country: "Paese", dataAi: "Dati e IA", devops: "DevOps", discover: "Scopri", internships: "Tirocini", lastDays: "Ultimi {days} giorni", more: "Altri filtri", newSinceVisit: "Nuovi dall’ultima visita", noOptions: "Nessuna opzione disponibile", remote: "Da remoto", removeFilter: "Rimuovi {filter}", resultRange: "Visualizzati {start}–{end} di {count} lavori", savedJobs: "Lavori salvati", searchLabel: "Cerca lavori", shareSearch: "Condividi ricerca", stack: "Stack / Tecnologia", stackSelected: "{count} selezionate", updatedAt: "Annunci aggiornati il {date}", updatedHours: "Annunci aggiornati {count} h fa", withSalary: "Con stipendio" }, workModels: "Modalità" },
   },
   fr: {
     authors: { description: "Les personnes qui partagent des postes via GitHub.", github: "Ouvrir le profil GitHub", latestActivity: "Activité récente", open: "Voir l’auteur", profileTitle: "Auteur", searchPlaceholder: "Rechercher des auteurs", share: "Partager l’auteur", title: "Auteurs" },
@@ -43,8 +256,8 @@ export const messages = {
     communities: { active: "Actives", allSources: "Toutes les sources", description: "Communautés GitHub publiant des postes tech ouverts.", errors: "Avec erreurs", github: "Ouvrir le dépôt", latestActivity: "Activité récente", noOpenings: "Aucune offre", open: "Voir la communauté", profileTitle: "Communauté", searchPlaceholder: "Rechercher communautés ou dépôts", share: "Partager la communauté", title: "Communautés" },
     description: "Des offres tech partagées par les communautés GitHub, plus faciles à découvrir.",
     errorMessage: "Essayez de charger Openings à nouveau.", errorTitle: "Openings n’a pas pu démarrer", eyebrow: "Base mobile", localeLabel: "Langue", retry: "Réessayer", status: "La base est prête", title: "Openings",
-    header: { appearanceLabel: "Apparence", appearanceTitle: "Choisir l’apparence", brandLabel: "Offres Openings", dark: "Sombre", languageTitle: "Choisir la langue", light: "Clair", system: "Utiliser le réglage de l’appareil" },
-    jobs: { allSources: "Toutes les sources", areas: "Domaines", authors: "Auteurs", countries: "Pays", description: "Postes tech ouverts issus de communautés GitHub publiques.", detailsTitle: "Détails du poste", employmentTypes: "Contrat", freshness: "Publication", languages: "Langues", moreTags: "{count} tags supplémentaires", newBadge: "Nouveau", newOnly: "Nouveaux pour vous", noDescription: "La source n’a pas fourni de description.", oldest: "Plus anciens", olderBadge: "Annonce ancienne", openOriginal: "Ouvrir l’annonce originale", posted: "Publié", regions: "Régions", repositories: "Communautés", salary: "Salaire", salaryOnly: "Avec salaire", save: "Enregistrer", savedOnly: "Enregistrés seulement", searchPlaceholder: "Poste, stack, entreprise ou lieu", seniority: "Expérience", share: "Partager le poste", showAuthorJobs: "Voir les offres de @{handle}", showCommunityJobs: "Voir les offres de {name}", similar: "Postes similaires", sortLabel: "Trier", sourcesCount: "{count} sources", technologies: "Technologies", title: "Offres", unsave: "Retirer des favoris", updated: "Mis à jour", updatedSort: "Récemment mis à jour", viewDetails: "Voir les détails", workspace: { allCountries: "Tous les pays", chooseCountry: "Choisir le pays", chooseSort: "Choisir le tri", chooseStack: "Choisir une stack ou technologie", clearFilters: "Effacer les filtres", country: "Pays", dataAi: "Données et IA", devops: "DevOps", discover: "Découvrir", internships: "Stages", lastDays: "{days} derniers jours", more: "Plus de filtres", newSinceVisit: "Nouveaux depuis la dernière visite", noOptions: "Aucune option disponible", remote: "À distance", removeFilter: "Retirer {filter}", resultRange: "Affichage de {start}–{end} sur {count} offres", savedJobs: "Offres enregistrées", searchLabel: "Rechercher des offres", shareSearch: "Partager la recherche", stack: "Stack / Technologie", stackSelected: "{count} sélectionnées", updatedAt: "Annonces mises à jour le {date}", updatedHours: "Annonces mises à jour il y a {count} h", withSalary: "Avec salaire" }, workModels: "Mode de travail" },
+    header: { ...webNativeMessages.fr.header, appearanceLabel: "Apparence", appearanceTitle: "Choisir l’apparence", brandLabel: "Offres Openings", dark: "Sombre", languageTitle: "Choisir la langue", light: "Clair", system: "Utiliser le réglage de l’appareil" },
+    jobs: { ...webNativeMessages.fr.jobs, allSources: "Toutes les sources", areas: "Domaines", authors: "Auteurs", countries: "Pays", description: "Postes tech ouverts issus de communautés GitHub publiques.", detailsTitle: "Détails du poste", employmentTypes: "Contrat", freshness: "Publication", languages: "Langues", moreTags: "{count} tags supplémentaires", newBadge: "Nouveau", newOnly: "Nouveaux pour vous", noDescription: "La source n’a pas fourni une description.", oldest: "Plus anciens", olderBadge: "Annonce ancienne", openOriginal: "Ouvrir l’annonce originale", posted: "Publié", regions: "Régions", repositories: "Communautés", salary: "Salaire", salaryOnly: "Avec salaire", save: "Enregistrer", savedOnly: "Enregistrés seulement", searchPlaceholder: "Poste, stack, entreprise ou lieu", seniority: "Expérience", share: "Partager le poste", showAuthorJobs: "Voir les offres de @{handle}", showCommunityJobs: "Voir les offres de {name}", similar: "Postes similaires", sortLabel: "Trier", sourcesCount: "{count} sources", technologies: "Technologies", title: "Offres", unsave: "Retirer des favoris", updated: "Mis à jour", updatedSort: "Récemment mis à jour", viewDetails: "Voir les détails", workspace: { allCountries: "Tous les pays", chooseCountry: "Choisir le pays", chooseSort: "Choisir le tri", chooseStack: "Choisir une stack ou technologie", clearFilters: "Effacer les filtres", country: "Pays", dataAi: "Données et IA", devops: "DevOps", discover: "Découvrir", internships: "Stages", lastDays: "{days} derniers jours", more: "Plus de filtres", newSinceVisit: "Nouveaux depuis la dernière visite", noOptions: "Aucune option disponible", remote: "À distance", removeFilter: "Retirer {filter}", resultRange: "Affichage de {start}–{end} sur {count} offres", savedJobs: "Offres enregistrées", searchLabel: "Rechercher des offres", shareSearch: "Partager la recherche", stack: "Stack / Technologie", stackSelected: "{count} sélectionnées", updatedAt: "Annonces mises à jour le {date}", updatedHours: "Annonces mises à jour il y a {count} h", withSalary: "Avec salaire" }, workModels: "Mode de travail" },
   },
   de: {
     authors: { description: "Menschen, die Stellen über GitHub-Communitys teilen.", github: "GitHub-Profil öffnen", latestActivity: "Letzte Aktivität", open: "Autor ansehen", profileTitle: "Autor", searchPlaceholder: "Autoren oder Handles suchen", share: "Autor teilen", title: "Autoren" },
@@ -52,7 +265,7 @@ export const messages = {
     communities: { active: "Aktiv", allSources: "Alle Quellen", description: "GitHub-Communitys mit offenen Tech-Stellen.", errors: "Mit Fehlern", github: "Repository öffnen", latestActivity: "Letzte Aktivität", noOpenings: "Keine Stellen", open: "Community ansehen", profileTitle: "Community", searchPlaceholder: "Communitys oder Repositorys suchen", share: "Community teilen", title: "Communitys" },
     description: "Tech-Stellen aus GitHub-Communitys, einfacher zu entdecken.",
     errorMessage: "Bitte lade Openings erneut.", errorTitle: "Openings konnte nicht gestartet werden", eyebrow: "Mobile Grundlage", localeLabel: "Sprache", retry: "Erneut versuchen", status: "Die Grundlage ist bereit", title: "Openings",
-    header: { appearanceLabel: "Darstellung", appearanceTitle: "Darstellung auswählen", brandLabel: "Openings-Stellen", dark: "Dunkel", languageTitle: "Sprache auswählen", light: "Hell", system: "Geräteeinstellung verwenden" },
-    jobs: { allSources: "Alle Quellen", areas: "Bereiche", authors: "Autoren", countries: "Länder", description: "Offene Tech-Stellen aus öffentlichen GitHub-Communitys.", detailsTitle: "Stellendetails", employmentTypes: "Anstellung", freshness: "Aktualität", languages: "Sprachen", moreTags: "{count} weitere Tags", newBadge: "Neu", newOnly: "Neu für dich", noDescription: "Die Quelle enthält keine Beschreibung.", oldest: "Älteste", olderBadge: "Ältere Anzeige", openOriginal: "Originalanzeige öffnen", posted: "Veröffentlicht", regions: "Regionen", repositories: "Communitys", salary: "Gehalt", salaryOnly: "Mit Gehalt", save: "Stelle speichern", savedOnly: "Nur gespeichert", searchPlaceholder: "Rolle, Stack, Firma oder Standort", seniority: "Erfahrung", share: "Stelle teilen", showAuthorJobs: "Stellen von @{handle} anzeigen", showCommunityJobs: "Stellen von {name} anzeigen", similar: "Ähnliche Stellen", sortLabel: "Sortieren", sourcesCount: "{count} Quellen", technologies: "Technologien", title: "Stellen", unsave: "Speicherung entfernen", updated: "Aktualisiert", updatedSort: "Kürzlich aktualisiert", viewDetails: "Details ansehen", workspace: { allCountries: "Alle Länder", chooseCountry: "Land auswählen", chooseSort: "Sortierung auswählen", chooseStack: "Stack oder Technologie auswählen", clearFilters: "Filter löschen", country: "Land", dataAi: "Daten & KI", devops: "DevOps", discover: "Entdecken", internships: "Praktika", lastDays: "Letzte {days} Tage", more: "Mehr Filter", newSinceVisit: "Neu seit dem letzten Besuch", noOptions: "Keine Optionen verfügbar", remote: "Remote", removeFilter: "{filter} entfernen", resultRange: "{start}–{end} von {count} Stellen angezeigt", savedJobs: "Gespeicherte Stellen", searchLabel: "Stellen suchen", shareSearch: "Suche teilen", stack: "Stack / Technologie", stackSelected: "{count} ausgewählt", updatedAt: "Anzeigen aktualisiert am {date}", updatedHours: "Anzeigen vor {count} Std. aktualisiert", withSalary: "Mit Gehalt" }, workModels: "Arbeitsmodell" },
+    header: { ...webNativeMessages.de.header, appearanceLabel: "Darstellung", appearanceTitle: "Darstellung auswählen", brandLabel: "Openings-Stellen", dark: "Dunkel", languageTitle: "Sprache auswählen", light: "Hell", system: "Geräteeinstellung verwenden" },
+    jobs: { ...webNativeMessages.de.jobs, allSources: "Alle Quellen", areas: "Bereiche", authors: "Autoren", countries: "Länder", description: "Offene Tech-Stellen aus öffentlichen GitHub-Communitys.", detailsTitle: "Stellendetails", employmentTypes: "Anstellung", freshness: "Aktualität", languages: "Sprachen", moreTags: "{count} weitere Tags", newBadge: "Neu", newOnly: "Neu für dich", noDescription: "Die Quelle enthält keine Beschreibung.", oldest: "Älteste", olderBadge: "Ältere Anzeige", openOriginal: "Originalanzeige öffnen", posted: "Veröffentlicht", regions: "Regionen", repositories: "Communitys", salary: "Gehalt", salaryOnly: "Mit Gehalt", save: "Stelle speichern", savedOnly: "Nur gespeichert", searchPlaceholder: "Rolle, Stack, Firma oder Standort", seniority: "Erfahrung", share: "Stelle teilen", showAuthorJobs: "Stellen von @{handle} anzeigen", showCommunityJobs: "Stellen von {name} anzeigen", similar: "Ähnliche Stellen", sortLabel: "Sortieren", sourcesCount: "{count} Quellen", technologies: "Technologien", title: "Stellen", unsave: "Speicherung entfernen", updated: "Aktualisiert", updatedSort: "Kürzlich aktualisiert", viewDetails: "Details ansehen", workspace: { allCountries: "Alle Länder", chooseCountry: "Land auswählen", chooseSort: "Sortierung auswählen", chooseStack: "Stack oder Technologie auswählen", clearFilters: "Filter löschen", country: "Land", dataAi: "Daten & KI", devops: "DevOps", discover: "Entdecken", internships: "Praktika", lastDays: "Letzte {days} Tage", more: "Mehr Filter", newSinceVisit: "Neu seit dem letzten Besuch", noOptions: "Keine Optionen verfügbar", remote: "Remote", removeFilter: "{filter} entfernen", resultRange: "{start}–{end} von {count} Stellen angezeigt", savedJobs: "Gespeicherte Stellen", searchLabel: "Stellen suchen", shareSearch: "Suche teilen", stack: "Stack / Technologie", stackSelected: "{count} ausgewählt", updatedAt: "Anzeigen aktualisiert am {date}", updatedHours: "Anzeigen vor {count} Std. aktualisiert", withSalary: "Mit Gehalt" }, workModels: "Arbeitsmodell" },
   },
 } as const satisfies MessageCatalog;

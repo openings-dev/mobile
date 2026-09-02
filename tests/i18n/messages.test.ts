@@ -24,4 +24,38 @@ describe("localized messages", () => {
       expect(Object.keys(messages[locale] ?? {})).toEqual(englishKeys);
     }
   });
+
+  it("translates the web-native navigation and job trust surfaces", () => {
+    const messages = moduleContract.messages as Record<
+      string,
+      {
+        header?: {
+          menu?: string;
+          support?: { action?: string; description?: string; title?: string };
+        };
+        jobs?: {
+          dataConfidence?: {
+            fields?: { location?: string };
+            title?: string;
+          };
+          newMatches?: { action?: string; title?: string };
+          reportProblem?: string;
+        };
+      }
+    >;
+
+    for (const locale of SUPPORTED_LOCALES) {
+      const copy = messages[locale];
+
+      expect(copy?.header?.menu).toBeTruthy();
+      expect(copy?.header?.support?.title).toBeTruthy();
+      expect(copy?.header?.support?.description).toBeTruthy();
+      expect(copy?.header?.support?.action).toBeTruthy();
+      expect(copy?.jobs?.newMatches?.title).toBeTruthy();
+      expect(copy?.jobs?.newMatches?.action).toBeTruthy();
+      expect(copy?.jobs?.dataConfidence?.title).toBeTruthy();
+      expect(copy?.jobs?.dataConfidence?.fields?.location).toBeTruthy();
+      expect(copy?.jobs?.reportProblem).toBeTruthy();
+    }
+  });
 });

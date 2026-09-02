@@ -23,7 +23,7 @@ describe("AppHeader", () => {
     jest.mocked(AsyncStorage.setItem).mockResolvedValue();
   });
 
-  it("renders the Openings brand and exposes language and appearance selectors", async () => {
+  it("renders the Openings brand and opens the native navigation drawer", async () => {
     const screen = await render(
       <LocaleProvider>
         <ThemeProvider>
@@ -33,16 +33,29 @@ describe("AppHeader", () => {
     );
 
     expect(await screen.findByLabelText("Openings jobs")).toBeTruthy();
+    expect(screen.queryByLabelText("Language")).toBeNull();
+    expect(screen.queryByLabelText("Appearance")).toBeNull();
+
+    await fireEvent.press(screen.getByLabelText("Open navigation menu"));
+    expect(screen.getByText("Jobs")).toBeTruthy();
+    expect(screen.getByText("Communities")).toBeTruthy();
+    expect(screen.getByText("Authors")).toBeTruthy();
+    expect(screen.getByText("Support openings.dev")).toBeTruthy();
+    expect(screen.getByText("Star on GitHub")).toBeTruthy();
+    expect(screen.getByLabelText("Language")).toBeTruthy();
+    expect(screen.getByLabelText("Appearance")).toBeTruthy();
+
     await fireEvent.press(screen.getByLabelText("Language"));
     expect(screen.getByText("Choose language")).toBeTruthy();
-    expect(screen.getByText("Português (Brasil)")).toBeTruthy();
-    await fireEvent.press(screen.getByLabelText("Close"));
+    expect(screen.getByText("Português")).toBeTruthy();
+    await fireEvent.press(screen.getByText("Português"));
+    expect(screen.getByText("Português")).toBeTruthy();
 
-    await fireEvent.press(screen.getByLabelText("Appearance"));
-    expect(screen.getByText("Choose appearance")).toBeTruthy();
-    expect(screen.getByText("Use device setting")).toBeTruthy();
-    expect(screen.getByText("Light")).toBeTruthy();
-    expect(screen.getByText("Dark")).toBeTruthy();
+    await fireEvent.press(screen.getByLabelText("Aparência"));
+    expect(screen.getByText("Escolha a aparência")).toBeTruthy();
+    expect(screen.getByText("Usar configuração do aparelho")).toBeTruthy();
+    expect(screen.getByText("Claro")).toBeTruthy();
+    expect(screen.getByText("Escuro")).toBeTruthy();
   });
 
   it("uses the wordmark as a native destination back to Jobs", async () => {
@@ -56,5 +69,19 @@ describe("AppHeader", () => {
 
     await fireEvent.press(await screen.findByLabelText("Openings jobs"));
     expect(mockReplace).toHaveBeenCalledWith("/jobs");
+  });
+
+  it("closes the navigation drawer with its explicit close control", async () => {
+    const screen = await render(
+      <LocaleProvider>
+        <ThemeProvider>
+          <AppHeader />
+        </ThemeProvider>
+      </LocaleProvider>,
+    );
+
+    await fireEvent.press(await screen.findByLabelText("Open navigation menu"));
+    await fireEvent.press(screen.getByLabelText("Close navigation menu"));
+    expect(screen.queryByText("Support openings.dev")).toBeNull();
   });
 });

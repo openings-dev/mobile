@@ -1,11 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { render } from "@testing-library/react-native";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import TabsLayout from "@/app/routes/(tabs)/_layout";
 import { LocaleProvider } from "@/contexts/locale";
 import { ThemeProvider } from "@/contexts/theme";
 
 let mockCapturedScreenOptions: Record<string, unknown> = {};
+let mockCapturedScreens: Record<string, Record<string, unknown>> = {};
 
 jest.mock("expo-router", () => {
   const React = jest.requireActual<typeof import("react")>("react");
@@ -24,8 +26,9 @@ jest.mock("expo-router", () => {
     options,
   }: {
     name: string;
-    options: { title: string };
+    options: Record<string, unknown> & { title: string };
   }) {
+    mockCapturedScreens[name] = options;
     return React.createElement(Text, null, `${name}:${options.title}`);
   }
 
@@ -45,17 +48,20 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
 describe("native navigation shell", () => {
   beforeEach(() => {
     mockCapturedScreenOptions = {};
+    mockCapturedScreens = {};
     jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
     jest.mocked(AsyncStorage.setItem).mockResolvedValue();
   });
 
   it("exposes only the three product destinations with production tab sizing", async () => {
     const screen = await render(
-      <LocaleProvider>
-        <ThemeProvider>
-          <TabsLayout />
-        </ThemeProvider>
-      </LocaleProvider>,
+      <SafeAreaProvider initialMetrics={{ frame: { height: 844, width: 390, x: 0, y: 0 }, insets: { bottom: 0, left: 0, right: 0, top: 0 } }}>
+        <LocaleProvider>
+          <ThemeProvider>
+            <TabsLayout />
+          </ThemeProvider>
+        </LocaleProvider>
+      </SafeAreaProvider>,
     );
 
     expect(screen.getByText("jobs:Jobs")).toBeTruthy();
@@ -70,10 +76,23 @@ describe("native navigation shell", () => {
         fontWeight: "500",
       }),
       tabBarStyle: expect.objectContaining({
-        height: 72,
-        paddingBottom: 8,
+        height: 64,
+        paddingBottom: 6,
         paddingTop: 6,
       }),
     }));
+
+    for (const route of ["jobs", "communities", "authors"]) {
+      const tabBarIcon = mockCapturedScreens[route]?.tabBarIcon as (props: {
+        color: string;
+        focused: boolean;
+        size: number;
+      }) => React.ReactElement;
+      const icon = await render(
+        tabBarIcon({ color: "#153C31", focused: route === "jobs", size: 22 }),
+      );
+
+      expect(JSON.stringify(icon.toJSON())).toContain("RNSVGSvgView");
+    }
   });
 });

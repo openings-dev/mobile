@@ -56,9 +56,17 @@ export interface FoundationMessages {
     appearanceLabel: string;
     appearanceTitle: string;
     brandLabel: string;
+    closeMenu: string;
     dark: string;
     languageTitle: string;
     light: string;
+    menu: string;
+    support: {
+      action: string;
+      ariaLabel: string;
+      description: string;
+      title: string;
+    };
     system: string;
   };
   localeLabel: string;
@@ -67,12 +75,41 @@ export interface FoundationMessages {
     areas: string;
     authors: string;
     countries: string;
+    dataConfidence: {
+      description: string;
+      fields: {
+        location: string;
+        salary: string;
+        seniority: string;
+        workModel: string;
+      };
+      incompleteWarning: string;
+      lastVerified: string;
+      originalAuthority: string;
+      published: string;
+      sources: string;
+      staleWarning: string;
+      states: {
+        declared: string;
+        inferred: string;
+        unknown: string;
+      };
+      title: string;
+      verificationUnavailable: string;
+    };
     description: string;
     detailsTitle: string;
     employmentTypes: string;
     freshness: string;
     languages: string;
     moreTags: string;
+    newMatches: {
+      action: string;
+      description: string;
+      dismiss: string;
+      privacy: string;
+      title: string;
+    };
     newBadge: string;
     newOnly: string;
     noDescription: string;
@@ -81,6 +118,7 @@ export interface FoundationMessages {
     openOriginal: string;
     posted: string;
     regions: string;
+    reportProblem: string;
     repositories: string;
     salary: string;
     salaryOnly: string;
