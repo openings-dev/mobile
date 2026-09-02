@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { render } from "@testing-library/react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import AppShellLayout from "@/app/routes/(tabs)/_layout";
+import AppShellLayout from "@/app/routes/(app)/_layout";
 import { LocaleProvider } from "@/contexts/locale";
 import { ThemeProvider } from "@/contexts/theme";
 
@@ -88,7 +88,13 @@ describe("native navigation shell", () => {
     }));
 
     const renderHeader = mockCapturedStackOptions.header as () => React.ReactElement;
-    const header = await render(renderHeader());
+    const header = await render(
+      <SafeAreaProvider initialMetrics={{ frame: { height: 844, width: 390, x: 0, y: 0 }, insets: { bottom: 0, left: 0, right: 0, top: 0 } }}>
+        <LocaleProvider>
+          <ThemeProvider>{renderHeader()}</ThemeProvider>
+        </LocaleProvider>
+      </SafeAreaProvider>,
+    );
     expect(header.getByLabelText("Open navigation menu")).toBeTruthy();
   });
 });
