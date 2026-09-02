@@ -9,6 +9,7 @@ import {
 import { useAppTheme } from "@/contexts/theme";
 import { buildWebDiscoveryUrl } from "@/app/jobs/helpers/share-search";
 import { formatCount, formatDate } from "@/domain/openings/formatting";
+import { formatVisibleResultRange } from "@/domain/openings/presentation";
 import type { JobFilters, JobSort } from "@/domain/openings/types";
 import type { FoundationMessages } from "@/i18n/types";
 
@@ -22,6 +23,7 @@ interface JobsResultToolbarProps {
   onChange: (filters: JobFilters) => void;
   resultCount: number;
   totalPages: number;
+  visibleCount: number;
 }
 
 function updatedLabel(
@@ -55,6 +57,7 @@ export function JobsResultToolbar({
   onChange,
   resultCount,
   totalPages,
+  visibleCount,
 }: JobsResultToolbarProps): React.ReactNode {
   const { theme } = useAppTheme();
   const [sortOpen, setSortOpen] = useState(false);
@@ -67,13 +70,18 @@ export function JobsResultToolbar({
   const selectedSort = sortOptions.find(({ value }) => value === filters.sort)
     ?? sortOptions[0];
   const recency = updatedLabel(generatedAt, locale, messages);
+  const range = formatVisibleResultRange(visibleCount, resultCount);
+  const resultLabel = messages.jobs.workspace.resultRange
+    .replace("{start}", formatCount(range.start, locale))
+    .replace("{end}", formatCount(range.end, locale))
+    .replace("{count}", formatCount(resultCount, locale));
 
   return (
     <View className="gap-3 border-y border-line px-4 py-4">
       <View className="flex-row items-center justify-between gap-3">
         <View className="gap-1">
           <Text className="font-mono text-label font-semibold text-foreground">
-            {formatCount(resultCount, locale)} {messages.common.results}
+            {resultLabel}
           </Text>
           {recency ? (
             <View className="flex-row items-center gap-1.5">

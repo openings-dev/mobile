@@ -10,7 +10,11 @@ import { useLocale } from "@/contexts/locale";
 import { useOpeningsCatalog } from "@/contexts/openings-catalog";
 import { useAppTheme } from "@/contexts/theme";
 import { createDefaultJobFilters, filterAndSortJobs } from "@/domain/openings/discovery";
-import { buildJobRoute } from "@/domain/openings/routing";
+import {
+  buildAuthorRoute,
+  buildCommunityRoute,
+  buildJobRoute,
+} from "@/domain/openings/routing";
 import type { JobFilters } from "@/domain/openings/types";
 import { isOfflineCatalogError } from "@/services/openings-catalog";
 import { JobsFilterModal } from "./components/jobs-filter-modal";
@@ -67,6 +71,7 @@ export function JobsScreen(): React.ReactNode {
         onChange={updateFilters}
         resultCount={filtered.length}
         totalPages={catalog.totalPages}
+        visibleCount={visible.length}
       />
     </View>
   );
@@ -80,15 +85,18 @@ export function JobsScreen(): React.ReactNode {
     <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
       <FlatList
         data={visible}
+        initialNumToRender={8}
         keyExtractor={(item) => item.id}
         ListHeaderComponent={header}
         ListEmptyComponent={emptyState}
-        ListFooterComponent={visibleCount < filtered.length ? <Pressable accessibilityRole="button" className="mx-5 min-h-12 items-center justify-center rounded-control border border-line bg-paper" onPress={() => setVisibleCount((count) => count + PAGE_SIZE)}><Text className="font-body text-label font-semibold text-primary-deep">{messages.common.loadMore}</Text></Pressable> : <View className="h-5" />}
+        ListFooterComponent={visibleCount < filtered.length ? <Pressable accessibilityRole="button" className="mx-4 min-h-12 items-center justify-center rounded-control border border-line bg-paper" onPress={() => setVisibleCount((count) => count + PAGE_SIZE)}><Text className="font-body text-label font-semibold text-primary-deep">{messages.common.loadMore}</Text></Pressable> : <View className="h-5" />}
+        maxToRenderPerBatch={8}
         refreshControl={<RefreshControl refreshing={catalog.isRefreshing} onRefresh={() => void catalog.refresh()} tintColor={theme.colors["primary-deep"]} />}
         renderItem={({ item }) => {
           const isNew = Boolean(candidate.previousVisitAt && !candidate.viewedIds.has(item.id) && Date.parse(item.createdAt) > Date.parse(candidate.previousVisitAt));
-          return <OpportunityCard item={item} locale={locale} isSaved={candidate.isSaved(item.id)} isNew={isNew} newLabel={messages.jobs.newBadge} saveLabel={messages.jobs.save} unsaveLabel={messages.jobs.unsave} viewDetailsLabel={messages.jobs.viewDetails} onToggleSaved={() => candidate.toggleSaved(item.id)} onPress={() => router.push(buildJobRoute(item.id) as never)} />;
+          return <OpportunityCard item={item} isSaved={candidate.isSaved(item.id)} isNew={isNew} onAuthorPress={() => router.push(buildAuthorRoute(item.author.handle) as never)} onCommunityPress={() => router.push(buildCommunityRoute(item.repository) as never)} onToggleSaved={() => candidate.toggleSaved(item.id)} onPress={() => router.push(buildJobRoute(item.id) as never)} />;
         }}
+        windowSize={7}
       />
       <JobsFilterModal open={filterOpen} filters={filters} items={catalog.opportunities} messages={messages} onChange={updateFilters} onClose={() => setFilterOpen(false)} resultCount={filtered.length} />
     </SafeAreaView>

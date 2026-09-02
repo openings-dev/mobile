@@ -117,6 +117,7 @@ export interface FoundationMessages {
       noOptions: string;
       remote: string;
       removeFilter: string;
+      resultRange: string;
       savedJobs: string;
       searchLabel: string;
       shareSearch: string;

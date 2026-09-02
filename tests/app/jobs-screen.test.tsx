@@ -73,6 +73,20 @@ describe("JobsScreen", () => {
     expect(screen.getByText("More")).toBeTruthy();
     expect(screen.getByText("Share search")).toBeTruthy();
     expect(screen.getByText("Most recent")).toBeTruthy();
-    expect(screen.queryByText("Remote")).toBeNull();
+    expect(screen.getByText("Showing 1–2 of 2 jobs")).toBeTruthy();
+    expect(screen.getAllByText("Remote")).toHaveLength(1);
+    expect(screen.queryByText("Discover")).toBeNull();
+  });
+
+  it("opens community and author discovery from a job card", async () => {
+    const screen = await render(
+      <LocaleProvider><ThemeProvider><JobsScreen /></ThemeProvider></LocaleProvider>,
+    );
+
+    await fireEvent.press(screen.getAllByLabelText("Show jobs from Openings")[0]!);
+    expect(mockPush).toHaveBeenLastCalledWith("/communities/openings-dev/jobs");
+
+    await fireEvent.press(screen.getAllByLabelText("Show jobs from @alice")[0]!);
+    expect(mockPush).toHaveBeenLastCalledWith("/authors/alice");
   });
 });
