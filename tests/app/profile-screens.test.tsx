@@ -16,7 +16,7 @@ jest.mock("@/contexts/openings-catalog", () => ({ useOpeningsCatalog: jest.fn() 
 describe("native profiles", () => {
   beforeEach(() => {
     mockPush.mockClear();
-    jest.mocked(useCandidateState).mockReturnValue({ hydrated: true, isSaved: () => false, markViewed: jest.fn(), previousVisitAt: null, savedIds: new Set(), toggleSaved: jest.fn(), viewedIds: new Set() });
+    jest.mocked(useCandidateState).mockReturnValue({ dismissNewMatches: jest.fn(), hydrated: true, isSaved: () => false, markViewed: jest.fn(), newMatchesDismissedAt: null, previousVisitAt: null, savedIds: new Set(), toggleSaved: jest.fn(), viewedIds: new Set() });
     jest.mocked(useOpeningsCatalog).mockReturnValue({ communities: [makeCommunity("openings-dev/jobs")], error: null, generatedAt: null, isIncremental: false, isLoading: false, isRefreshing: false, loadedPages: 1, opportunities: [makeOpportunity("1"), makeOpportunity("2", { author: { avatarUrl: null, handle: "bob", id: "bob", name: "Bob" }, repository: "other/jobs", community: { avatarUrl: null, id: "other", name: "Other", repository: "other/jobs", url: "https://github.com/other/jobs" } })], refresh: jest.fn(), status: null, totalPages: 1, totalResults: 2 });
   });
 

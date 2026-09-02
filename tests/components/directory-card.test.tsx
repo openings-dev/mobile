@@ -25,7 +25,11 @@ describe("DirectoryCard", () => {
     expect(screen.getByText("openings-dev/jobs")).toBeTruthy();
     expect(screen.getByText("South America · Brazil")).toBeTruthy();
     expect(screen.getByText("Sep 1, 2026")).toBeTruthy();
-    expect(screen.getByText("24 jobs")).toBeTruthy();
+    expect(screen.getByText("24 jobs").props.className).toContain("font-mono");
+    expect(
+      screen.getByLabelText("View community: Openings").props.className,
+    ).toEqual(expect.stringContaining("bg-paper"));
+    expect(JSON.stringify(screen.toJSON())).toContain("RNSVGSvgView");
     await fireEvent.press(screen.getByText("View community"));
     expect(onPress).toHaveBeenCalledTimes(1);
   });

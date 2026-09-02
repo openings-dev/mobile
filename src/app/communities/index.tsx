@@ -43,7 +43,7 @@ export function CommunitiesScreen(): React.ReactNode {
 
   if (catalog.isLoading && catalog.communities.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-canvas">
+      <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
         <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
         <CatalogState pending message={messages.common.loading} />
       </SafeAreaView>
@@ -52,7 +52,7 @@ export function CommunitiesScreen(): React.ReactNode {
 
   if (catalog.error && catalog.communities.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-canvas">
+      <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
         <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
         <CatalogState
           actionLabel={messages.common.retry}
@@ -64,9 +64,9 @@ export function CommunitiesScreen(): React.ReactNode {
   }
 
   const header = (
-    <View className="gap-4 pb-4">
+    <View className="gap-3 pb-4">
       <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
-      <View className="gap-4 px-4">
+      <View className="gap-3 px-4">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
           <FilterChip label={`${messages.communities.active} · ${activityCounts.healthy}`} selected={activity === "healthy"} onPress={() => setActivity("healthy")} />
           <FilterChip label={`${messages.communities.noOpenings} · ${activityCounts["no-openings"]}`} selected={activity === "no-openings"} onPress={() => setActivity("no-openings")} />
@@ -107,7 +107,7 @@ export function CommunitiesScreen(): React.ReactNode {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-canvas" edges={["top", "left", "right"]}>
+    <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
       <FlatList
         data={visible}
         initialNumToRender={8}

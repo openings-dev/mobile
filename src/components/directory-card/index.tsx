@@ -1,4 +1,9 @@
-import Feather from "@expo/vector-icons/Feather";
+import {
+  ArrowUpRight,
+  BriefcaseBusiness,
+  CalendarDays,
+  MapPin,
+} from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
 import { useAppTheme } from "@/contexts/theme";
@@ -21,7 +26,7 @@ export function DirectoryCard(props: DirectoryCardProps): React.ReactNode {
     <Pressable
       accessibilityLabel={`${props.actionLabel}: ${props.title}`}
       accessibilityRole="button"
-      className="mx-4 mb-3 gap-4 rounded-card border border-line bg-surface p-4 active:bg-surface-elevated"
+      className="mx-4 mb-3 gap-4 rounded-card border border-line bg-paper p-4 active:bg-primary-soft"
       onPress={props.onPress}
     >
       <View className="flex-row items-center gap-3">
@@ -34,25 +39,25 @@ export function DirectoryCard(props: DirectoryCardProps): React.ReactNode {
       <View className="gap-2.5">
         {props.location ? (
           <View className="flex-row items-center gap-2">
-            <Feather name="map-pin" size={15} color={theme.colors["muted-foreground"]} />
+            <MapPin accessibilityElementsHidden size={15} strokeWidth={1.8} color={theme.colors["muted-foreground"]} />
             <Text className="min-w-0 flex-1 font-body text-metadata text-muted-foreground" numberOfLines={2}>{props.location}</Text>
           </View>
         ) : null}
         {props.latestActivity ? (
           <View className="flex-row items-center gap-2">
-            <Feather name="calendar" size={15} color={theme.colors["muted-foreground"]} />
+            <CalendarDays accessibilityElementsHidden size={15} strokeWidth={1.8} color={theme.colors["muted-foreground"]} />
             <Text className="font-body text-metadata text-muted-foreground">{props.latestActivity}</Text>
           </View>
         ) : null}
       </View>
       <View className="min-h-11 flex-row items-center justify-between gap-3 border-t border-line pt-3">
         <View className="flex-row items-center gap-2">
-          <Feather name="briefcase" size={16} color={theme.colors["primary-deep"]} />
-          <Text className="font-body text-label font-semibold text-primary-deep">{props.countLabel}</Text>
+          <BriefcaseBusiness accessibilityElementsHidden size={16} strokeWidth={1.8} color={theme.colors["primary-deep"]} />
+          <Text className="font-mono text-label font-semibold text-primary-deep">{props.countLabel}</Text>
         </View>
         <View className="flex-row items-center gap-1.5">
           <Text className="font-body text-label font-semibold text-primary-deep">{props.actionLabel}</Text>
-          <Feather name="arrow-up-right" size={15} color={theme.colors["primary-deep"]} />
+          <ArrowUpRight accessibilityElementsHidden size={15} strokeWidth={1.8} color={theme.colors["primary-deep"]} />
         </View>
       </View>
     </Pressable>

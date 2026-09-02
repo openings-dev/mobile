@@ -40,7 +40,7 @@ export function AuthorsScreen(): React.ReactNode {
   const errorMessage = isOfflineCatalogError(catalog.error) ? messages.common.offline : messages.common.sourceError;
   if (catalog.isLoading && authors.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-canvas">
+      <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
         <ScreenHeader title={messages.authors.title} description={messages.authors.description} />
         <CatalogState pending message={messages.common.loading} />
       </SafeAreaView>
@@ -49,7 +49,7 @@ export function AuthorsScreen(): React.ReactNode {
 
   if (catalog.error && authors.length === 0) {
     return (
-      <SafeAreaView className="flex-1 bg-canvas">
+      <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
         <ScreenHeader title={messages.authors.title} description={messages.authors.description} />
         <CatalogState
           actionLabel={messages.common.retry}
@@ -61,9 +61,9 @@ export function AuthorsScreen(): React.ReactNode {
   }
 
   const header = (
-    <View className="gap-4 pb-4">
+    <View className="gap-3 pb-4">
       <ScreenHeader title={messages.authors.title} description={messages.authors.description} />
-      <View className="gap-4 px-4">
+      <View className="gap-3 px-4">
         <SearchField
           label={messages.common.search}
           onChangeText={(query) => setFilters({ ...filters, query })}
@@ -98,7 +98,7 @@ export function AuthorsScreen(): React.ReactNode {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-canvas" edges={["top", "left", "right"]}>
+    <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
       <FlatList
         data={visible}
         initialNumToRender={8}
