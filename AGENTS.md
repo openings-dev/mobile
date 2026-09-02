@@ -33,8 +33,8 @@ implemented until its source and tests exist.
   a local opportunity dataset, backend proxy, authentication, or credentials.
 - Keep repository identifiers, paths, filter values, and other domain values
   language-neutral.
-- When saved jobs, viewed state, or preferences are added, keep them device-local
-  unless a separate approved specification introduces synchronization.
+- Keep saved jobs, viewed state, locale selection, and appearance preference
+  device-local unless a separate approved specification introduces synchronization.
 - Do not imply that Openings verifies employers, guarantees availability, ranks
   candidate fit, or manages applications.
 

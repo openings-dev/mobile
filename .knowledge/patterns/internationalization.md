@@ -10,8 +10,10 @@ device language tags, preserves exact supported tags, maps any Portuguese varian
 to `pt-BR`, maps supported regional variants to their base language, and falls back
 to English.
 
-The current provider derives locale from `expo-localization`. It does not yet expose
-a persisted manual language selection.
+The provider first hydrates a validated manual selection from AsyncStorage. Without
+one, it derives the locale from `expo-localization`. The global application header
+opens a native language sheet for all six supported locales; selecting a locale
+updates the full application immediately and persists the choice on the device.
 
 ## Message contract
 

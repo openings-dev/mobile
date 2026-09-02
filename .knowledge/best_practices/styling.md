@@ -7,10 +7,15 @@
 NativeWind 4 is configured through Babel and Metro. Tailwind CSS 3 scans `src` and
 combines the NativeWind preset with `@openingshq/design-tokens/nativewind`. The theme
 provider applies light or dark runtime variables exported by the shared token
-package.
+package. The user may choose system, light, or dark appearance from the global
+header; the device-local preference must resolve to the same semantic role set.
 
 Figtree Regular, Medium, and SemiBold are linked through the Expo font plugin. The
 current app uses Figtree for display, interface, and body roles.
+
+The mobile header renders the canonical Openings wordmark with the same vector path
+and transform as the web brand source. Keep the artwork monochrome through semantic
+foreground color and preserve its intrinsic proportions.
 
 ## Rules
 

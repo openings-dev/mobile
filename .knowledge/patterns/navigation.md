@@ -8,6 +8,10 @@ Expo Router scans only `src/app/routes`, configured through `app.json`. The root
 redirects to `/jobs`. The `(tabs)` group contains Jobs, Communities, and Authors.
 Root stack routes contain job, community, and author details.
 
+The tab navigator owns one branded application header for all three root tabs. It
+contains the canonical Openings wordmark plus language and appearance actions.
+Detail routes keep their localized native stack headers and back behavior.
+
 Route entries declare the route, receive parameters, and compose or export the
 screen implementation. Screen UI,
 queries, and interaction behavior remain under `src/app/<entity>/`.

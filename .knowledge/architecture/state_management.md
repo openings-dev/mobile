@@ -4,11 +4,13 @@
 
 ## Current state
 
-`LocaleProvider` owns the
-resolved device locale and its typed messages. `ThemeProvider` owns the current
-system-derived light or dark theme and installs the corresponding NativeWind runtime
-variables. `OpeningsCatalogProvider` exposes a TanStack Query-backed catalog shared
-by the three tabs, including progressive batches and refresh state.
+`LocaleProvider` owns the persisted locale preference and its typed messages. It
+hydrates a valid manual selection from AsyncStorage and otherwise resolves the
+device locale. `ThemeProvider` owns a persisted `system`, `light`, or `dark`
+preference, resolves `system` against the current device appearance, and installs
+the corresponding NativeWind runtime variables. `OpeningsCatalogProvider` exposes
+a TanStack Query-backed catalog shared by the three tabs, including progressive
+batches and refresh state.
 
 `CandidateStateProvider` owns version-2 saved IDs, viewed IDs, and the previous
 visit timestamp. It validates AsyncStorage content before hydration and persists
@@ -41,9 +43,9 @@ changes belong in event handlers rather than effects.
 
 ## Device-local state
 
-Saved jobs, viewed timestamps, and previous-visit state remain local to the device.
-Malformed, missing, or unsupported storage versions resolve to the safe empty state.
-There is no account or synchronization path.
+Saved jobs, viewed timestamps, previous-visit state, locale selection, and appearance
+preference remain local to the device. Malformed, missing, or unsupported stored
+values resolve to their safe defaults. There is no account or synchronization path.
 
 ## Remote state
 

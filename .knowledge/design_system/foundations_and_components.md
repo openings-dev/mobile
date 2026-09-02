@@ -56,6 +56,16 @@ native accessibility state.
 
 ## Content patterns
 
+The global tab header uses the canonical monochrome Openings wordmark geometry and
+keeps language and appearance controls beside the brand. Wordmark color follows the
+semantic foreground role; do not introduce a separate mobile logo treatment.
+
+The Jobs discovery workspace keeps search, country, stack or technology, and the
+More action visible. Discovery shortcuts and the complete filter taxonomy live in
+the native More sheet, which exposes selected state, a filter count, clear behavior,
+and a result-count action. Active filters remain removable from the workspace. This
+is the native equivalent of the responsive web contract, not a literal DOM layout.
+
 Opportunity discovery should prioritize scanning: role, organization or community,
 location and work model, salary when supplied, technology and seniority, author or
 repository context, and posting recency. Missing optional data remains absent; never

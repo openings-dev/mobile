@@ -19,13 +19,17 @@ The repository currently provides a tested native discovery application:
 
 - generated Android and iOS projects for an Expo SDK 57 bare workflow;
 - bottom-tab routes for Jobs, Communities, and Authors plus stack detail routes;
-- system light and dark theme resolution;
-- device locale detection with English fallback;
+- persisted system, light, and dark appearance selection;
+- persisted six-language selection with device detection and English fallback;
+- a canonical branded tab header with language and appearance sheets;
 - complete typed product messages for six locales;
 - a localized application error boundary with an accessible retry;
 - validated, bounded-batch loading of the public schema-6 snapshot;
-- job search, sorting, structured filters, local result paging, refresh, empty,
-  incremental, and error states;
+- a native web-parity Jobs workspace with search, country and stack selectors,
+  removable active filters, sharing, sorting, and a result toolbar;
+- a native More sheet containing discovery shortcuts, complete structured filters,
+  result count, clear behavior, and accessible selection state;
+- local result paging, refresh, empty, incremental, and error states;
 - community activity and geography discovery plus native community profiles;
 - author derivation and discovery plus native author profiles;
 - native job details, similar roles, source links, HTTPS validation, and sharing;
