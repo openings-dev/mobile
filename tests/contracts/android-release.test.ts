@@ -15,6 +15,7 @@ describe("Android release automation", () => {
   const gemfile = readProjectFile("Gemfile");
   const gradle = readProjectFile("android/app/build.gradle");
   const gitignore = readProjectFile(".gitignore");
+  const eslintConfig = readProjectFile("eslint.config.mjs");
   const internalWorkflow = readProjectFile(
     ".github/workflows/android-internal.yml",
   );
@@ -57,6 +58,11 @@ describe("Android release automation", () => {
     expect(gitignore).toContain("fastlane/report.xml");
     expect(gitignore).toContain("*.aab");
     expect(gitignore).toContain("*.apk");
+  });
+
+  it("keeps installed Ruby dependencies outside the JavaScript lint boundary", () => {
+    expect(eslintConfig).toContain('".bundle/**"');
+    expect(eslintConfig).toContain('"vendor/bundle/**"');
   });
 
   it("preserves one internal artifact for explicit production promotion", () => {
