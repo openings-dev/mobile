@@ -52,6 +52,15 @@ export interface FoundationMessages {
   errorMessage: string;
   errorTitle: string;
   eyebrow: string;
+  header: {
+    appearanceLabel: string;
+    appearanceTitle: string;
+    brandLabel: string;
+    dark: string;
+    languageTitle: string;
+    light: string;
+    system: string;
+  };
   localeLabel: string;
   jobs: {
     allSources: string;
@@ -86,6 +95,32 @@ export interface FoundationMessages {
     updated: string;
     updatedSort: string;
     viewDetails: string;
+    workspace: {
+      allCountries: string;
+      chooseCountry: string;
+      chooseSort: string;
+      chooseStack: string;
+      clearFilters: string;
+      country: string;
+      dataAi: string;
+      devops: string;
+      discover: string;
+      internships: string;
+      lastDays: string;
+      more: string;
+      newSinceVisit: string;
+      noOptions: string;
+      remote: string;
+      removeFilter: string;
+      savedJobs: string;
+      searchLabel: string;
+      shareSearch: string;
+      stack: string;
+      stackSelected: string;
+      updatedAt: string;
+      updatedHours: string;
+      withSalary: string;
+    };
     workModels: string;
   };
   retry: string;

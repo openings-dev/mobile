@@ -1,6 +1,7 @@
 import Feather from "@expo/vector-icons/Feather";
 import { Tabs } from "expo-router";
 
+import { AppHeader } from "@/components/app-header";
 import { useLocale } from "@/contexts/locale";
 import { useAppTheme } from "@/contexts/theme";
 
@@ -10,7 +11,8 @@ export default function TabsLayout(): React.ReactNode {
   return (
     <Tabs
       screenOptions={{
-        headerShown: false,
+        header: () => <AppHeader />,
+        headerShown: true,
         tabBarActiveTintColor: theme.colors["primary-deep"],
         tabBarInactiveTintColor: theme.colors["muted-foreground"],
         tabBarStyle: {
