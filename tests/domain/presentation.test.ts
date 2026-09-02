@@ -19,6 +19,12 @@ describe("opportunity presentation", () => {
     );
   });
 
+  it("removes headings that follow source HTML metadata", () => {
+    expect(plainTextExcerpt(
+      "<!-- collected from GitHub --> ## Nossa empresa\nTrabalhe com **tecnologia**.",
+    )).toBe("Nossa empresa Trabalhe com tecnologia.");
+  });
+
   it("orders structured card metadata and reports overflow without duplicates", () => {
     const item = makeOpportunity("presentation", {
       tags: ["remote", "typescript", "React Native", "product"],

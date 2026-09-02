@@ -203,8 +203,9 @@ export function plainTextExcerpt(value: string): string {
     .replace(/\[([^\]]+)\]\([^)]*\)/g, "$1")
     .replace(/^\s*```[^\n]*$/gm, " ")
     .replace(/`([^`]+)`/g, "$1")
-    .replace(/^[ \t]*(?:#{1,6}|>|[-+*]|\d+[.)])[ \t]+/gm, "")
     .replace(/<[^>]+>/g, " ")
+    .replace(/^[ \t]*(?:#{1,6}|>|[-+*]|\d+[.)])[ \t]+/gm, "")
+    .replace(/(?:^|\s)#{1,6}[ \t]+/g, " ")
     .replace(/[*_~]+/g, "")
     .replace(/\s+/g, " ")
     .trim();
