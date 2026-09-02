@@ -70,6 +70,9 @@
 		<string>Figtree_400Regular.ttf</string>
 		<string>Figtree_500Medium.ttf</string>
 		<string>Figtree_600SemiBold.ttf</string>
+		<string>GeistMono_400Regular.ttf</string>
+		<string>GeistMono_500Medium.ttf</string>
+		<string>GeistMono_600SemiBold.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>SplashScreen</string>

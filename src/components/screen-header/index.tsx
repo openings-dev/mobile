@@ -12,15 +12,15 @@ export function ScreenHeader({
   title,
 }: ScreenHeaderProps): React.ReactNode {
   return (
-    <View className="gap-3 px-4 pb-5 pt-4">
+    <View className="gap-3 px-4 pb-4 pt-5">
       <Text className="font-body text-label font-semibold text-primary-deep">
         {eyebrow}
       </Text>
       <View className="gap-2">
-        <Text accessibilityRole="header" className="font-display text-section-title font-semibold text-foreground">
+        <Text accessibilityRole="header" className="font-display text-[32px] font-semibold leading-[34px] tracking-[-1px] text-foreground">
           {title}
         </Text>
-        <Text className="font-body text-product-body text-muted-foreground">
+        <Text className="font-body text-product-body leading-[22px] text-muted-foreground">
           {description}
         </Text>
       </View>

@@ -1,4 +1,4 @@
-import Feather from "@expo/vector-icons/Feather";
+import { Check, X } from "lucide-react-native";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -64,7 +64,7 @@ export function SelectionSheet<TValue extends string>({
       visible={visible}
     >
       <SafeAreaView className="flex-1 bg-canvas" edges={["top", "bottom"]}>
-        <View className="min-h-16 flex-row items-center justify-between border-b border-line bg-paper px-5">
+        <View className="min-h-14 flex-row items-center justify-between border-b border-line bg-paper px-4">
           <Text
             accessibilityRole="header"
             className="flex-1 font-display text-card-title font-semibold text-foreground"
@@ -77,7 +77,7 @@ export function SelectionSheet<TValue extends string>({
             className="h-11 w-11 items-center justify-center rounded-control"
             onPress={onClose}
           >
-            <Feather name="x" size={21} color={theme.colors.foreground} />
+            <X accessibilityElementsHidden size={20} strokeWidth={1.8} color={theme.colors.foreground} />
           </Pressable>
         </View>
         <ScrollView className="flex-1" contentContainerClassName="p-4">
@@ -93,11 +93,12 @@ export function SelectionSheet<TValue extends string>({
                 return (
                   <Pressable
                     key={option.value}
+                    accessibilityLabel={option.label}
                     accessibilityRole="button"
                     accessibilityState={{ selected }}
                     className={index === 0
-                      ? "min-h-14 flex-row items-center gap-3 px-4"
-                      : "min-h-14 flex-row items-center gap-3 border-t border-line px-4"}
+                      ? "min-h-[52px] flex-row items-center gap-3 px-4"
+                      : "min-h-[52px] flex-row items-center gap-3 border-t border-line px-4"}
                     onPress={() => select(option.value)}
                   >
                     <Text
@@ -118,9 +119,10 @@ export function SelectionSheet<TValue extends string>({
                         : "h-7 w-7 items-center justify-center rounded-pill border border-control"}
                     >
                       {selected ? (
-                        <Feather
-                          name="check"
+                        <Check
+                          accessibilityElementsHidden
                           size={16}
+                          strokeWidth={1.8}
                           color={theme.colors["primary-foreground"]}
                         />
                       ) : null}
@@ -135,7 +137,7 @@ export function SelectionSheet<TValue extends string>({
           <View className="flex-row gap-3 border-t border-line bg-paper p-5">
             <Pressable
               accessibilityRole="button"
-              className="min-h-12 flex-1 items-center justify-center rounded-control border border-control"
+              className="min-h-11 flex-1 items-center justify-center rounded-control border border-control"
               onPress={() => setDraftValues([])}
             >
               <Text className="font-body text-label font-semibold text-foreground">
@@ -144,7 +146,7 @@ export function SelectionSheet<TValue extends string>({
             </Pressable>
             <Pressable
               accessibilityRole="button"
-              className="min-h-12 flex-[1.4] items-center justify-center rounded-control bg-primary"
+              className="min-h-11 flex-[1.4] items-center justify-center rounded-control bg-primary"
               onPress={() => {
                 onApply(draftValues);
                 onClose();

@@ -42,6 +42,12 @@ describe("SelectionSheet", () => {
       </ThemeProvider>,
     );
 
+    expect(screen.getByLabelText("React").props.className).toContain(
+      "min-h-[52px]",
+    );
+    expect(screen.getByLabelText("React").props.accessibilityState).toEqual({
+      selected: true,
+    });
     await fireEvent.press(screen.getByText("Java"));
     expect(onApply).not.toHaveBeenCalled();
     await fireEvent.press(screen.getByText("Apply"));

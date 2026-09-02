@@ -1,6 +1,7 @@
-import Feather from "@expo/vector-icons/Feather";
-import { Pressable, Text, View } from "react-native";
+import { X } from "lucide-react-native";
+import { Pressable, View } from "react-native";
 
+import { BrandWordmark } from "@/components/brand-wordmark";
 import { useAppTheme } from "@/contexts/theme";
 
 interface DetailHeaderProps {
@@ -9,14 +10,14 @@ interface DetailHeaderProps {
   title: string;
 }
 
-export function DetailHeader({ backLabel, onBack, title }: DetailHeaderProps): React.ReactNode {
+export function DetailHeader(props: DetailHeaderProps): React.ReactNode {
   const { theme } = useAppTheme();
   return (
-    <View className="min-h-16 flex-row items-center gap-3 border-b border-line bg-paper px-3">
-      <Pressable accessibilityLabel={backLabel} accessibilityRole="button" className="h-11 w-11 items-center justify-center rounded-control" onPress={onBack}>
-        <Feather name="arrow-left" size={22} color={theme.colors.foreground} />
+    <View className="min-h-16 flex-row items-center justify-between gap-3 border-b border-line bg-paper px-4">
+      <BrandWordmark height={28} width={154} />
+      <Pressable accessibilityHint={props.title} accessibilityLabel={props.backLabel} accessibilityRole="button" className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper" onPress={props.onBack}>
+        <X accessibilityElementsHidden size={20} strokeWidth={1.8} color={theme.colors.foreground} />
       </Pressable>
-      <Text className="min-w-0 flex-1 font-display text-card-title font-semibold text-foreground" numberOfLines={1}>{title}</Text>
     </View>
   );
 }

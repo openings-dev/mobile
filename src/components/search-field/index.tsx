@@ -1,4 +1,4 @@
-import Feather from "@expo/vector-icons/Feather";
+import { Search } from "lucide-react-native";
 import { Text, TextInput, View } from "react-native";
 
 import { useAppTheme } from "@/contexts/theme";
@@ -15,11 +15,11 @@ export function SearchField({ label, onChangeText, placeholder, value }: SearchF
   return (
     <View className="gap-2">
       <Text className="font-body text-label font-semibold text-foreground">{label}</Text>
-      <View className="min-h-12 flex-row items-center gap-3 rounded-control border border-line bg-paper px-4">
-        <Feather name="search" size={18} color={theme.colors["muted-foreground"]} accessibilityElementsHidden />
+      <View className="min-h-11 flex-row items-center gap-3 rounded-control border border-line bg-paper px-3">
+        <Search size={18} strokeWidth={1.8} color={theme.colors["muted-foreground"]} accessibilityElementsHidden />
         <TextInput
           accessibilityLabel={label}
-          className="min-h-12 flex-1 font-body text-product-body text-foreground"
+          className="min-h-11 flex-1 font-body text-product-body text-foreground"
           onChangeText={onChangeText}
           placeholder={placeholder}
           placeholderTextColor={theme.colors["muted-foreground"]}

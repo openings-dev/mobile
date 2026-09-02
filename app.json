@@ -85,6 +85,23 @@
                     "weight": 600
                   }
                 ]
+              },
+              {
+                "fontFamily": "Geist Mono",
+                "fontDefinitions": [
+                  {
+                    "path": "./node_modules/@expo-google-fonts/geist-mono/400Regular/GeistMono_400Regular.ttf",
+                    "weight": 400
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/geist-mono/500Medium/GeistMono_500Medium.ttf",
+                    "weight": 500
+                  },
+                  {
+                    "path": "./node_modules/@expo-google-fonts/geist-mono/600SemiBold/GeistMono_600SemiBold.ttf",
+                    "weight": 600
+                  }
+                ]
               }
             ]
           },
@@ -92,7 +109,10 @@
             "fonts": [
               "./node_modules/@expo-google-fonts/figtree/400Regular/Figtree_400Regular.ttf",
               "./node_modules/@expo-google-fonts/figtree/500Medium/Figtree_500Medium.ttf",
-              "./node_modules/@expo-google-fonts/figtree/600SemiBold/Figtree_600SemiBold.ttf"
+              "./node_modules/@expo-google-fonts/figtree/600SemiBold/Figtree_600SemiBold.ttf",
+              "./node_modules/@expo-google-fonts/geist-mono/400Regular/GeistMono_400Regular.ttf",
+              "./node_modules/@expo-google-fonts/geist-mono/500Medium/GeistMono_500Medium.ttf",
+              "./node_modules/@expo-google-fonts/geist-mono/600SemiBold/GeistMono_600SemiBold.ttf"
             ]
           }
         }
