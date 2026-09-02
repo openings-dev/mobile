@@ -8,8 +8,8 @@ import { ThemeProvider } from "@/contexts/theme";
 let mockCapturedScreenOptions: Record<string, unknown> = {};
 
 jest.mock("expo-router", () => {
-  const React = require("react") as typeof import("react");
-  const { Text, View } = require("react-native") as typeof import("react-native");
+  const React = jest.requireActual<typeof import("react")>("react");
+  const { Text, View } = jest.requireActual<typeof import("react-native")>("react-native");
 
   function MockTabs({
     children,
@@ -19,13 +19,17 @@ jest.mock("expo-router", () => {
     return React.createElement(View, null, children);
   }
 
-  MockTabs.Screen = ({
+  function MockScreen({
     name,
     options,
   }: {
     name: string;
     options: { title: string };
-  }) => React.createElement(Text, null, `${name}:${options.title}`);
+  }) {
+    return React.createElement(Text, null, `${name}:${options.title}`);
+  }
+
+  MockTabs.Screen = MockScreen;
 
   return {
     Tabs: MockTabs,
