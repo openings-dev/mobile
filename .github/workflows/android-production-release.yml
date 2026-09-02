@@ -1,0 +1,214 @@
+name: Android production release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_code:
+        description: Existing Google Play internal version code
+        required: true
+        type: number
+      version_name:
+        description: Public semantic version without the v prefix
+        required: true
+        type: string
+      source_run_id:
+        description: Successful Android internal release workflow run ID
+        required: true
+        type: number
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: android-google-play-production
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Validate release inputs
+        env:
+          VERSION_CODE: ${{ inputs.version_code }}
+          VERSION_NAME: ${{ inputs.version_name }}
+        run: |
+          if ! [[ "$VERSION_CODE" =~ ^[1-9][0-9]*$ ]]; then
+            echo "version_code must be a positive integer" >&2
+            exit 1
+          fi
+          if ! [[ "$VERSION_NAME" =~ ^[0-9]+\.[0-9]+\.[0-9]+([.-][0-9A-Za-z.-]+)?$ ]]; then
+            echo "version_name must be a semantic version without the v prefix" >&2
+            exit 1
+          fi
+          printf 'TAG_NAME=v%s\n' "$VERSION_NAME" >> "$GITHUB_ENV"
+
+      - name: Validate source workflow and artifact
+        id: source
+        uses: actions/github-script@v8
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          VERSION_CODE: ${{ inputs.version_code }}
+          VERSION_NAME: ${{ inputs.version_name }}
+        with:
+          script: |
+            const runId = Number(process.env.SOURCE_RUN_ID);
+            const versionCode = process.env.VERSION_CODE;
+            const versionName = process.env.VERSION_NAME;
+            const repository = `${context.repo.owner}/${context.repo.repo}`;
+            const expectedWorkflow = ".github/workflows/android-internal.yml";
+
+            if (!Number.isSafeInteger(runId) || runId < 1) {
+              core.setFailed("source_run_id must be a positive integer");
+              return;
+            }
+
+            const { data: run } = await github.rest.actions.getWorkflowRun({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: runId,
+            });
+            const sourceRepository = run.head_repository?.full_name;
+            if (
+              run.status !== "completed" ||
+              run.conclusion !== "success" ||
+              run.path !== expectedWorkflow ||
+              sourceRepository !== repository
+            ) {
+              core.setFailed(
+                "source_run_id must reference a successful Android internal release from this repository",
+              );
+              return;
+            }
+
+            const artifacts = await github.paginate(
+              github.rest.actions.listWorkflowRunArtifacts,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: runId,
+                per_page: 100,
+              },
+            );
+            const artifactName = `openings-android-${versionCode}`;
+            const matchingArtifacts = artifacts.filter(
+              (artifact) => artifact.name === artifactName && !artifact.expired,
+            );
+            if (matchingArtifacts.length !== 1) {
+              core.setFailed(
+                `source run must contain one active ${artifactName} artifact`,
+              );
+              return;
+            }
+
+            const tagName = `v${versionName}`;
+            try {
+              await github.rest.git.getRef({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                ref: `tags/${tagName}`,
+              });
+              core.setFailed(`Git tag ${tagName} already exists`);
+              return;
+            } catch (error) {
+              if (error.status !== 404) throw error;
+            }
+
+            const releases = await github.paginate(
+              github.rest.repos.listReleases,
+              {
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                per_page: 100,
+              },
+            );
+            if (releases.some((release) => release.tag_name === tagName)) {
+              core.setFailed(`GitHub Release ${tagName} already exists`);
+              return;
+            }
+
+            core.setOutput("artifact_name", artifactName);
+            core.setOutput("source_sha", run.head_sha);
+            core.setOutput("source_url", run.html_url);
+
+      - name: Download existing signed Android App Bundle
+        uses: actions/download-artifact@v6
+        with:
+          github-token: ${{ github.token }}
+          name: openings-android-${{ inputs.version_code }}
+          path: dist
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.source_run_id }}
+
+      - name: Validate downloaded Android App Bundle
+        id: aab
+        run: |
+          mapfile -t aabs < <(find dist -type f -name app-release.aab)
+          if [[ "${#aabs[@]}" -ne 1 ]]; then
+            echo "Expected exactly one app-release.aab in the source artifact" >&2
+            exit 1
+          fi
+          printf 'path=%s\n' "${aabs[0]}" >> "$GITHUB_OUTPUT"
+
+      - name: Create draft GitHub Release
+        id: draft
+        env:
+          AAB_PATH: ${{ steps.aab.outputs.path }}
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ steps.source.outputs.source_sha }}
+          VERSION_NAME: ${{ inputs.version_name }}
+        run: |
+          gh release create "$TAG_NAME" \
+            "$AAB_PATH#openings-$VERSION_NAME-android.aab" \
+            --draft \
+            --generate-notes \
+            --target "$SOURCE_SHA" \
+            --title "Openings $VERSION_NAME"
+          draft_url=$(gh release view "$TAG_NAME" --json url --jq .url)
+          printf 'url=%s\n' "$draft_url" >> "$GITHUB_OUTPUT"
+          printf 'Draft release: %s\n' "$draft_url" >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          package-manager-cache: false
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+
+      - name: Install Fastlane
+        run: bundle install --jobs 4 --retry 3
+
+      - name: Restore Google Play credentials
+        env:
+          GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64 }}
+        run: node scripts/restore-google-play-service-account.mjs "$RUNNER_TEMP/google-play-service-account.json"
+
+      - name: Promote internal version to Google Play production
+        env:
+          GOOGLE_PLAY_JSON_KEY_FILE: ${{ runner.temp }}/google-play-service-account.json
+        run: bundle exec fastlane android production "version_code:${{ inputs.version_code }}"
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release edit "$TAG_NAME" --draft=false --latest
+          release_url=$(gh release view "$TAG_NAME" --json url --jq .url)
+          printf 'Published release: %s\n' "$release_url" >> "$GITHUB_STEP_SUMMARY"
+          printf 'Promoted Android version code: %s\n' "${{ inputs.version_code }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Remove Google Play credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/google-play-service-account.json"
+
+      - name: Report retained draft after failure
+        if: ${{ failure() && steps.draft.outputs.url != '' }}
+        env:
+          DRAFT_URL: ${{ steps.draft.outputs.url }}
+        run: |
+          printf 'Promotion failed. Draft retained for inspection: %s\n' "$DRAFT_URL" >> "$GITHUB_STEP_SUMMARY"
