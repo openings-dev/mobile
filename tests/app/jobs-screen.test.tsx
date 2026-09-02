@@ -61,4 +61,18 @@ describe("JobsScreen", () => {
     await fireEvent.press(screen.getByText("Backend Java Engineer"));
     expect(mockPush).toHaveBeenCalledWith("/jobs/backend");
   });
+
+  it("uses the compact web-parity discovery workspace", async () => {
+    const screen = await render(
+      <LocaleProvider><ThemeProvider><JobsScreen /></ThemeProvider></LocaleProvider>,
+    );
+
+    expect(screen.getByText("Search jobs")).toBeTruthy();
+    expect(screen.getByText("Country")).toBeTruthy();
+    expect(screen.getByText("Stack / Technology")).toBeTruthy();
+    expect(screen.getByText("More")).toBeTruthy();
+    expect(screen.getByText("Share search")).toBeTruthy();
+    expect(screen.getByText("Most recent")).toBeTruthy();
+    expect(screen.queryByText("Remote")).toBeNull();
+  });
 });
