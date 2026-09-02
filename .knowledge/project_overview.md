@@ -21,7 +21,8 @@ The repository currently provides a tested native discovery application:
 - bottom-tab routes for Jobs, Communities, and Authors plus stack detail routes;
 - persisted system, light, and dark appearance selection;
 - persisted six-language selection with device detection and English fallback;
-- a canonical branded tab header with language and appearance sheets;
+- a canonical branded tab header with a right-side menu drawer, GitHub support
+  card, and compact language and appearance popovers;
 - complete typed product messages for six locales;
 - a localized application error boundary with an accessible retry;
 - validated, bounded-batch loading of the public schema-6 snapshot;
@@ -29,10 +30,12 @@ The repository currently provides a tested native discovery application:
   removable active filters, sharing, sorting, and a result toolbar;
 - a native More sheet containing discovery shortcuts, complete structured filters,
   result count, clear behavior, and accessible selection state;
+- a device-local New matches callout with persistent dismissal and filter action;
 - local result paging, refresh, empty, incremental, and error states;
 - community activity and geography discovery plus native community profiles;
 - author derivation and discovery plus native author profiles;
-- native job details, similar roles, source links, HTTPS validation, and sharing;
+- native job details with Data confidence, similar roles, source links, HTTPS
+  validation, sharing, reporting, and a measured fixed action dock;
 - versioned device-local saved and viewed job state through AsyncStorage;
 - local integration with `@openingshq/core` and
   `@openingshq/design-tokens`;
@@ -47,7 +50,8 @@ The repository currently provides a tested native discovery application:
 - NativeWind 4 with Tailwind CSS 3
 - TanStack Query for the public catalog lifecycle
 - AsyncStorage for versioned device-local candidate state
-- Figtree through the Expo font plugin
+- Figtree and Geist Mono through the Expo font plugin
+- Lucide React Native icons aligned with the responsive web interface
 - Jest and React Native Testing Library
 - public sibling packages `@openingshq/core` and
   `@openingshq/design-tokens`

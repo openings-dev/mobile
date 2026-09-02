@@ -4,10 +4,10 @@
 
 ## Typography
 
-Figtree owns display, interface, and body roles in the current mobile foundation.
-Use the shared display, body, and mono family mappings and prefer regular, medium,
-and semibold weights. Build hierarchy with scale, spacing, and tonal contrast rather
-than maximum weight.
+Figtree owns display, interface, and body roles. Geist Mono owns tabular result
+counts, repository identifiers, and other technical metadata. Both families are
+bundled through the Expo font plugin in regular, medium, and semibold weights.
+Build hierarchy with scale, spacing, and tonal contrast rather than maximum weight.
 
 Text must respect system font scaling and remain usable with long translations.
 Technical identifiers and compact version or source metadata may use the shared mono
@@ -34,6 +34,11 @@ Use the shared 4-point rhythm and semantic spacing values. Maintain at least a
 cards, large panels, and pills use their shared radius roles rather than arbitrary
 per-screen values.
 
+NativeWind resolves `rem` with a 16-point baseline so conventional Tailwind spacing
+matches the responsive web surface (`px-4` is 16 points and `h-11` is 44 points).
+Raw spacing primitives from the public token package are namespaced as `space-*`
+utilities and must not replace Tailwind's numeric scale.
+
 Default boundaries are 1-point low-contrast hairlines. Diffuse elevation belongs to
 dialogs, sheets, menus, and other truly floating native surfaces. Content hierarchy
 should not depend on a stack of nested cards.
@@ -57,8 +62,11 @@ native accessibility state.
 ## Content patterns
 
 The global tab header uses the canonical monochrome Openings wordmark geometry and
-keeps language and appearance controls beside the brand. Wordmark color follows the
-semantic foreground role; do not introduce a separate mobile logo treatment.
+a 44-point menu trigger. The right-side drawer contains only Jobs, Communities,
+Authors, the public GitHub support card, and compact appearance and language
+controls. Preferences open as bounded popovers above the drawer footer. Wordmark
+color follows the semantic foreground role; do not introduce a separate mobile
+logo treatment.
 
 The Jobs discovery workspace keeps search, country, stack or technology, and the
 More action visible. Discovery shortcuts and the complete filter taxonomy live in
@@ -71,10 +79,22 @@ location and work model, salary when supplied, technology and seniority, author 
 repository context, and posting recency. Missing optional data remains absent; never
 invent values to balance a card.
 
-The original listing action must remain clear on a job detail. Community and author
-screens are identity-led destinations, not generic search results with a label
-changed. Mobile may use lists, sheets, stacks, or tabs differently from the web while
-preserving these information priorities.
+When device-local history contains relevant listings from after the previous visit,
+Jobs shows the mint `New matches for you` callout between discovery controls and the
+result toolbar. Dismissal persists locally and the action applies the existing
+`newOnly` filter contract.
+
+Job details use a wordmark/X header, identity-first hierarchy, 32-point title,
+`Data confidence` card, and a fixed safe-area action dock. The dock exposes opening
+the original listing, sharing, saving, and reporting as four independent 44-point
+actions. `Data confidence` shows verification availability, publication time,
+source count, ordered provenance fields, and source links without inventing missing
+facts. Community and author screens are identity-led destinations, not generic
+search results with a label changed.
+
+Lucide React Native is the application icon language. Use the icon that matches the
+responsive web surface, an explicit semantic color, and a consistent 1.8 stroke.
+Do not introduce Feather or platform-specific substitute glyphs in product UI.
 
 ## Accessibility and motion
 

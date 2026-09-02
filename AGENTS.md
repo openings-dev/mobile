@@ -15,7 +15,8 @@ Openings web application while using native mobile interaction patterns.
 - Expo Router with typed routes under `src/app/routes`
 - strict TypeScript
 - NativeWind 4 and Tailwind CSS 3
-- Figtree typography
+- Figtree interface typography and Geist Mono technical typography
+- Lucide React Native icons aligned with the web icon language
 - public `@openingshq/core` and `@openingshq/design-tokens` packages
 - typed `en`, `pt-BR`, `es`, `it`, `fr`, and `de` message catalogs
 - npm for dependency and script management
@@ -123,12 +124,17 @@ older Expo or React Native release.
 ## Interface rules
 
 - Use NativeWind utilities backed by `@openingshq/design-tokens` semantic roles.
+- Keep Metro's NativeWind `inlineRem` at 16 so standard numeric spacing utilities
+  retain web-equivalent measurements. Shared raw spacing tokens use the namespaced
+  `space-*` scale and must not override Tailwind's numeric scale.
 - Do not introduce another token system, CSS-in-JS, component stylesheets, or raw
   palette values in application components.
 - Application source must not use `StyleSheet` for fixed styling. Inline styles
   are reserved for runtime variables, measured geometry, animation values, or
   third-party native components that cannot consume `className`.
-- Use Figtree for display, interface, and body text. Preserve the Openings editorial
+- Use Figtree for display, interface, and body text, and Geist Mono for technical
+  identifiers and tabular result counts. Use Lucide React Native for product icons
+  and do not add Feather icons. Preserve the Openings editorial
   system: Warm Paper and Community Ink foundations, controlled Brand Mint actions,
   1-pixel low-contrast boundaries, and rare diffuse elevation.
 - Respect safe areas, Dynamic Type, screen readers, reduced motion, color contrast,
