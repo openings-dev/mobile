@@ -1,4 +1,4 @@
-import Feather from "@expo/vector-icons/Feather";
+import { ArrowDownUp, ChevronDown, Clock3, Share2 } from "lucide-react-native";
 import { useState } from "react";
 import { Pressable, Share, Text, View } from "react-native";
 
@@ -77,7 +77,7 @@ export function JobsResultToolbar({
     .replace("{count}", formatCount(resultCount, locale));
 
   return (
-    <View className="gap-3 border-y border-line px-4 py-4">
+    <View className="gap-3 border-y border-line px-4 py-3">
       <View className="flex-row items-center justify-between gap-3">
         <View className="gap-1">
           <Text className="font-mono text-label font-semibold text-foreground">
@@ -85,9 +85,10 @@ export function JobsResultToolbar({
           </Text>
           {recency ? (
             <View className="flex-row items-center gap-1.5">
-              <Feather
-                name="clock"
+              <Clock3
+                accessibilityElementsHidden
                 size={14}
+                strokeWidth={1.8}
                 color={theme.colors["muted-foreground"]}
               />
               <Text className="font-body text-metadata text-muted-foreground">
@@ -105,14 +106,15 @@ export function JobsResultToolbar({
       <View className="flex-row gap-3">
         <Pressable
           accessibilityRole="button"
-          className="min-h-12 flex-1 flex-row items-center justify-center gap-2 rounded-control border border-control bg-paper px-3"
+          className="min-h-11 flex-1 flex-row items-center justify-center gap-2 rounded-control border border-control bg-paper px-3"
           onPress={() => {
             void Share.share({ message: buildWebDiscoveryUrl(filters) });
           }}
         >
-          <Feather
-            name="share-2"
+          <Share2
+            accessibilityElementsHidden
             size={17}
+            strokeWidth={1.8}
             color={theme.colors.foreground}
           />
           <Text className="font-body text-label font-semibold text-foreground">
@@ -122,15 +124,22 @@ export function JobsResultToolbar({
         <Pressable
           accessibilityLabel={messages.jobs.workspace.chooseSort}
           accessibilityRole="button"
-          className="min-h-12 min-w-36 flex-row items-center justify-between gap-2 rounded-control border border-control bg-paper px-3"
+          className="min-h-11 min-w-36 flex-row items-center justify-between gap-2 rounded-control border border-control bg-paper px-3"
           onPress={() => setSortOpen(true)}
         >
+          <ArrowDownUp
+            accessibilityElementsHidden
+            size={15}
+            strokeWidth={1.8}
+            color={theme.colors["muted-foreground"]}
+          />
           <Text className="font-body text-label font-medium text-foreground">
             {selectedSort?.label}
           </Text>
-          <Feather
-            name="chevron-down"
+          <ChevronDown
+            accessibilityElementsHidden
             size={17}
+            strokeWidth={1.8}
             color={theme.colors["muted-foreground"]}
           />
         </Pressable>

@@ -48,10 +48,14 @@ describe("OpportunityCard", () => {
     expect(screen.getByText("New")).toBeTruthy();
     expect(screen.getByText("Older listing")).toBeTruthy();
     expect(screen.getByText("3 sources")).toBeTruthy();
-    expect(screen.getByText("Senior React Native Engineer")).toBeTruthy();
+    expect(screen.getByText("Senior React Native Engineer").props.numberOfLines).toBe(3);
     expect(screen.getByText(
       "Build native experiences for a public community.",
-    )).toBeTruthy();
+    ).props.numberOfLines).toBe(2);
+    expect(screen.getByLabelText("Save job").props.accessibilityState).toEqual({
+      selected: false,
+    });
+    expect(JSON.stringify(screen.toJSON())).toContain("RNSVGSvgView");
     expect(screen.getByText("$60 – $110 / hour")).toBeTruthy();
     expect(screen.getByText("Remote")).toBeTruthy();
     expect(screen.getByText("São Paulo · Remote")).toBeTruthy();

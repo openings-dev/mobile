@@ -1,5 +1,6 @@
 import {
   createEmptyCandidateState,
+  dismissNewMatches,
   parseCandidateState,
   startCandidateSession,
   toggleSavedJob,
@@ -38,5 +39,31 @@ describe("candidate state", () => {
 
     expect(session.previousVisitAt).toBe("2026-08-31T12:00:00Z");
     expect(session.state.lastVisitAt).toBe("2026-09-01T12:00:00Z");
+  });
+
+  it("migrates version 2 state without losing candidate history", () => {
+    const migrated = parseCandidateState(JSON.stringify({
+      lastVisitAt: "2026-08-31T12:00:00Z",
+      saved: { gh_123: "2026-08-31T13:00:00Z" },
+      version: 2,
+      viewed: { gh_456: "2026-08-31T14:00:00Z" },
+    }));
+
+    expect(migrated).toEqual({
+      lastVisitAt: "2026-08-31T12:00:00Z",
+      newMatchesDismissedAt: null,
+      saved: { gh_123: "2026-08-31T13:00:00Z" },
+      version: 3,
+      viewed: { gh_456: "2026-08-31T14:00:00Z" },
+    });
+  });
+
+  it("records when the new-matches suggestion was dismissed", () => {
+    const dismissed = dismissNewMatches(
+      createEmptyCandidateState(),
+      "2026-09-02T12:00:00Z",
+    );
+
+    expect(dismissed.newMatchesDismissedAt).toBe("2026-09-02T12:00:00Z");
   });
 });

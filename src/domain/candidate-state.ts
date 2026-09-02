@@ -1,12 +1,19 @@
 export interface CandidateState {
   lastVisitAt: string | null;
+  newMatchesDismissedAt: string | null;
   saved: Record<string, string>;
-  version: 2;
+  version: 3;
   viewed: Record<string, string>;
 }
 
 export function createEmptyCandidateState(): CandidateState {
-  return { lastVisitAt: null, saved: {}, version: 2, viewed: {} };
+  return {
+    lastVisitAt: null,
+    newMatchesDismissedAt: null,
+    saved: {},
+    version: 3,
+    viewed: {},
+  };
 }
 
 function isTimestampMap(value: unknown): value is Record<string, string> {
@@ -28,20 +35,41 @@ export function parseCandidateState(raw: string | null): CandidateState {
       typeof value !== "object" ||
       value === null ||
       !("version" in value) ||
-      value.version !== 2 ||
+      (value.version !== 2 && value.version !== 3) ||
       !("saved" in value) ||
       !isTimestampMap(value.saved) ||
       !("viewed" in value) ||
       !isTimestampMap(value.viewed) ||
       !("lastVisitAt" in value) ||
-      !(value.lastVisitAt === null || typeof value.lastVisitAt === "string")
+      !(value.lastVisitAt === null || typeof value.lastVisitAt === "string") ||
+      (value.version === 3 &&
+        (!("newMatchesDismissedAt" in value) ||
+          !(value.newMatchesDismissedAt === null ||
+            typeof value.newMatchesDismissedAt === "string")))
     ) {
       return createEmptyCandidateState();
     }
-    return value as CandidateState;
+
+    return {
+      lastVisitAt: value.lastVisitAt,
+      newMatchesDismissedAt: value.version === 3 &&
+        "newMatchesDismissedAt" in value
+        ? value.newMatchesDismissedAt as string | null
+        : null,
+      saved: value.saved,
+      version: 3,
+      viewed: value.viewed,
+    };
   } catch {
     return createEmptyCandidateState();
   }
+}
+
+export function dismissNewMatches(
+  state: CandidateState,
+  timestamp: string,
+): CandidateState {
+  return { ...state, newMatchesDismissedAt: timestamp };
 }
 
 export function toggleSavedJob(

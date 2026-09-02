@@ -13,13 +13,23 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
 }));
 
 function Harness(): React.ReactNode {
-  const { hydrated, isSaved, toggleSaved } = useCandidateState();
+  const {
+    dismissNewMatches,
+    hydrated,
+    isSaved,
+    newMatchesDismissedAt,
+    toggleSaved,
+  } = useCandidateState();
   return (
     <>
       <Text>{hydrated ? "hydrated" : "loading"}</Text>
       <Text>{isSaved("gh_123") ? "saved" : "not-saved"}</Text>
+      <Text>{newMatchesDismissedAt ?? "not-dismissed"}</Text>
       <Pressable onPress={() => toggleSaved("gh_123")} accessibilityRole="button">
         <Text>toggle</Text>
+      </Pressable>
+      <Pressable onPress={dismissNewMatches} accessibilityRole="button">
+        <Text>dismiss-new-matches</Text>
       </Pressable>
     </>
   );
@@ -45,13 +55,34 @@ describe("CandidateStateProvider", () => {
     );
 
     await screen.findByText("hydrated");
-    await fireEvent.press(screen.getByRole("button"));
+    await fireEvent.press(screen.getByText("toggle"));
 
     expect(screen.getByText("saved")).toBeTruthy();
     await waitFor(() =>
       expect(AsyncStorage.setItem).toHaveBeenCalledWith(
         "openings:candidate-state",
         expect.stringContaining('"gh_123":"2026-09-01T12:00:00Z"'),
+      ),
+    );
+  });
+
+  it("persists dismissal of the new-matches suggestion locally", async () => {
+    jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
+    jest.mocked(AsyncStorage.setItem).mockResolvedValue();
+    const screen = await render(
+      <CandidateStateProvider>
+        <Harness />
+      </CandidateStateProvider>,
+    );
+
+    await screen.findByText("hydrated");
+    await fireEvent.press(screen.getByText("dismiss-new-matches"));
+
+    expect(screen.getByText("2026-09-01T12:00:00Z")).toBeTruthy();
+    await waitFor(() =>
+      expect(AsyncStorage.setItem).toHaveBeenCalledWith(
+        "openings:candidate-state",
+        expect.stringContaining('"newMatchesDismissedAt":"2026-09-01T12:00:00Z"'),
       ),
     );
   });

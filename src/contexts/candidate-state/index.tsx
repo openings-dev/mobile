@@ -12,6 +12,7 @@ import {
 import {
   type CandidateState,
   createEmptyCandidateState,
+  dismissNewMatches as dismissNewMatchesState,
   parseCandidateState,
   startCandidateSession,
   toggleSavedJob,
@@ -21,9 +22,11 @@ import {
 const STORAGE_KEY = "openings:candidate-state";
 
 interface CandidateStateContextValue {
+  dismissNewMatches: () => void;
   hydrated: boolean;
   isSaved: (id: string) => boolean;
   markViewed: (id: string) => void;
+  newMatchesDismissedAt: string | null;
   previousVisitAt: string | null;
   savedIds: ReadonlySet<string>;
   toggleSaved: (id: string) => void;
@@ -71,19 +74,36 @@ export function CandidateStateProvider({
   const markViewed = useCallback((id: string) => {
     setState((current) => viewJob(current, id, new Date().toISOString()));
   }, []);
+  const dismissNewMatches = useCallback(() => {
+    setState((current) => dismissNewMatchesState(
+      current,
+      new Date().toISOString(),
+    ));
+  }, []);
   const savedIds = useMemo(() => new Set(Object.keys(state.saved)), [state.saved]);
   const viewedIds = useMemo(() => new Set(Object.keys(state.viewed)), [state.viewed]);
   const value = useMemo<CandidateStateContextValue>(
     () => ({
+      dismissNewMatches,
       hydrated,
       isSaved: (id) => savedIds.has(id),
       markViewed,
+      newMatchesDismissedAt: state.newMatchesDismissedAt,
       previousVisitAt,
       savedIds,
       toggleSaved,
       viewedIds,
     }),
-    [hydrated, markViewed, previousVisitAt, savedIds, toggleSaved, viewedIds],
+    [
+      dismissNewMatches,
+      hydrated,
+      markViewed,
+      previousVisitAt,
+      savedIds,
+      state.newMatchesDismissedAt,
+      toggleSaved,
+      viewedIds,
+    ],
   );
 
   return (

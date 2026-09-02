@@ -16,10 +16,12 @@ describe("JobsScreen", () => {
   beforeEach(() => {
     mockPush.mockClear();
     jest.mocked(useCandidateState).mockReturnValue({
+      dismissNewMatches: jest.fn(),
       hydrated: true,
       isSaved: () => false,
       markViewed: jest.fn(),
-      previousVisitAt: null,
+      newMatchesDismissedAt: null,
+      previousVisitAt: "2026-08-31T12:00:00Z",
       savedIds: new Set(),
       toggleSaved: jest.fn(),
       viewedIds: new Set(),
@@ -68,14 +70,37 @@ describe("JobsScreen", () => {
     );
 
     expect(screen.getByText("Search jobs")).toBeTruthy();
+    expect(screen.queryByText("Open tech roles collected from public GitHub communities.")).toBeNull();
     expect(screen.getByText("Country")).toBeTruthy();
     expect(screen.getByText("Stack / Technology")).toBeTruthy();
     expect(screen.getByText("More")).toBeTruthy();
     expect(screen.getByText("Share search")).toBeTruthy();
     expect(screen.getByText("Most recent")).toBeTruthy();
     expect(screen.getByText("Showing 1–2 of 2 jobs")).toBeTruthy();
+    expect(screen.getByText("New matches for you")).toBeTruthy();
+    expect(screen.getByText("Show new matches")).toBeTruthy();
     expect(screen.getAllByText("Remote")).toHaveLength(1);
     expect(screen.queryByText("Discover")).toBeNull();
+  });
+
+  it("applies the new-matches suggestion as a visible filter", async () => {
+    jest.mocked(useCandidateState).mockReturnValue({
+      dismissNewMatches: jest.fn(),
+      hydrated: true,
+      isSaved: () => false,
+      markViewed: jest.fn(),
+      newMatchesDismissedAt: null,
+      previousVisitAt: "2026-08-31T12:00:00Z",
+      savedIds: new Set(),
+      toggleSaved: jest.fn(),
+      viewedIds: new Set(),
+    });
+    const screen = await render(
+      <LocaleProvider><ThemeProvider><JobsScreen /></ThemeProvider></LocaleProvider>,
+    );
+
+    await fireEvent.press(screen.getByText("Show new matches"));
+    expect(screen.getByLabelText("Remove New since last visit")).toBeTruthy();
   });
 
   it("opens community and author discovery from a job card", async () => {

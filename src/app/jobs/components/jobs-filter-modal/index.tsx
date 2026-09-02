@@ -1,4 +1,4 @@
-import Feather from "@expo/vector-icons/Feather";
+import { Bookmark, Clock3, Sparkles, X } from "lucide-react-native";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -149,7 +149,7 @@ export function JobsFilterModal({
       visible={open}
     >
       <SafeAreaView className="flex-1 bg-canvas" edges={["top", "bottom"]}>
-        <View className="min-h-20 flex-row items-center justify-between border-b border-line bg-paper px-5 py-3">
+        <View className="min-h-16 flex-row items-center justify-between border-b border-line bg-paper px-4 py-3">
           <View className="min-w-0 flex-1 gap-1">
             <Text className="font-mono text-metadata font-semibold uppercase tracking-widest text-primary-deep">
               {messages.jobs.title}
@@ -176,7 +176,7 @@ export function JobsFilterModal({
             className="h-11 w-11 items-center justify-center rounded-control border border-line"
             onPress={onClose}
           >
-            <Feather name="x" size={22} color={theme.colors.foreground} />
+            <X accessibilityElementsHidden size={20} strokeWidth={1.8} color={theme.colors.foreground} />
           </Pressable>
         </View>
 
@@ -187,9 +187,10 @@ export function JobsFilterModal({
         >
           <View className="gap-3 rounded-card border border-primary-deep bg-primary-soft p-4">
             <View className="flex-row items-center gap-2">
-              <Feather
-                name="compass"
+              <Sparkles
+                accessibilityElementsHidden
                 size={16}
+                strokeWidth={1.8}
                 color={theme.colors["primary-deep"]}
               />
               <Text className="font-display text-card-title font-semibold text-foreground">
@@ -199,6 +200,21 @@ export function JobsFilterModal({
             <View className="flex-row flex-wrap gap-2">
               {shortcuts.map(([shortcut, label]) => (
                 <FilterChip
+                  icon={shortcut.startsWith("freshness-") ? (
+                    <Clock3
+                      accessibilityElementsHidden
+                      color={shortcutSelected(filters, shortcut) ? theme.colors["primary-foreground"] : theme.colors["muted-foreground"]}
+                      size={15}
+                      strokeWidth={1.8}
+                    />
+                  ) : shortcut === "saved" ? (
+                    <Bookmark
+                      accessibilityElementsHidden
+                      color={shortcutSelected(filters, shortcut) ? theme.colors["primary-foreground"] : theme.colors["muted-foreground"]}
+                      size={15}
+                      strokeWidth={1.8}
+                    />
+                  ) : undefined}
                   key={shortcut}
                   label={label}
                   onPress={() => onChange(
@@ -306,7 +322,7 @@ export function JobsFilterModal({
         <View className="flex-row gap-3 border-t border-line bg-paper p-5">
           <Pressable
             accessibilityRole="button"
-            className="min-h-12 flex-1 items-center justify-center rounded-control border border-control"
+            className="min-h-11 flex-1 items-center justify-center rounded-control border border-control"
             onPress={() => onChange({
               ...createDefaultJobFilters(),
               query: filters.query,
@@ -319,7 +335,7 @@ export function JobsFilterModal({
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            className="min-h-12 flex-[1.5] items-center justify-center rounded-control bg-primary px-3"
+            className="min-h-11 flex-[1.5] items-center justify-center rounded-pill bg-primary px-3"
             onPress={onClose}
           >
             <Text className="font-body text-label font-semibold text-primary-foreground">

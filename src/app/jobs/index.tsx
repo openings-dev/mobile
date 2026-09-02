@@ -4,6 +4,7 @@ import { FlatList, Pressable, RefreshControl, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { CatalogState } from "@/components/catalog-state";
+import { NewMatchesCard } from "@/components/new-matches-card";
 import { OpportunityCard } from "@/components/opportunity-card";
 import { useCandidateState } from "@/contexts/candidate-state";
 import { useLocale } from "@/contexts/locale";
@@ -42,6 +43,22 @@ export function JobsScreen(): React.ReactNode {
     [candidate, catalog.opportunities, filters],
   );
   const visible = filtered.slice(0, visibleCount);
+  const newMatchCount = useMemo(
+    () => filterAndSortJobs(
+      catalog.opportunities,
+      { ...filters, newOnly: true },
+      candidate,
+    ).length,
+    [candidate, catalog.opportunities, filters],
+  );
+  const dismissalPredatesVisit = Boolean(
+    !candidate.newMatchesDismissedAt ||
+      (candidate.previousVisitAt &&
+        Date.parse(candidate.newMatchesDismissedAt) <
+          Date.parse(candidate.previousVisitAt)),
+  );
+  const showNewMatches =
+    !filters.newOnly && newMatchCount > 0 && dismissalPredatesVisit;
   const updateFilters = (next: JobFilters) => { setVisibleCount(PAGE_SIZE); setFilters(next); };
   const activeFilters = useMemo(() => getActiveJobFilters(filters), [filters]);
   const errorMessage = isOfflineCatalogError(catalog.error)
@@ -61,6 +78,13 @@ export function JobsScreen(): React.ReactNode {
         onOpenFilters={() => setFilterOpen(true)}
         onRemoveFilter={(filter) => updateFilters(removeActiveJobFilter(filters, filter))}
       />
+      {showNewMatches ? (
+        <NewMatchesCard
+          copy={messages.jobs.newMatches}
+          onDismiss={candidate.dismissNewMatches}
+          onShow={() => updateFilters({ ...filters, newOnly: true })}
+        />
+      ) : null}
       <JobsResultToolbar
         filters={filters}
         generatedAt={catalog.generatedAt}

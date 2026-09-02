@@ -1,4 +1,12 @@
-import Feather from "@expo/vector-icons/Feather";
+import {
+  ArrowUpRight,
+  Bookmark,
+  BriefcaseBusiness,
+  CalendarDays,
+  GitBranch,
+  MapPin,
+  WalletCards,
+} from "lucide-react-native";
 import { Pressable, Text, View } from "react-native";
 
 import { EntityAvatar } from "@/components/entity-avatar";
@@ -28,11 +36,11 @@ interface OpportunityCardProps {
 function tagClasses(category: OpportunityCardTagCategory): string {
   switch (category) {
     case "seniority":
-      return "rounded-pill bg-primary-soft px-3 py-1";
+      return "min-h-6 justify-center rounded-pill bg-primary-soft px-3";
     case "technology":
-      return "rounded-pill bg-info px-3 py-1";
+      return "min-h-6 justify-center rounded-pill bg-info px-3";
     case "neutral":
-      return "rounded-pill bg-surface-muted px-3 py-1";
+      return "min-h-6 justify-center rounded-pill bg-surface-muted px-3";
   }
 }
 
@@ -69,23 +77,24 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
     <Pressable
       accessibilityLabel={`${messages.jobs.viewDetails}: ${item.title}`}
       accessibilityRole="button"
-      className="relative mx-4 mb-3 gap-3 overflow-hidden rounded-card border border-line bg-surface p-4 active:bg-surface-elevated"
+      className="relative mx-4 mb-3 gap-3 overflow-hidden rounded-card border border-line bg-paper p-4 active:bg-surface-elevated"
       onPress={props.onPress}
     >
       <Pressable
         accessibilityLabel={props.isSaved ? messages.jobs.unsave : messages.jobs.save}
         accessibilityRole="button"
         accessibilityState={{ selected: props.isSaved }}
-        className="absolute right-1 top-1 z-10 h-11 w-11 items-center justify-center rounded-control"
+        className="absolute right-2 top-2 z-10 h-11 w-11 items-center justify-center rounded-control"
         hitSlop={4}
         onPress={(event) => {
           event.stopPropagation();
           props.onToggleSaved();
         }}
       >
-        <Feather
-          name="bookmark"
+        <Bookmark
+          accessibilityElementsHidden
           size={20}
+          strokeWidth={1.8}
           color={props.isSaved
             ? theme.colors["primary-deep"]
             : theme.colors["muted-foreground"]}
@@ -137,9 +146,10 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
         ) : null}
         {item.companyName ? (
           <View className="min-w-0 flex-row items-center gap-1.5">
-            <Feather
-              name="briefcase"
+            <BriefcaseBusiness
+              accessibilityElementsHidden
               size={14}
+              strokeWidth={1.8}
               color={theme.colors["muted-foreground"]}
             />
             <Text
@@ -154,21 +164,21 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
 
       <View className="flex-row flex-wrap gap-1.5">
         {props.isNew ? (
-          <View className="rounded-pill bg-positive px-3 py-1">
+          <View className="min-h-6 justify-center rounded-pill bg-positive px-3">
             <Text className="font-body text-metadata font-semibold text-positive-foreground">
               {messages.jobs.newBadge}
             </Text>
           </View>
         ) : null}
         {item.freshness?.status === "stale" ? (
-          <View className="rounded-pill bg-surface-muted px-3 py-1">
+          <View className="min-h-6 justify-center rounded-pill bg-surface-muted px-3">
             <Text className="font-body text-metadata font-medium text-muted-foreground">
               {messages.jobs.olderBadge}
             </Text>
           </View>
         ) : null}
         {presentation.sourceCount > 1 ? (
-          <View className="rounded-pill bg-info px-3 py-1">
+          <View className="min-h-6 justify-center rounded-pill bg-info px-3">
             <Text className="font-body text-metadata font-medium text-info-foreground">
               {sourceLabel}
             </Text>
@@ -179,14 +189,14 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
       <View className="gap-2">
         <Text
           className="font-display text-card-title font-semibold tracking-tight text-foreground"
-          numberOfLines={4}
+          numberOfLines={3}
         >
           {item.title}
         </Text>
         {excerpt ? (
           <Text
-            className="font-body text-product-body text-muted-foreground"
-            numberOfLines={3}
+            className="font-body text-product-body leading-5 text-muted-foreground"
+            numberOfLines={2}
           >
             {excerpt}
           </Text>
@@ -196,9 +206,10 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
       <View className="flex-row flex-wrap items-center gap-x-3 gap-y-2">
         {salary ? (
           <View className="flex-row items-center gap-1.5">
-            <Feather
-              name="credit-card"
+            <WalletCards
+              accessibilityElementsHidden
               size={16}
+              strokeWidth={1.8}
               color={theme.colors["positive-foreground"]}
             />
             <Text className="font-body text-label font-semibold text-foreground">
@@ -207,7 +218,7 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
           </View>
         ) : null}
         {presentation.workModel ? (
-          <View className="rounded-pill bg-positive px-3 py-1">
+          <View className="min-h-6 justify-center rounded-pill bg-positive px-3">
             <Text className="font-body text-metadata font-medium text-positive-foreground">
               {formatOpportunityTag(presentation.workModel, locale)}
             </Text>
@@ -215,9 +226,10 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
         ) : null}
         {location ? (
           <View className="min-w-0 flex-row items-center gap-1.5">
-            <Feather
-              name="map-pin"
+            <MapPin
+              accessibilityElementsHidden
               size={16}
+              strokeWidth={1.8}
               color={theme.colors["muted-foreground"]}
             />
             <Text
@@ -243,7 +255,7 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
             <View
               accessible
               accessibilityLabel={moreTagsLabel}
-              className="rounded-pill bg-surface-muted px-3 py-1"
+              className="min-h-6 justify-center rounded-pill bg-surface-muted px-3"
             >
               <Text className="font-body text-metadata font-medium text-muted-foreground">
                 +{presentation.overflowCount.toLocaleString(locale)}
@@ -299,9 +311,10 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
           ) : null}
           {date ? (
             <View className="flex-row items-center gap-1.5">
-              <Feather
-                name="calendar"
+              <CalendarDays
+                accessibilityElementsHidden
                 size={14}
+                strokeWidth={1.8}
                 color={theme.colors["muted-foreground"]}
               />
               <Text className="font-body text-metadata text-muted-foreground">
@@ -311,9 +324,10 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
           ) : null}
           {!props.hideCommunityIdentity ? (
             <View className="min-w-0 flex-row items-center gap-1.5">
-              <Feather
-                name="git-branch"
+              <GitBranch
+                accessibilityElementsHidden
                 size={14}
+                strokeWidth={1.8}
                 color={theme.colors["muted-foreground"]}
               />
               <Text
@@ -329,9 +343,10 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
           <Text className="font-body text-metadata font-semibold text-primary-deep">
             {messages.jobs.viewDetails}
           </Text>
-          <Feather
-            name="arrow-up-right"
+          <ArrowUpRight
+            accessibilityElementsHidden
             size={14}
+            strokeWidth={1.8}
             color={theme.colors["primary-deep"]}
           />
         </View>

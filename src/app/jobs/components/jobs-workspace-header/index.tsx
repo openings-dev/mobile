@@ -1,4 +1,4 @@
-import Feather from "@expo/vector-icons/Feather";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react-native";
 import { useMemo, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -48,7 +48,7 @@ function QuickSelector({
       <Pressable
         accessibilityLabel={label}
         accessibilityRole="button"
-        className="min-h-12 flex-row items-center justify-between gap-2 rounded-control border border-control bg-paper px-3"
+        className="min-h-11 flex-row items-center justify-between gap-2 rounded-control border border-control bg-paper px-3"
         onPress={onPress}
       >
         <Text
@@ -57,9 +57,10 @@ function QuickSelector({
         >
           {value}
         </Text>
-        <Feather
-          name="chevron-down"
+        <ChevronDown
+          accessibilityElementsHidden
           size={17}
+          strokeWidth={1.8}
           color={theme.colors["muted-foreground"]}
         />
       </Pressable>
@@ -146,25 +147,14 @@ export function JobsWorkspaceHeader({
         );
 
   return (
-    <View className="gap-4 px-4 pb-5 pt-4">
-      <View className="gap-1">
-        <Text
-          accessibilityRole="header"
-          className="font-display text-product-title font-semibold tracking-tight text-foreground"
-        >
-          {messages.jobs.title}
-        </Text>
-        <Text className="font-body text-label leading-5 text-muted-foreground">
-          {messages.jobs.description}
-        </Text>
-      </View>
+    <View className="gap-3 px-4 pb-4 pt-3">
       <SearchField
         label={messages.jobs.workspace.searchLabel}
         onChangeText={(query) => onChange({ ...filters, query })}
         placeholder={messages.jobs.searchPlaceholder}
         value={filters.query}
       />
-      <View className="flex-row gap-3">
+      <View className="flex-row gap-2">
         <QuickSelector
           label={messages.jobs.workspace.country}
           onPress={() => setCountryOpen(true)}
@@ -181,12 +171,13 @@ export function JobsWorkspaceHeader({
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: filtersOpen }}
-        className="min-h-12 flex-row items-center justify-center gap-2 rounded-control border border-control bg-paper px-4"
+        className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-control bg-paper px-4"
         onPress={onOpenFilters}
       >
-        <Feather
-          name="sliders"
+        <SlidersHorizontal
+          accessibilityElementsHidden
           size={17}
+          strokeWidth={1.8}
           color={theme.colors.foreground}
         />
         <Text className="font-body text-label font-semibold text-foreground">
@@ -220,9 +211,10 @@ export function JobsWorkspaceHeader({
                   <Text className="font-body text-label font-medium text-primary-deep">
                     {label}
                   </Text>
-                  <Feather
-                    name="x"
+                  <X
+                    accessibilityElementsHidden
                     size={15}
+                    strokeWidth={1.8}
                     color={theme.colors["primary-deep"]}
                   />
                 </Pressable>
