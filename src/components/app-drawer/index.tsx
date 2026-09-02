@@ -70,119 +70,116 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
   };
 
   return (
-    <>
-      <Modal animationType="fade" onRequestClose={close} transparent visible={visible}>
-        <Pressable className="flex-1 flex-row justify-end bg-overlay" onPress={close}>
-          <Pressable
-            accessibilityLabel={messages.header.menu}
-            className="h-full w-[92%] max-w-[368px] border-l border-line bg-paper shadow-floating"
-            onPress={(event) => event.stopPropagation()}
+    <Modal animationType="fade" onRequestClose={close} transparent visible={visible}>
+      <Pressable className="flex-1 flex-row justify-end bg-overlay" onPress={close}>
+        <Pressable
+          accessibilityLabel={messages.header.menu}
+          className="h-full w-[92%] max-w-[368px] border-l border-line bg-paper shadow-floating"
+          onPress={(event) => event.stopPropagation()}
+        >
+          <View
+            className="flex-1"
+            style={{ paddingRight: insets.right, paddingTop: insets.top }}
           >
-            <View
+            <View className="min-h-[72px] flex-row items-center justify-between border-b border-line px-4">
+              <BrandWordmark height={32} width={176} />
+              <Pressable
+                accessibilityLabel={messages.header.closeMenu}
+                accessibilityRole="button"
+                className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper"
+                onPress={close}
+              >
+                <X color={theme.colors.foreground} size={20} strokeWidth={1.8} />
+              </Pressable>
+            </View>
+
+            <ScrollView
               className="flex-1"
-              style={{ paddingRight: insets.right, paddingTop: insets.top }}
+              contentContainerClassName="grow"
+              testID="app-drawer-scroll"
             >
-              <View className="min-h-[72px] flex-row items-center justify-between border-b border-line px-4">
-                <BrandWordmark height={32} width={176} />
-                <Pressable
-                  accessibilityLabel={messages.header.closeMenu}
-                  accessibilityRole="button"
-                  className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper"
-                  onPress={close}
-                >
-                  <X color={theme.colors.foreground} size={20} strokeWidth={1.8} />
-                </Pressable>
+              <View className="gap-1 p-4">
+                {navigationItems.map((item) => {
+                  const Icon = item.icon;
+
+                  return (
+                    <Pressable
+                      accessibilityRole="button"
+                      className="min-h-11 flex-row items-center gap-3 rounded-control px-3"
+                      key={item.href}
+                      onPress={() => {
+                        router.replace(item.href);
+                        close();
+                      }}
+                    >
+                      <Icon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                      <Text className="font-body text-product-body font-medium text-foreground">
+                        {item.label}
+                      </Text>
+                    </Pressable>
+                  );
+                })}
               </View>
 
-              <ScrollView
-                className="flex-1"
-                contentContainerClassName="grow"
-                testID="app-drawer-scroll"
+              <View
+                className="mt-auto gap-3 border-t border-line bg-surface px-4 pt-4"
+                style={{ paddingBottom: insets.bottom + DRAWER_FOOTER_PADDING }}
+                testID="app-drawer-footer"
               >
-                <View className="gap-1 p-4">
-                  {navigationItems.map((item) => {
-                    const Icon = item.icon;
-
-                    return (
-                      <Pressable
-                        accessibilityRole="button"
-                        className="min-h-11 flex-row items-center gap-3 rounded-control px-3"
-                        key={item.href}
-                        onPress={() => {
-                          router.replace(item.href);
-                          close();
-                        }}
-                      >
-                        <Icon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
-                        <Text className="font-body text-product-body font-medium text-foreground">
-                          {item.label}
-                        </Text>
-                      </Pressable>
-                    );
-                  })}
+                <SupportCard />
+                <View className="flex-row gap-2">
+                  <Pressable
+                    accessibilityLabel={messages.header.appearanceLabel}
+                    accessibilityRole="button"
+                    className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper"
+                    onPress={() => setAppearanceOpen(true)}
+                  >
+                    {name === "dark" ? (
+                      <Moon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                    ) : (
+                      <Sun color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                    )}
+                  </Pressable>
+                  <Pressable
+                    accessibilityLabel={messages.localeLabel}
+                    accessibilityRole="button"
+                    className="h-11 min-w-0 flex-1 flex-row items-center gap-2 rounded-control border border-primary/40 bg-primary-soft px-3"
+                    onPress={() => setLanguageOpen(true)}
+                  >
+                    <Globe2 color={theme.colors["primary-deep"]} size={17} strokeWidth={1.8} />
+                    <Text className="min-w-0 flex-1 font-body text-metadata font-medium text-foreground">
+                      {LOCALE_NAMES[locale]}
+                    </Text>
+                    <ChevronUp color={theme.colors["muted-foreground"]} size={16} strokeWidth={1.6} />
+                  </Pressable>
                 </View>
-
-                <View
-                  className="mt-auto gap-3 border-t border-line bg-surface px-4 pt-4"
-                  style={{ paddingBottom: insets.bottom + DRAWER_FOOTER_PADDING }}
-                  testID="app-drawer-footer"
-                >
-                  <SupportCard />
-                  <View className="flex-row gap-2">
-                    <Pressable
-                      accessibilityLabel={messages.header.appearanceLabel}
-                      accessibilityRole="button"
-                      className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper"
-                      onPress={() => setAppearanceOpen(true)}
-                    >
-                      {name === "dark" ? (
-                        <Moon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
-                      ) : (
-                        <Sun color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
-                      )}
-                    </Pressable>
-                    <Pressable
-                      accessibilityLabel={messages.localeLabel}
-                      accessibilityRole="button"
-                      className="h-11 min-w-0 flex-1 flex-row items-center gap-2 rounded-control border border-primary/40 bg-primary-soft px-3"
-                      onPress={() => setLanguageOpen(true)}
-                    >
-                      <Globe2 color={theme.colors["primary-deep"]} size={17} strokeWidth={1.8} />
-                      <Text className="min-w-0 flex-1 font-body text-metadata font-medium text-foreground">
-                        {LOCALE_NAMES[locale]}
-                      </Text>
-                      <ChevronUp color={theme.colors["muted-foreground"]} size={16} strokeWidth={1.6} />
-                    </Pressable>
-                  </View>
-                </View>
-              </ScrollView>
-            </View>
-          </Pressable>
+              </View>
+            </ScrollView>
+          </View>
+          <PreferencePopover
+            onClose={() => setLanguageOpen(false)}
+            onSelect={(nextLocale) => {
+              setLocale(nextLocale);
+              setLanguageOpen(false);
+            }}
+            options={LOCALE_OPTIONS}
+            selectedValue={locale}
+            title={messages.header.languageTitle}
+            visible={languageOpen}
+          />
+          <PreferencePopover
+            onClose={() => setAppearanceOpen(false)}
+            onSelect={(nextPreference) => {
+              setPreference(nextPreference);
+              setAppearanceOpen(false);
+            }}
+            options={themeOptions}
+            selectedValue={preference}
+            title={messages.header.appearanceTitle}
+            visible={appearanceOpen}
+          />
         </Pressable>
-      </Modal>
-
-      <PreferencePopover
-        onClose={() => setLanguageOpen(false)}
-        onSelect={(nextLocale) => {
-          setLocale(nextLocale);
-          setLanguageOpen(false);
-        }}
-        options={LOCALE_OPTIONS}
-        selectedValue={locale}
-        title={messages.header.languageTitle}
-        visible={languageOpen}
-      />
-      <PreferencePopover
-        onClose={() => setAppearanceOpen(false)}
-        onSelect={(nextPreference) => {
-          setPreference(nextPreference);
-          setAppearanceOpen(false);
-        }}
-        options={themeOptions}
-        selectedValue={preference}
-        title={messages.header.appearanceTitle}
-        visible={appearanceOpen}
-      />
-    </>
+      </Pressable>
+    </Modal>
   );
 }

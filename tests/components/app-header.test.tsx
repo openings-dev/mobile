@@ -102,4 +102,20 @@ describe("AppHeader", () => {
       expect.objectContaining({ paddingBottom: 50 }),
     );
   });
+
+  it("keeps drawer preferences inside one native modal host on iOS", async () => {
+    const screen = await renderAppHeader();
+
+    await fireEvent.press(await screen.findByLabelText("Open navigation menu"));
+    await fireEvent.press(screen.getByLabelText("Language"));
+
+    const visibleNativeModalHosts = screen.container.queryAll(
+      (element) =>
+        element.props.visible === true &&
+        typeof element.props.onRequestClose === "function",
+    );
+
+    expect(screen.getByText("Choose language")).toBeTruthy();
+    expect(visibleNativeModalHosts).toHaveLength(1);
+  });
 });
