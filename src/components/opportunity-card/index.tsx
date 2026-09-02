@@ -19,15 +19,10 @@ interface OpportunityCardProps {
   isNew?: boolean;
   isSaved: boolean;
   item: Opportunity;
-  locale?: string;
-  newLabel?: string;
   onAuthorPress?: () => void;
   onCommunityPress?: () => void;
   onPress: () => void;
   onToggleSaved: () => void;
-  saveLabel?: string;
-  unsaveLabel?: string;
-  viewDetailsLabel?: string;
 }
 
 function tagClasses(category: OpportunityCardTagCategory): string {

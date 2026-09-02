@@ -8,12 +8,14 @@ import { useOpeningsCatalog } from "@/contexts/openings-catalog";
 import { ThemeProvider } from "@/contexts/theme";
 import { makeOpportunity } from "../fixtures/openings";
 
-jest.mock("expo-router", () => ({ useRouter: () => ({ back: jest.fn(), push: jest.fn() }) }));
+const mockPush = jest.fn();
+jest.mock("expo-router", () => ({ useRouter: () => ({ back: jest.fn(), push: mockPush }) }));
 jest.mock("@/contexts/candidate-state", () => ({ useCandidateState: jest.fn() }));
 jest.mock("@/contexts/openings-catalog", () => ({ useOpeningsCatalog: jest.fn() }));
 
 describe("JobDetailsScreen", () => {
   it("marks the job viewed and exposes native source/share actions", async () => {
+    mockPush.mockClear();
     const markViewed = jest.fn();
     jest.mocked(useCandidateState).mockReturnValue({ hydrated: true, isSaved: () => false, markViewed, previousVisitAt: null, savedIds: new Set(), toggleSaved: jest.fn(), viewedIds: new Set() });
     jest.mocked(useOpeningsCatalog).mockReturnValue({ communities: [], error: null, generatedAt: null, isIncremental: false, isLoading: false, isRefreshing: false, loadedPages: 1, opportunities: [makeOpportunity("gh_123")], refresh: jest.fn(), status: null, totalPages: 1, totalResults: 1 });
@@ -22,7 +24,12 @@ describe("JobDetailsScreen", () => {
     const screen = await render(<LocaleProvider><ThemeProvider><JobDetailsScreen id="gh_123" /></ThemeProvider></LocaleProvider>);
 
     expect(screen.getByText("Senior React Native Engineer")).toBeTruthy();
+    expect(screen.getByText("React Native")).toBeTruthy();
     await waitFor(() => expect(markViewed).toHaveBeenCalledWith("gh_123"));
+    await fireEvent.press(screen.getByLabelText("Show jobs from Openings"));
+    expect(mockPush).toHaveBeenLastCalledWith("/communities/openings-dev/jobs");
+    await fireEvent.press(screen.getByLabelText("Show jobs from @alice"));
+    expect(mockPush).toHaveBeenLastCalledWith("/authors/alice");
     await fireEvent.press(screen.getByText("Open original listing"));
     expect(open).toHaveBeenCalledWith("https://github.com/openings-dev/jobs/issues/gh_123");
     await fireEvent.press(screen.getByText("Share job"));
