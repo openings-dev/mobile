@@ -12,7 +12,7 @@ import {
 } from "lucide-react-native";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { PreferencePopover, type PreferenceOption } from "@/components/preference-popover";
@@ -38,6 +38,8 @@ const LOCALE_NAMES: Record<SupportedLocale, string> = {
   "pt-BR": "Português",
 };
 
+const DRAWER_FOOTER_PADDING = 16;
+
 interface AppDrawerProps {
   onClose: () => void;
   visible: boolean;
@@ -45,6 +47,7 @@ interface AppDrawerProps {
 
 export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const { locale, messages, setLocale } = useLocale();
   const { name, preference, setPreference, theme } = useAppTheme();
   const [languageOpen, setLanguageOpen] = useState(false);
@@ -75,7 +78,10 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
             className="h-full w-[92%] max-w-[368px] border-l border-line bg-paper shadow-floating"
             onPress={(event) => event.stopPropagation()}
           >
-            <SafeAreaView className="flex-1" edges={["top", "bottom"]}>
+            <View
+              className="flex-1"
+              style={{ paddingRight: insets.right, paddingTop: insets.top }}
+            >
               <View className="min-h-[72px] flex-row items-center justify-between border-b border-line px-4">
                 <BrandWordmark height={32} width={176} />
                 <Pressable
@@ -88,59 +94,69 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
                 </Pressable>
               </View>
 
-              <ScrollView className="flex-1" contentContainerClassName="gap-1 p-4">
-                {navigationItems.map((item) => {
-                  const Icon = item.icon;
+              <ScrollView
+                className="flex-1"
+                contentContainerClassName="grow"
+                testID="app-drawer-scroll"
+              >
+                <View className="gap-1 p-4">
+                  {navigationItems.map((item) => {
+                    const Icon = item.icon;
 
-                  return (
-                    <Pressable
-                      accessibilityRole="button"
-                      className="min-h-11 flex-row items-center gap-3 rounded-control px-3"
-                      key={item.href}
-                      onPress={() => {
-                        router.replace(item.href);
-                        close();
-                      }}
-                    >
-                      <Icon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
-                      <Text className="font-body text-product-body font-medium text-foreground">
-                        {item.label}
-                      </Text>
-                    </Pressable>
-                  );
-                })}
-              </ScrollView>
-
-              <View className="gap-3 border-t border-line bg-surface p-4">
-                <SupportCard />
-                <View className="flex-row gap-2">
-                  <Pressable
-                    accessibilityLabel={messages.header.appearanceLabel}
-                    accessibilityRole="button"
-                    className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper"
-                    onPress={() => setAppearanceOpen(true)}
-                  >
-                    {name === "dark" ? (
-                      <Moon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
-                    ) : (
-                      <Sun color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
-                    )}
-                  </Pressable>
-                  <Pressable
-                    accessibilityLabel={messages.localeLabel}
-                    accessibilityRole="button"
-                    className="h-11 min-w-0 flex-1 flex-row items-center gap-2 rounded-control border border-primary/40 bg-primary-soft px-3"
-                    onPress={() => setLanguageOpen(true)}
-                  >
-                    <Globe2 color={theme.colors["primary-deep"]} size={17} strokeWidth={1.8} />
-                    <Text className="min-w-0 flex-1 font-body text-metadata font-medium text-foreground">
-                      {LOCALE_NAMES[locale]}
-                    </Text>
-                    <ChevronUp color={theme.colors["muted-foreground"]} size={16} strokeWidth={1.6} />
-                  </Pressable>
+                    return (
+                      <Pressable
+                        accessibilityRole="button"
+                        className="min-h-11 flex-row items-center gap-3 rounded-control px-3"
+                        key={item.href}
+                        onPress={() => {
+                          router.replace(item.href);
+                          close();
+                        }}
+                      >
+                        <Icon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                        <Text className="font-body text-product-body font-medium text-foreground">
+                          {item.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
                 </View>
-              </View>
-            </SafeAreaView>
+
+                <View
+                  className="mt-auto gap-3 border-t border-line bg-surface px-4 pt-4"
+                  style={{ paddingBottom: insets.bottom + DRAWER_FOOTER_PADDING }}
+                  testID="app-drawer-footer"
+                >
+                  <SupportCard />
+                  <View className="flex-row gap-2">
+                    <Pressable
+                      accessibilityLabel={messages.header.appearanceLabel}
+                      accessibilityRole="button"
+                      className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper"
+                      onPress={() => setAppearanceOpen(true)}
+                    >
+                      {name === "dark" ? (
+                        <Moon color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                      ) : (
+                        <Sun color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                      )}
+                    </Pressable>
+                    <Pressable
+                      accessibilityLabel={messages.localeLabel}
+                      accessibilityRole="button"
+                      className="h-11 min-w-0 flex-1 flex-row items-center gap-2 rounded-control border border-primary/40 bg-primary-soft px-3"
+                      onPress={() => setLanguageOpen(true)}
+                    >
+                      <Globe2 color={theme.colors["primary-deep"]} size={17} strokeWidth={1.8} />
+                      <Text className="min-w-0 flex-1 font-body text-metadata font-medium text-foreground">
+                        {LOCALE_NAMES[locale]}
+                      </Text>
+                      <ChevronUp color={theme.colors["muted-foreground"]} size={16} strokeWidth={1.6} />
+                    </Pressable>
+                  </View>
+                </View>
+              </ScrollView>
+            </View>
           </Pressable>
         </Pressable>
       </Modal>
