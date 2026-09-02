@@ -1,0 +1,115 @@
+require "shellwords"
+
+default_platform(:android)
+
+OPENINGS_ANDROID_PACKAGE = "dev.openings.mobile"
+
+def project_root
+  File.expand_path("..", __dir__)
+end
+
+def signing_properties
+  File.join(project_root, "android", "keystore.properties")
+end
+
+def release_keystore
+  File.join(project_root, "android", "app", "keystore.jks")
+end
+
+def validate_signing!
+  UI.user_error!("Missing android/keystore.properties") unless File.exist?(signing_properties)
+  UI.user_error!("Missing android/app/keystore.jks") unless File.exist?(release_keystore)
+end
+
+def play_json_key
+  path = ENV["GOOGLE_PLAY_JSON_KEY_FILE"] || File.join(project_root, "google-play-service-account.json")
+  UI.user_error!("Google Play service-account JSON was not found at #{path}") unless File.exist?(path)
+  path
+end
+
+def positive_version_code(options)
+  value = options[:version_code] || ENV["ANDROID_VERSION_CODE"]
+  UI.user_error!("version_code must be a positive integer") unless value.to_s.match?(/\A[1-9]\d*\z/)
+  value.to_i
+end
+
+def release_version_name(options)
+  value = options[:version_name] || ENV["ANDROID_VERSION_NAME"]
+  pattern = /\A\d+\.\d+\.\d+(?:[.-][0-9A-Za-z.-]+)?\z/
+  UI.user_error!("version_name must be a semantic version without the v prefix") unless value.to_s.match?(pattern)
+  value
+end
+
+platform :android do
+  desc "Run the complete mobile repository verification"
+  lane :check do
+    sh("cd #{project_root.shellescape} && npm run check")
+  end
+
+  desc "Build the Android debug APK"
+  lane :build_debug do
+    gradle(project_dir: File.join(project_root, "android"), task: "assemble", build_type: "Debug")
+  end
+
+  desc "Build a signed Android App Bundle"
+  lane :bundle_release do
+    validate_signing!
+    gradle_options = {
+      project_dir: File.join(project_root, "android"),
+      task: "bundle",
+      build_type: "Release"
+    }
+    architectures = ENV["ANDROID_REACT_NATIVE_ARCHITECTURES"].to_s.strip
+    unless architectures.empty?
+      gradle_options[:properties] = { "reactNativeArchitectures" => architectures }
+    end
+    gradle(**gradle_options)
+  end
+
+  desc "Build and upload an explicit version to the internal track"
+  lane :internal do |options|
+    version_code = positive_version_code(options)
+    version_name = release_version_name(options)
+    ENV["ANDROID_VERSION_CODE"] = version_code.to_s
+    ENV["ANDROID_VERSION_NAME"] = version_name
+    bundle_release
+    upload_internal(
+      aab: File.join(project_root, "android", "app", "build", "outputs", "bundle", "release", "app-release.aab")
+    )
+  end
+
+  desc "Upload an existing signed Android App Bundle to the internal track"
+  lane :upload_internal do |options|
+    aab = options[:aab]
+    UI.user_error!("aab is required") unless aab
+    aab = File.expand_path(aab, project_root)
+    UI.user_error!("AAB was not found at #{aab}") unless File.exist?(aab)
+    upload_to_play_store(
+      aab: aab,
+      json_key: play_json_key,
+      package_name: "dev.openings.mobile",
+      release_status: "completed",
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_metadata: true,
+      skip_upload_screenshots: true,
+      track: "internal"
+    )
+  end
+
+  desc "Promote an explicit internal version to production"
+  lane :production do |options|
+    version_code = positive_version_code(options)
+    upload_to_play_store(
+      json_key: play_json_key,
+      package_name: "dev.openings.mobile",
+      skip_upload_changelogs: true,
+      skip_upload_images: true,
+      skip_upload_metadata: true,
+      skip_upload_screenshots: true,
+      track: "internal",
+      track_promote_to: "production",
+      version_code: version_code
+    )
+  end
+end
