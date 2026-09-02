@@ -21,6 +21,8 @@ The current Jest suite covers:
 - versioned saved/viewed state and AsyncStorage hydration;
 - Jobs, Communities, Authors, job details, and profile behavior;
 - native HTTPS linking and sharing.
+- Android release identifiers, lanes, signing guards, workflows, ignored files,
+  and Google Play credential restoration.
 
 ## JavaScript verification
 
@@ -52,3 +54,18 @@ Warnings emitted by third-party native dependencies should be reviewed, but a
 successful process exit is the build result. Do not describe the app as release
 ready until release configuration, signing, device behavior, and distribution have
 their own approved verification scope.
+
+## Release verification
+
+After Fastlane, Gradle signing, or workflow changes, run:
+
+```sh
+ruby -c fastlane/Fastfile
+bundle exec fastlane lanes
+make android-build
+```
+
+`bundle exec fastlane lanes` verifies that the pinned bundle can load the Appfile
+and all Android lanes. The debug build confirms that release-only signing guards do
+not break ordinary development. A signed bundle requires ignored credentials and is
+not part of the default check. Google Play uploads must never be used as a test.

@@ -70,3 +70,33 @@ requirement to regenerate and inspect native projects after configuration change
 
 Do not use clean regeneration as a routine fix when it would erase a deliberate
 native customization. Confirm ownership first.
+
+## Android release tooling
+
+Android delivery uses the Bundler-pinned Fastlane version from `Gemfile.lock`.
+Install a current Ruby and Bundler, then run:
+
+```sh
+make fastlane-install
+make android-release-lanes
+make android-release-check
+```
+
+A local signed bundle requires ignored `android/keystore.properties` and
+`android/app/keystore.jks` files:
+
+```sh
+make android-release-bundle
+```
+
+Internal and production lanes additionally require Google Play credentials through
+`GOOGLE_PLAY_JSON_KEY_FILE` or the ignored root-level
+`google-play-service-account.json`. They require explicit version values:
+
+```sh
+ANDROID_VERSION_CODE=2 ANDROID_VERSION_NAME=0.2.0 make android-release-internal
+ANDROID_VERSION_CODE=2 make android-release-production
+```
+
+These commands are prepared for the future Google Play application. Adding the
+tooling does not create the application or upload a release.

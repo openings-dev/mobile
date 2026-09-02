@@ -153,6 +153,9 @@ older Expo or React Native release.
   represented safely through Expo configuration.
 - Never log or version credentials, signing data, service-account JSON, keystores,
   certificates, tokens, personal data, or private environment files.
+- Android release automation belongs in the Bundler-pinned Fastlane lanes. Release
+  signing uses only ignored local files or CI secrets, and production promotion must
+  reuse an explicit artifact from a successful internal workflow rather than rebuild.
 - Do not send saved jobs, viewed state, search terms, or opportunity interaction
   details to a third party unless an approved analytics contract explicitly permits
   each field.

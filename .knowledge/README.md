@@ -20,6 +20,7 @@ Other web areas are intentionally outside the mobile scope.
 - [Security](best_practices/security.md) — public-data, secrets, storage, and native safety boundaries
 - [Development setup](guides/development_setup.md) — local package, JavaScript, and native workflows
 - [Testing](guides/testing.md) — behavioral, package-integration, and native verification
+- [Android Fastlane](release/android_fastlane.md) — signing, internal delivery, and production promotion
 - [Design system](design_system/README.md) — mobile visual authority and documentation index
   - [Foundations and components](design_system/foundations_and_components.md)
 - [Shared packages](integrations/shared_packages.md) — ownership and local consumption of public NPM packages

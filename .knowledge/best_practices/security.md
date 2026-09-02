@@ -23,6 +23,12 @@ keystores, certificates, provisioning profiles, API tokens, or private configura
 Local and CI signing material must remain outside tracked source and must not appear
 in screenshots, fixtures, logs, or test output.
 
+Android release signing uses only ignored `android/keystore.properties` and
+`android/app/keystore.jks` files. Google Play authentication uses an ignored
+`google-play-service-account.json` file or a temporary path supplied through
+`GOOGLE_PLAY_JSON_KEY_FILE`. CI reconstructs these files from secrets, validates
+them before use, and removes temporary Play credentials after delivery.
+
 ## Device-local product state
 
 Saved jobs, viewed state, search preferences, and language or theme preferences are
@@ -30,8 +36,9 @@ personal application state even when they contain public job identifiers. Store 
 what the product needs, validate versioned documents when reading them, and avoid
 placing sensitive values in plaintext logs or analytics.
 
-The current foundation does not persist candidate state and includes no analytics,
-advertising, notifications, authentication, or cloud synchronization.
+The current application persists versioned candidate state on the device and
+includes no analytics, advertising, notifications, authentication, or cloud
+synchronization.
 
 ## External services
 

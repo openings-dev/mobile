@@ -1,4 +1,4 @@
-# Android Fastlane Design
+# Android Fastlane
 
 ## Goal
 
@@ -88,3 +88,50 @@ restorer with valid and invalid payloads. The final gate runs the full mobile ch
 Fastlane syntax/lane discovery, Expo Doctor, and an Android debug build. A signed AAB
 or store upload is intentionally not executed because signing and store credentials
 do not exist yet.
+
+## Local commands
+
+Install and inspect the pinned release tooling:
+
+```sh
+make fastlane-install
+make android-release-lanes
+make android-release-check
+```
+
+Build a signed AAB without uploading it:
+
+```sh
+make android-release-bundle
+```
+
+Upload a new internal version or promote an existing internal version only when the
+Google Play application and credentials exist:
+
+```sh
+ANDROID_VERSION_CODE=2 ANDROID_VERSION_NAME=0.2.0 make android-release-internal
+ANDROID_VERSION_CODE=2 make android-release-production
+```
+
+`ANDROID_VERSION_CODE` must be a positive integer. `ANDROID_VERSION_NAME` must be a
+semantic version without a `v` prefix. The internal lane sets both values before
+Gradle builds the bundle.
+
+## GitHub configuration
+
+The manual workflows require these repository secrets:
+
+- `ANDROID_KEY_ALIAS`
+- `ANDROID_KEY_PASSWORD`
+- `ANDROID_KEYSTORE_BASE64`
+- `ANDROID_STORE_PASSWORD`
+- `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64`
+
+Run `Android internal release` first with an unused version code and semantic
+version name. After the internal upload succeeds, run `Android production release`
+with the same values and the successful internal workflow run ID. The production
+workflow accepts only the single non-expired `openings-android-<version_code>`
+artifact from that run and never invokes Gradle.
+
+No Google Play application, secret, signed bundle, store upload, or iOS delivery
+configuration is created by the repository setup itself.
