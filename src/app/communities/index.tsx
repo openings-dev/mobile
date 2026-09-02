@@ -25,7 +25,12 @@ export function CommunitiesScreen(): React.ReactNode {
   const { theme } = useAppTheme();
   const catalog = useOpeningsCatalog();
   const [activity, setActivity] = useState<ActivityFilter>("healthy");
-  const [filters, setFilters] = useState<DirectoryFilters>({ country: "all", query: "", region: "all", sort: "count" });
+  const [filters, setFilters] = useState<DirectoryFilters>({
+    country: "all",
+    query: "",
+    region: "all",
+    sort: "count",
+  });
   const states = useMemo(() => new Map(catalog.status?.items.map((item) => [item.repository, item.state])), [catalog.status]);
   const stateFor = (repository: string, count: number): CommunityActivity => states.get(repository) ?? (count > 0 ? "healthy" : "no-openings");
   const activityCounts = { healthy: 0, "no-openings": 0, error: 0 };
@@ -36,8 +41,96 @@ export function CommunitiesScreen(): React.ReactNode {
   const countries = [...new Set(activityItems.map((item) => item.country).filter(Boolean))].sort();
   const errorMessage = isOfflineCatalogError(catalog.error) ? messages.common.offline : messages.common.sourceError;
 
-  if (catalog.isLoading && catalog.communities.length === 0) return <SafeAreaView className="flex-1 bg-canvas"><ScreenHeader title={messages.communities.title} description={messages.communities.description} /><CatalogState pending message={messages.common.loading} /></SafeAreaView>;
-  if (catalog.error && catalog.communities.length === 0) return <SafeAreaView className="flex-1 bg-canvas"><ScreenHeader title={messages.communities.title} description={messages.communities.description} /><CatalogState message={errorMessage} actionLabel={messages.common.retry} onAction={() => void catalog.refresh()} /></SafeAreaView>;
-  const header = <View className="gap-4 pb-4"><ScreenHeader title={messages.communities.title} description={messages.communities.description} /><View className="gap-4 px-5"><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2"><FilterChip label={`${messages.communities.active} · ${activityCounts.healthy}`} selected={activity === "healthy"} onPress={() => setActivity("healthy")} /><FilterChip label={`${messages.communities.noOpenings} · ${activityCounts["no-openings"]}`} selected={activity === "no-openings"} onPress={() => setActivity("no-openings")} /><FilterChip label={`${messages.communities.errors} · ${activityCounts.error}`} selected={activity === "error"} onPress={() => setActivity("error")} /><FilterChip label={`${messages.communities.allSources} · ${catalog.communities.length}`} selected={activity === "all"} onPress={() => setActivity("all")} /></ScrollView><SearchField label={messages.common.search} placeholder={messages.communities.searchPlaceholder} value={filters.query} onChangeText={(query) => setFilters({ ...filters, query })} /><ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2"><FilterChip label={messages.common.sortCount} selected={filters.sort === "count"} onPress={() => setFilters({ ...filters, sort: "count" })} /><FilterChip label={messages.common.sortRecent} selected={filters.sort === "recent"} onPress={() => setFilters({ ...filters, sort: "recent" })} /><FilterChip label={messages.common.sortName} selected={filters.sort === "name"} onPress={() => setFilters({ ...filters, sort: "name" })} /></ScrollView>{regions.length > 1 ? <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2"><FilterChip label={messages.common.all} selected={filters.region === "all"} onPress={() => setFilters({ ...filters, country: "all", region: "all" })} />{regions.map((region) => <FilterChip key={region} label={region} selected={filters.region === region} onPress={() => setFilters({ ...filters, country: "all", region })} />)}</ScrollView> : null}{countries.length > 1 ? <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">{countries.map((country) => <FilterChip key={country} label={country} selected={filters.country === country} onPress={() => setFilters({ ...filters, country: filters.country === country ? "all" : country })} />)}</ScrollView> : null}<Text className="font-body text-label font-semibold text-foreground">{formatCount(visible.length, locale)} {messages.common.results}</Text></View></View>;
-  return <SafeAreaView className="flex-1 bg-canvas" edges={["top", "left", "right"]}><FlatList data={visible} keyExtractor={(item) => item.repository} ListHeaderComponent={header} ListEmptyComponent={<CatalogState message={messages.common.noResults} />} refreshControl={<RefreshControl refreshing={catalog.isRefreshing} onRefresh={() => void catalog.refresh()} tintColor={theme.colors["primary-deep"]} />} renderItem={({ item }) => <DirectoryCard title={item.name} subtitle={item.repository} avatarUrl={item.avatarUrl} location={formatLocation([item.region, item.country])} latestActivity={formatDate(item.lastPostedAt, locale)} countLabel={`${formatCount(item.opportunitiesCount, locale)} ${messages.jobs.title.toLocaleLowerCase(locale)}`} actionLabel={messages.communities.open} onPress={() => router.push(buildCommunityRoute(item.repository) as never)} />} ListFooterComponent={<View className="h-5" />} /></SafeAreaView>;
+  if (catalog.isLoading && catalog.communities.length === 0) {
+    return (
+      <SafeAreaView className="flex-1 bg-canvas">
+        <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
+        <CatalogState pending message={messages.common.loading} />
+      </SafeAreaView>
+    );
+  }
+
+  if (catalog.error && catalog.communities.length === 0) {
+    return (
+      <SafeAreaView className="flex-1 bg-canvas">
+        <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
+        <CatalogState
+          actionLabel={messages.common.retry}
+          message={errorMessage}
+          onAction={() => void catalog.refresh()}
+        />
+      </SafeAreaView>
+    );
+  }
+
+  const header = (
+    <View className="gap-4 pb-4">
+      <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
+      <View className="gap-4 px-4">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
+          <FilterChip label={`${messages.communities.active} · ${activityCounts.healthy}`} selected={activity === "healthy"} onPress={() => setActivity("healthy")} />
+          <FilterChip label={`${messages.communities.noOpenings} · ${activityCounts["no-openings"]}`} selected={activity === "no-openings"} onPress={() => setActivity("no-openings")} />
+          <FilterChip label={`${messages.communities.errors} · ${activityCounts.error}`} selected={activity === "error"} onPress={() => setActivity("error")} />
+          <FilterChip label={`${messages.communities.allSources} · ${catalog.communities.length}`} selected={activity === "all"} onPress={() => setActivity("all")} />
+        </ScrollView>
+        <SearchField
+          label={messages.common.search}
+          onChangeText={(query) => setFilters({ ...filters, query })}
+          placeholder={messages.communities.searchPlaceholder}
+          value={filters.query}
+        />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
+          <FilterChip label={messages.common.sortCount} selected={filters.sort === "count"} onPress={() => setFilters({ ...filters, sort: "count" })} />
+          <FilterChip label={messages.common.sortRecent} selected={filters.sort === "recent"} onPress={() => setFilters({ ...filters, sort: "recent" })} />
+          <FilterChip label={messages.common.sortName} selected={filters.sort === "name"} onPress={() => setFilters({ ...filters, sort: "name" })} />
+        </ScrollView>
+        {regions.length > 1 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
+            <FilterChip label={messages.common.all} selected={filters.region === "all"} onPress={() => setFilters({ ...filters, country: "all", region: "all" })} />
+            {regions.map((region) => (
+              <FilterChip key={region} label={region} selected={filters.region === region} onPress={() => setFilters({ ...filters, country: "all", region })} />
+            ))}
+          </ScrollView>
+        ) : null}
+        {countries.length > 1 ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
+            {countries.map((country) => (
+              <FilterChip key={country} label={country} selected={filters.country === country} onPress={() => setFilters({ ...filters, country: filters.country === country ? "all" : country })} />
+            ))}
+          </ScrollView>
+        ) : null}
+        <Text className="font-mono text-label font-semibold text-foreground">
+          {formatCount(visible.length, locale)} {messages.common.results}
+        </Text>
+      </View>
+    </View>
+  );
+
+  return (
+    <SafeAreaView className="flex-1 bg-canvas" edges={["top", "left", "right"]}>
+      <FlatList
+        data={visible}
+        initialNumToRender={8}
+        keyExtractor={(item) => item.repository}
+        ListEmptyComponent={<CatalogState message={messages.common.noResults} />}
+        ListFooterComponent={<View className="h-5" />}
+        ListHeaderComponent={header}
+        maxToRenderPerBatch={8}
+        refreshControl={<RefreshControl refreshing={catalog.isRefreshing} onRefresh={() => void catalog.refresh()} tintColor={theme.colors["primary-deep"]} />}
+        renderItem={({ item }) => (
+          <DirectoryCard
+            actionLabel={messages.communities.open}
+            avatarUrl={item.avatarUrl}
+            countLabel={`${formatCount(item.opportunitiesCount, locale)} ${messages.jobs.title.toLocaleLowerCase(locale)}`}
+            latestActivity={formatDate(item.lastPostedAt, locale)}
+            location={formatLocation([item.region, item.country])}
+            onPress={() => router.push(buildCommunityRoute(item.repository) as never)}
+            subtitle={item.repository}
+            title={item.name}
+          />
+        )}
+        windowSize={7}
+      />
+    </SafeAreaView>
+  );
 }
