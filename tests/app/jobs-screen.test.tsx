@@ -8,13 +8,18 @@ import { JobsScreen } from "@/app/jobs";
 import { makeOpportunity } from "../fixtures/openings";
 
 const mockPush = jest.fn();
+const mockTrackProductEvent = jest.fn();
 jest.mock("expo-router", () => ({ useRouter: () => ({ push: mockPush }) }));
+jest.mock("@/services/telemetry/product-events", () => ({
+  trackProductEvent: (...args: unknown[]) => mockTrackProductEvent(...args),
+}));
 jest.mock("@/contexts/candidate-state", () => ({ useCandidateState: jest.fn() }));
 jest.mock("@/contexts/openings-catalog", () => ({ useOpeningsCatalog: jest.fn() }));
 
 describe("JobsScreen", () => {
   beforeEach(() => {
     mockPush.mockClear();
+    mockTrackProductEvent.mockClear();
     jest.mocked(useCandidateState).mockReturnValue({
       dismissNewMatches: jest.fn(),
       hydrated: true,
@@ -49,6 +54,22 @@ describe("JobsScreen", () => {
     });
   });
 
+  it("tracks a submitted search without sending its text", async () => {
+    const screen = await render(
+      <LocaleProvider><ThemeProvider><JobsScreen /></ThemeProvider></LocaleProvider>,
+    );
+    const input = screen.getByPlaceholderText("Role, stack, company, or location");
+    await fireEvent.changeText(input, "backend");
+    await fireEvent(input, "submitEditing");
+    expect(mockTrackProductEvent).toHaveBeenCalledWith("Search Submitted", {
+      activeFilterCount: 1,
+      locale: "en",
+      queryLength: "4-10",
+      resultCount: "1-10",
+    });
+    expect(JSON.stringify(mockTrackProductEvent.mock.calls)).not.toContain("backend");
+  });
+
   it("searches loaded jobs and opens native details", async () => {
     const screen = await render(
       <LocaleProvider><ThemeProvider><JobsScreen /></ThemeProvider></LocaleProvider>,
@@ -81,6 +102,19 @@ describe("JobsScreen", () => {
     expect(screen.getByText("Show new matches")).toBeTruthy();
     expect(screen.getAllByText("Remote")).toHaveLength(1);
     expect(screen.queryByText("Discover")).toBeNull();
+  });
+
+  it("keeps content above the Android navigation bar", async () => {
+    const screen = await render(
+      <LocaleProvider><ThemeProvider><JobsScreen /></ThemeProvider></LocaleProvider>,
+    );
+
+    expect(screen.getByTestId("jobs-screen").props.edges).toMatchObject({
+      bottom: "additive",
+      left: "additive",
+      right: "additive",
+      top: "off",
+    });
   });
 
   it("applies the new-matches suggestion as a visible filter", async () => {

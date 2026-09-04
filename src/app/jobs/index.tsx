@@ -17,7 +17,9 @@ import {
   buildJobRoute,
 } from "@/domain/openings/routing";
 import type { JobFilters } from "@/domain/openings/types";
+import type { TelemetryFilterDimension } from "@/services/telemetry/contracts";
 import { isOfflineCatalogError } from "@/services/openings-catalog";
+import { trackProductEvent } from "@/services/telemetry/product-events";
 import { JobsFilterModal } from "./components/jobs-filter-modal";
 import { JobsResultToolbar } from "./components/jobs-result-toolbar";
 import { JobsWorkspaceHeader } from "./components/jobs-workspace-header";
@@ -28,6 +30,45 @@ import {
 } from "./helpers/filter-presentation";
 
 const PAGE_SIZE = 20;
+
+function lengthBucket(length: number): "1-3" | "4-10" | "11-30" | "31+" {
+  if (length <= 3) return "1-3";
+  if (length <= 10) return "4-10";
+  if (length <= 30) return "11-30";
+  return "31+";
+}
+
+function resultBucket(count: number): "0" | "1-10" | "11-50" | "51+" {
+  if (count === 0) return "0";
+  if (count <= 10) return "1-10";
+  if (count <= 50) return "11-50";
+  return "51+";
+}
+
+function changedFilter(
+  previous: JobFilters,
+  next: JobFilters,
+): { dimension: TelemetryFilterDimension; value: string } | null {
+  const scalar: readonly [keyof JobFilters, TelemetryFilterDimension][] = [
+    ["country", "country"], ["region", "region"], ["repository", "community"],
+    ["freshnessDays", "freshness"], ["salaryOnly", "salary"],
+  ];
+  for (const [key, dimension] of scalar) {
+    if (previous[key] !== next[key]) return { dimension, value: String(next[key] ?? "all") };
+  }
+  const lists: readonly [keyof JobFilters, TelemetryFilterDimension][] = [
+    ["areas", "area"], ["workModels", "work-model"], ["seniority", "seniority"],
+    ["technologies", "technology"], ["employmentTypes", "employment-type"],
+  ];
+  for (const [key, dimension] of lists) {
+    const before = previous[key] as string[];
+    const after = next[key] as string[];
+    if (before.join("|") !== after.join("|")) {
+      return { dimension, value: after.find((value) => !before.includes(value)) ?? "none" };
+    }
+  }
+  return null;
+}
 
 export function JobsScreen(): React.ReactNode {
   const router = useRouter();
@@ -59,7 +100,12 @@ export function JobsScreen(): React.ReactNode {
   );
   const showNewMatches =
     !filters.newOnly && newMatchCount > 0 && dismissalPredatesVisit;
-  const updateFilters = (next: JobFilters) => { setVisibleCount(PAGE_SIZE); setFilters(next); };
+  const updateFilters = (next: JobFilters) => {
+    const change = changedFilter(filters, next);
+    if (change) trackProductEvent("Filter Applied", { ...change, locale });
+    setVisibleCount(PAGE_SIZE);
+    setFilters(next);
+  };
   const activeFilters = useMemo(() => getActiveJobFilters(filters), [filters]);
   const errorMessage = isOfflineCatalogError(catalog.error)
     ? messages.common.offline
@@ -77,6 +123,12 @@ export function JobsScreen(): React.ReactNode {
         onClearFilters={() => updateFilters(createDefaultJobFilters())}
         onOpenFilters={() => setFilterOpen(true)}
         onRemoveFilter={(filter) => updateFilters(removeActiveJobFilter(filters, filter))}
+        onSubmitSearch={() => trackProductEvent("Search Submitted", {
+          activeFilterCount: activeFilters.length,
+          locale,
+          queryLength: lengthBucket(filters.query.length),
+          resultCount: resultBucket(filtered.length),
+        })}
       />
       {showNewMatches ? (
         <NewMatchesCard
@@ -106,7 +158,11 @@ export function JobsScreen(): React.ReactNode {
       : <CatalogState message={messages.common.noResults} actionLabel={messages.common.clear} onAction={() => updateFilters(createDefaultJobFilters())} />;
 
   return (
-    <SafeAreaView className="flex-1 bg-canvas" edges={["left", "right"]}>
+    <SafeAreaView
+      className="flex-1 bg-canvas"
+      edges={["left", "right", "bottom"]}
+      testID="jobs-screen"
+    >
       <FlatList
         data={visible}
         initialNumToRender={8}
@@ -122,7 +178,7 @@ export function JobsScreen(): React.ReactNode {
         }}
         windowSize={7}
       />
-      <JobsFilterModal open={filterOpen} filters={filters} items={catalog.opportunities} messages={messages} onChange={updateFilters} onClose={() => setFilterOpen(false)} resultCount={filtered.length} />
+      <JobsFilterModal open={filterOpen} filters={filters} items={catalog.opportunities} messages={messages} onChange={updateFilters} onClose={() => setFilterOpen(false)} onShortcut={(shortcut) => trackProductEvent("Discovery Shortcut Opened", { locale, shortcut })} resultCount={filtered.length} />
     </SafeAreaView>
   );
 }

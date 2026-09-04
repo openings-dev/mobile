@@ -29,6 +29,7 @@ import {
   buildJobRoute,
 } from "@/domain/openings/routing";
 import { openHttpsUrl, shareUrl } from "@/services/external-actions";
+import { trackProductEvent } from "@/services/telemetry/product-events";
 
 interface JobDetailsScreenProps {
   id: string;
@@ -66,6 +67,21 @@ function reportUrl(title: string, canonicalUrl: string, sourceUrl: string): stri
   return `https://github.com/openings-dev/web/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
 }
 
+function ageBucket(createdAt: string): "0-7" | "8-30" | "31-90" | "91+" {
+  const days = Math.max(0, (Date.now() - Date.parse(createdAt)) / 86_400_000);
+  if (days <= 7) return "0-7";
+  if (days <= 30) return "8-30";
+  if (days <= 90) return "31-90";
+  return "91+";
+}
+
+function savedCountBucket(count: number): "0" | "1-5" | "6-20" | "21+" {
+  if (count === 0) return "0";
+  if (count <= 5) return "1-5";
+  if (count <= 20) return "6-20";
+  return "21+";
+}
+
 export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode {
   const router = useRouter();
   const { locale, messages } = useLocale();
@@ -79,7 +95,14 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
   const markViewed = candidate.markViewed;
 
   useEffect(() => {
-    if (item) markViewed(item.id);
+    if (item) {
+      markViewed(item.id);
+      trackProductEvent("Job Viewed", {
+        age: ageBucket(item.createdAt),
+        jobId: item.id,
+        sourceCount: item.sources.length,
+      });
+    }
   }, [item, markViewed]);
 
   if (!item) {
@@ -289,10 +312,19 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
           share: messages.jobs.share,
         }}
         onHeightChange={setDockHeight}
-        onOpenOriginal={() => void openHttpsUrl(item.url)}
+        onOpenOriginal={() => {
+          trackProductEvent("Original Listing Opened", { jobId: item.id, sourceCount: item.sources.length });
+          void openHttpsUrl(item.url);
+        }}
         onReport={() => void openHttpsUrl(issueUrl)}
         onShare={() => void shareUrl(item.title, canonicalUrl)}
-        onToggleSaved={() => candidate.toggleSaved(item.id)}
+        onToggleSaved={() => {
+          const nextCount = candidate.isSaved(item.id)
+            ? Math.max(0, candidate.savedIds.size - 1)
+            : candidate.savedIds.size + 1;
+          candidate.toggleSaved(item.id);
+          trackProductEvent("Job Saved", { jobId: item.id, savedCount: savedCountBucket(nextCount) });
+        }}
       />
     </SafeAreaView>
   );

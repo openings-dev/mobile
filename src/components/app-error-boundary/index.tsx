@@ -1,6 +1,8 @@
 import { Component, type PropsWithChildren } from "react";
 import { Pressable, Text, View } from "react-native";
 
+import { captureTechnicalException } from "@/services/telemetry";
+
 interface ErrorFallbackCopy {
   message: string;
   retry: string;
@@ -23,6 +25,10 @@ export class AppErrorBoundary extends Component<
 
   public static getDerivedStateFromError(): AppErrorBoundaryState {
     return { hasError: true };
+  }
+
+  public componentDidCatch(error: Error): void {
+    captureTechnicalException(error, { category: "render-boundary" });
   }
 
   private handleRetry = (): void => {

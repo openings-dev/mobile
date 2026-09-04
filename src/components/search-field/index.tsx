@@ -6,11 +6,12 @@ import { useAppTheme } from "@/contexts/theme";
 interface SearchFieldProps {
   label: string;
   onChangeText: (value: string) => void;
+  onSubmitEditing?: () => void;
   placeholder: string;
   value: string;
 }
 
-export function SearchField({ label, onChangeText, placeholder, value }: SearchFieldProps): React.ReactNode {
+export function SearchField({ label, onChangeText, onSubmitEditing, placeholder, value }: SearchFieldProps): React.ReactNode {
   const { theme } = useAppTheme();
   return (
     <View className="gap-2">
@@ -21,6 +22,7 @@ export function SearchField({ label, onChangeText, placeholder, value }: SearchF
           accessibilityLabel={label}
           className="min-h-11 flex-1 font-body text-product-body text-foreground"
           onChangeText={onChangeText}
+          onSubmitEditing={onSubmitEditing}
           placeholder={placeholder}
           placeholderTextColor={theme.colors["muted-foreground"]}
           returnKeyType="search"

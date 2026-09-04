@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "platforms": ["android", "ios"],
+    "platforms": ["android"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.openings.mobile",
@@ -34,6 +34,7 @@
     },
     "android": {
       "package": "dev.openings.mobile",
+      "googleServicesFile": "./google-services.json",
       "versionCode": 1,
       "predictiveBackGestureEnabled": true,
       "icon": "./assets/images/icon.png",
@@ -44,6 +45,15 @@
       }
     },
     "plugins": [
+      [
+        "onesignal-expo-plugin",
+        {
+          "mode": "development"
+        }
+      ],
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      "@sentry/react-native/expo",
       [
         "expo-router",
         {

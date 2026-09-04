@@ -1,4 +1,5 @@
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -13,6 +14,7 @@ import { useOpeningsCatalog } from "@/contexts/openings-catalog";
 import { formatCount, formatDate, formatLocation } from "@/domain/openings/formatting";
 import { buildAuthorRoute, buildJobRoute } from "@/domain/openings/routing";
 import { openHttpsUrl, shareUrl } from "@/services/external-actions";
+import { trackProductEvent } from "@/services/telemetry/product-events";
 
 interface CommunityProfileScreenProps { repository: string }
 
@@ -24,6 +26,13 @@ export function CommunityProfileScreen({ repository }: CommunityProfileScreenPro
   const profile = catalog.communities.find((item) => item.repository.toLocaleLowerCase() === repository.toLocaleLowerCase());
   const jobs = catalog.opportunities.filter((item) => item.repository.toLocaleLowerCase() === repository.toLocaleLowerCase());
   const status = catalog.status?.items.find((item) => item.repository === repository);
+  useEffect(() => {
+    if (!profile) return;
+    trackProductEvent("Community Viewed", {
+      activity: status?.state === "error" ? "error" : jobs.length > 0 ? "active" : "no-openings",
+      repository: profile.repository,
+    });
+  }, [jobs.length, profile, status?.state]);
   if (!profile) {
     return (
       <SafeAreaView className="flex-1 bg-canvas">

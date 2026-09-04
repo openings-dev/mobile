@@ -24,6 +24,7 @@ interface JobsWorkspaceHeaderProps {
   onClearFilters: () => void;
   onOpenFilters: () => void;
   onRemoveFilter: (filter: ActiveJobFilter) => void;
+  onSubmitSearch: () => void;
   messages: FoundationMessages;
 }
 
@@ -124,6 +125,7 @@ export function JobsWorkspaceHeader({
   onClearFilters,
   onOpenFilters,
   onRemoveFilter,
+  onSubmitSearch,
 }: JobsWorkspaceHeaderProps): React.ReactNode {
   const { theme } = useAppTheme();
   const [countryOpen, setCountryOpen] = useState(false);
@@ -151,6 +153,7 @@ export function JobsWorkspaceHeader({
       <SearchField
         label={messages.jobs.workspace.searchLabel}
         onChangeText={(query) => onChange({ ...filters, query })}
+        onSubmitEditing={onSubmitSearch}
         placeholder={messages.jobs.searchPlaceholder}
         value={filters.query}
       />

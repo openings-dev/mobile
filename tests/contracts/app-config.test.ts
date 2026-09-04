@@ -9,10 +9,15 @@ interface ExpoConfig {
       monochromeImage?: string;
     };
     icon?: string;
+    googleServicesFile?: string;
   };
   icon?: string;
+  platforms?: string[];
   ios?: {
+    entitlements?: Record<string, unknown>;
+    infoPlist?: Record<string, unknown>;
     icon?: string;
+    googleServicesFile?: string;
     privacyManifests?: {
       NSPrivacyAccessedAPITypes?: {
         NSPrivacyAccessedAPIType: string;
@@ -34,6 +39,25 @@ function readExpoConfig(): ExpoConfig {
 }
 
 describe("native application identity", () => {
+  it("configures privacy-safe observability and OneSignal native plugins", () => {
+    const expo = readExpoConfig();
+    const pluginNames = expo.plugins?.map((plugin) =>
+      Array.isArray(plugin) ? plugin[0] : plugin,
+    );
+
+    expect(pluginNames?.[0]).toBe("onesignal-expo-plugin");
+    expect(pluginNames).toEqual(expect.arrayContaining([
+      "@react-native-firebase/app",
+      "@react-native-firebase/crashlytics",
+      "@sentry/react-native/expo",
+    ]));
+    expect(expo.platforms).toEqual(["android"]);
+    expect(expo.android?.googleServicesFile).toBe("./google-services.json");
+    expect(expo.ios?.googleServicesFile).toBeUndefined();
+    expect(expo.ios?.infoPlist).toBeUndefined();
+    expect(expo.ios?.entitlements).toBeUndefined();
+  });
+
   it("configures canonical app, adaptive, monochrome, and splash artwork", () => {
     const expo = readExpoConfig();
     const expectedAssets = [

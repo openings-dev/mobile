@@ -1,6 +1,12 @@
 import type { SupportedLocale } from "@openingshq/core";
 
 export interface FoundationMessages {
+  analyticsConsent: {
+    accept: string;
+    decline: string;
+    purpose: string;
+    title: string;
+  };
   authors: {
     description: string;
     github: string;
@@ -70,6 +76,12 @@ export interface FoundationMessages {
     system: string;
   };
   localeLabel: string;
+  notificationConsent: {
+    accept: string;
+    decline: string;
+    purpose: string;
+    title: string;
+  };
   jobs: {
     allSources: string;
     areas: string;

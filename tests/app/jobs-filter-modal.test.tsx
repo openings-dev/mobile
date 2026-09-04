@@ -19,6 +19,7 @@ function Harness({ onClose }: { onClose: () => void }): React.ReactNode {
         messages={messages.en}
         onChange={setFilters}
         onClose={onClose}
+        onShortcut={jest.fn()}
         open
         resultCount={2}
       />
@@ -62,6 +63,7 @@ describe("JobsFilterModal", () => {
           messages={messages.en}
           onChange={onChange}
           onClose={jest.fn()}
+          onShortcut={jest.fn()}
           open
           resultCount={1}
         />

@@ -19,6 +19,7 @@ interface JobsFilterModalProps {
   messages: FoundationMessages;
   onChange: (filters: JobFilters) => void;
   onClose: () => void;
+  onShortcut: (shortcut: DiscoveryShortcut) => void;
   open: boolean;
   resultCount: number;
 }
@@ -108,6 +109,7 @@ export function JobsFilterModal({
   messages,
   onChange,
   onClose,
+  onShortcut,
   open,
   resultCount,
 }: JobsFilterModalProps): React.ReactNode {
@@ -217,9 +219,10 @@ export function JobsFilterModal({
                   ) : undefined}
                   key={shortcut}
                   label={label}
-                  onPress={() => onChange(
-                    toggleDiscoveryShortcut(filters, shortcut),
-                  )}
+                  onPress={() => {
+                    onShortcut(shortcut);
+                    onChange(toggleDiscoveryShortcut(filters, shortcut));
+                  }}
                   selected={shortcutSelected(filters, shortcut)}
                 />
               ))}
