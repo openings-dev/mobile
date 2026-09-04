@@ -138,6 +138,7 @@ platform :android do
       json_key: play_json_key,
       metadata_path: File.join(project_root, "fastlane", "metadata", "android"),
       package_name: OPENINGS_ANDROID_PACKAGE,
+      changes_not_sent_for_review: true,
       skip_upload_aab: true,
       skip_upload_apk: true,
       track: "internal",

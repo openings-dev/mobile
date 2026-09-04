@@ -40,6 +40,7 @@ describe("Android release automation", () => {
     expect(fastfile).toMatch(/lane :store_listing/);
     expect(fastfile).toContain("skip_upload_aab: true");
     expect(fastfile).toContain("skip_upload_apk: true");
+    expect(fastfile).toContain("changes_not_sent_for_review: true");
   });
 
   it("keeps store-listing uploads separate from binary delivery", () => {
