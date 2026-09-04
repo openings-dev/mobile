@@ -50,7 +50,7 @@ def github_config_set(kind, name, value)
 end
 
 platform :android do
-  desc "Sync Android telemetry and Firebase build configuration to GitHub"
+  desc "Sync Android telemetry, Firebase, signing, and Play configuration to GitHub"
   lane :sync_github_config do
     variables = {
       "EXPO_PUBLIC_SENTRY_DSN" => ENV["EXPO_PUBLIC_SENTRY_DSN"],
@@ -73,6 +73,21 @@ platform :android do
     unless ENV["SENTRY_AUTH_TOKEN"].to_s.strip.empty?
       github_config_set("secret", "SENTRY_AUTH_TOKEN", ENV["SENTRY_AUTH_TOKEN"])
     end
+
+    validate_signing!
+    github_config_set("secret", "ANDROID_KEY_ALIAS", ENV["ANDROID_KEY_ALIAS"])
+    github_config_set("secret", "ANDROID_KEY_PASSWORD", ENV["ANDROID_KEY_PASSWORD"])
+    github_config_set("secret", "ANDROID_STORE_PASSWORD", ENV["ANDROID_STORE_PASSWORD"])
+    github_config_set(
+      "secret",
+      "ANDROID_KEYSTORE_BASE64",
+      Base64.strict_encode64(File.binread(release_keystore))
+    )
+    github_config_set(
+      "secret",
+      "GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64",
+      Base64.strict_encode64(File.binread(play_json_key))
+    )
   end
 
   desc "Run the complete mobile repository verification"
@@ -131,7 +146,7 @@ platform :android do
     )
   end
 
-  desc "Upload localized Google Play listing assets for an explicit internal version"
+  desc "Upload localized Google Play listing assets without changing its release"
   lane :store_listing do |options|
     version_code = positive_version_code(options)
     upload_to_play_store(
@@ -141,6 +156,7 @@ platform :android do
       changes_not_sent_for_review: true,
       skip_upload_aab: true,
       skip_upload_apk: true,
+      skip_upload_changelogs: true,
       track: "internal",
       version_code: version_code
     )

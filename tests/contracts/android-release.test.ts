@@ -44,9 +44,14 @@ describe("Android release automation", () => {
   });
 
   it("keeps store-listing uploads separate from binary delivery", () => {
+    const storeListingLane =
+      fastfile.match(/lane :store_listing[\s\S]*?^  end$/m)?.[0] ?? "";
     const internalLane = fastfile.match(/lane :internal[\s\S]*?^  end$/m)?.[0] ?? "";
     const productionLane = fastfile.match(/lane :production[\s\S]*?^  end$/m)?.[0] ?? "";
 
+    expect(storeListingLane).toContain("skip_upload_changelogs: true");
+    expect(storeListingLane).toContain("version_code: version_code");
+    expect(storeListingLane).toContain('track: "internal"');
     expect(internalLane).not.toContain("store_listing");
     expect(productionLane).not.toContain("store_listing");
   });
@@ -58,6 +63,16 @@ describe("Android release automation", () => {
     expect(internalWorkflow).toContain("SENTRY_AUTH_TOKEN");
     expect(internalWorkflow).toContain("GOOGLE_SERVICES_JSON_BASE64");
     expect(internalWorkflow).toContain("mobile/google-services.json");
+  });
+
+  it("syncs Android signing and Google Play credentials through Fastlane", () => {
+    expect(fastfile).toContain('"ANDROID_KEY_ALIAS"');
+    expect(fastfile).toContain('"ANDROID_KEY_PASSWORD"');
+    expect(fastfile).toContain('"ANDROID_STORE_PASSWORD"');
+    expect(fastfile).toContain('"ANDROID_KEYSTORE_BASE64"');
+    expect(fastfile).toContain('"GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64"');
+    expect(fastfile).toContain("Base64.strict_encode64(File.binread(release_keystore))");
+    expect(fastfile).toContain("Base64.strict_encode64(File.binread(play_json_key))");
   });
 
   it("keeps release versions and signing explicit", () => {
