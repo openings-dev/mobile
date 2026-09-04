@@ -1,4 +1,6 @@
 require "shellwords"
+require "base64"
+require "open3"
 
 default_platform(:android)
 
@@ -40,7 +42,39 @@ def release_version_name(options)
   value
 end
 
+def github_config_set(kind, name, value)
+  UI.user_error!("#{name} is required") if value.to_s.strip.empty?
+  stdout, stderr, status = Open3.capture3("gh", kind, "set", name, stdin_data: value)
+  UI.user_error!("Unable to set GitHub #{kind} #{name}: #{stderr.strip}") unless status.success?
+  UI.success("Updated GitHub #{kind} #{name}")
+end
+
 platform :android do
+  desc "Sync Android telemetry and Firebase build configuration to GitHub"
+  lane :sync_github_config do
+    variables = {
+      "EXPO_PUBLIC_SENTRY_DSN" => ENV["EXPO_PUBLIC_SENTRY_DSN"],
+      "EXPO_PUBLIC_SENTRY_ENVIRONMENT" => ENV.fetch("EXPO_PUBLIC_SENTRY_ENVIRONMENT", "production"),
+      "EXPO_PUBLIC_MIXPANEL_TOKEN" => ENV["EXPO_PUBLIC_MIXPANEL_TOKEN"],
+      "EXPO_PUBLIC_MIXPANEL_API_HOST" => ENV.fetch("EXPO_PUBLIC_MIXPANEL_API_HOST", "https://api.mixpanel.com"),
+      "EXPO_PUBLIC_ONESIGNAL_APP_ID" => ENV["EXPO_PUBLIC_ONESIGNAL_APP_ID"],
+      "SENTRY_ORG" => ENV.fetch("SENTRY_ORG", "openings-hq"),
+      "SENTRY_PROJECT" => ENV.fetch("SENTRY_PROJECT", "openings-mobile")
+    }
+    variables.each { |name, value| github_config_set("variable", name, value) }
+
+    google_services = File.join(project_root, "google-services.json")
+    UI.user_error!("Missing #{google_services}") unless File.exist?(google_services)
+    github_config_set(
+      "secret",
+      "GOOGLE_SERVICES_JSON_BASE64",
+      Base64.strict_encode64(File.binread(google_services))
+    )
+    unless ENV["SENTRY_AUTH_TOKEN"].to_s.strip.empty?
+      github_config_set("secret", "SENTRY_AUTH_TOKEN", ENV["SENTRY_AUTH_TOKEN"])
+    end
+  end
+
   desc "Run the complete mobile repository verification"
   lane :check do
     sh("cd #{project_root.shellescape} && npm run check")
@@ -94,6 +128,20 @@ platform :android do
       skip_upload_metadata: true,
       skip_upload_screenshots: true,
       track: "internal"
+    )
+  end
+
+  desc "Upload localized Google Play listing assets for an explicit internal version"
+  lane :store_listing do |options|
+    version_code = positive_version_code(options)
+    upload_to_play_store(
+      json_key: play_json_key,
+      metadata_path: File.join(project_root, "fastlane", "metadata", "android"),
+      package_name: OPENINGS_ANDROID_PACKAGE,
+      skip_upload_aab: true,
+      skip_upload_apk: true,
+      track: "internal",
+      version_code: version_code
     )
   end
 

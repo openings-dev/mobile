@@ -27,6 +27,7 @@ describe("mobile Makefile", () => {
     expect(makefile).toMatch(/^android-release-bundle:/m);
     expect(makefile).toMatch(/^android-release-internal:/m);
     expect(makefile).toMatch(/^android-release-production:/m);
+    expect(makefile).toMatch(/^android-store-listing:/m);
     expect(makefile).toMatch(/^export:/m);
   });
 

@@ -37,15 +37,27 @@ what the product needs, validate versioned documents when reading them, and avoi
 placing sensitive values in plaintext logs or analytics.
 
 The current application persists versioned candidate state on the device and
-includes no analytics, advertising, notifications, authentication, or cloud
-synchronization.
+includes no advertising, authentication, or cloud synchronization. Crashlytics
+records automatic native crashes when Firebase is configured. Sentry records
+sanitized technical errors when a DSN is configured. Mixpanel product analytics
+requires explicit in-app consent, and OneSignal requires explicit in-app consent
+plus the operating-system notification permission.
 
 ## External services
 
-Any future analytics or monitoring integration requires an explicit event and field
-contract. Do not send search terms, saved jobs, viewed jobs, outbound application
-intent, locale history, or stable device identifiers by default. Integration failure
-must not block opportunity discovery.
+Analytics and monitoring integrations require an explicit event and field contract.
+The current Mixpanel allowlist sends bucketed search length and result counts,
+filter dimensions and normalized values, locale, public job identifiers, source
+counts, saved-count ranges, public community repositories, and activity state only
+after consent. It does not send search text, job content, email addresses, full
+URLs, or IP-derived location. Sentry strips email addresses and URL queries and has
+default personal-data collection and tracing disabled. Integration failure must not
+block opportunity discovery.
+
+OneSignal starts with consent required. Notification processing begins only after
+the user grants in-app consent and the operating-system permission. Users can
+disable notifications in system settings. Keep the public privacy policy and Google
+Play Data safety answers aligned whenever these contracts change.
 
 ## Dependency and platform safety
 

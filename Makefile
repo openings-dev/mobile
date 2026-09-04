@@ -30,7 +30,7 @@ ANDROID_KEYSTORE ?= android/app/keystore.jks
 .PHONY: prebuild ios-pods ios-run ios-debug ios-build
 .PHONY: android-run android-debug android-build
 .PHONY: fastlane-install android-release-lanes android-release-check
-.PHONY: android-release-bundle android-release-internal android-release-production
+.PHONY: android-release-bundle android-release-internal android-release-production android-store-listing
 
 help: ## Show the available Openings Mobile commands
 	@awk 'BEGIN {FS = ":.*## "; printf "Openings Mobile commands:\n\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-20s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -159,6 +159,11 @@ android-release-internal: ## Build and upload an explicit version to Google Play
 		[ -f "$(ANDROID_KEYSTORE_PROPERTIES)" ] || { printf '%s\n' "Missing $(ANDROID_KEYSTORE_PROPERTIES)." >&2; exit 2; }; \
 		[ -f "$(ANDROID_KEYSTORE)" ] || { printf '%s\n' "Missing $(ANDROID_KEYSTORE)." >&2; exit 2; }
 	$(FASTLANE) android internal version_code:"$(ANDROID_VERSION_CODE)" version_name:"$(ANDROID_VERSION_NAME)"
+
+android-store-listing: ## Upload localized Google Play copy and artwork for an internal version
+	@set -eu; \
+		[ -n "$(ANDROID_VERSION_CODE)" ] || { printf '%s\n' "ANDROID_VERSION_CODE is required." >&2; exit 2; }
+	$(FASTLANE) android store_listing version_code:"$(ANDROID_VERSION_CODE)"
 
 android-release-production: ## Promote an explicit internal version to Google Play production
 	@set -eu; \

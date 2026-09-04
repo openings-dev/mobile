@@ -1,0 +1,1 @@
+Primera versión de Openings para Android: descubre, filtra, guarda y consulta empleos tech de comunidades públicas de GitHub, con Comunidades y Autores en seis idiomas.

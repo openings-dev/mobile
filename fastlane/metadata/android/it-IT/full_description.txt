@@ -1,0 +1,17 @@
+Trova opportunità tecnologiche dove le community le condividono già.
+
+Openings raccoglie annunci pubblici dai repository delle community GitHub in un'esperienza mirata e pensata per dispositivi mobili. Cerca posizioni aperte, restringi i risultati con filtri utili e torna sempre alla fonte pubblica originale prima di candidarti.
+
+CON OPENINGS PUOI
+
+• Scoprire lavori tecnologici dalle community pubbliche di GitHub
+• Filtrare per località, modalità di lavoro, seniority, tecnologia, tipo di impiego, data, stipendio e community
+• Consultare dettagli, informazioni sulla fonte e contesto di pubblicazione
+• Salvare le opportunità interessanti localmente sul dispositivo
+• Esplorare community attive e autori collegati agli annunci
+• Usare l'app in italiano, inglese, portoghese, spagnolo, francese o tedesco
+• Scegliere il tema chiaro, scuro o di sistema
+
+Openings è uno strumento di scoperta. Non raccoglie candidature, non verifica i datori di lavoro e non garantisce che un annuncio sia ancora disponibile. Ogni opportunità rimanda alla fonte pubblica originale, dove puoi verificare i dettagli e proseguire.
+
+Non serve un account. I lavori salvati e le preferenze restano sul dispositivo.

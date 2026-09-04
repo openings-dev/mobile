@@ -36,7 +36,27 @@ describe("Android release automation", () => {
     expect(fastfile).toMatch(/lane :internal/);
     expect(fastfile).toMatch(/lane :upload_internal/);
     expect(fastfile).toMatch(/lane :production/);
-    expect(fastfile).not.toMatch(/lane :store_listing/);
+    expect(fastfile).toMatch(/lane :sync_github_config/);
+    expect(fastfile).toMatch(/lane :store_listing/);
+    expect(fastfile).toContain("skip_upload_aab: true");
+    expect(fastfile).toContain("skip_upload_apk: true");
+  });
+
+  it("keeps store-listing uploads separate from binary delivery", () => {
+    const internalLane = fastfile.match(/lane :internal[\s\S]*?^  end$/m)?.[0] ?? "";
+    const productionLane = fastfile.match(/lane :production[\s\S]*?^  end$/m)?.[0] ?? "";
+
+    expect(internalLane).not.toContain("store_listing");
+    expect(productionLane).not.toContain("store_listing");
+  });
+
+  it("injects mobile telemetry and Firebase config into release builds", () => {
+    expect(internalWorkflow).toContain("EXPO_PUBLIC_SENTRY_DSN");
+    expect(internalWorkflow).toContain("EXPO_PUBLIC_MIXPANEL_TOKEN");
+    expect(internalWorkflow).toContain("EXPO_PUBLIC_ONESIGNAL_APP_ID");
+    expect(internalWorkflow).toContain("SENTRY_AUTH_TOKEN");
+    expect(internalWorkflow).toContain("GOOGLE_SERVICES_JSON_BASE64");
+    expect(internalWorkflow).toContain("mobile/google-services.json");
   });
 
   it("keeps release versions and signing explicit", () => {
@@ -88,6 +108,6 @@ describe("Android release automation", () => {
       productionWorkflow,
     ].join("\n");
 
-    expect(releaseFiles).not.toMatch(/troco|admob|firebase|sentry/i);
+    expect(releaseFiles).not.toMatch(/troco|admob/i);
   });
 });

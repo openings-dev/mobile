@@ -39,7 +39,7 @@ dependencies. The internal-release workflow therefore checks out `core`,
 - `Gemfile` and `Gemfile.lock` pin Fastlane for reproducible local and CI execution.
 - `fastlane/Appfile` declares `dev.openings.mobile` and optional Play credentials.
 - `fastlane/Fastfile` defines `check`, `build_debug`, `bundle_release`, `internal`,
-  `upload_internal`, and `production` Android lanes.
+  `upload_internal`, `store_listing`, and `production` Android lanes.
 - `android/app/build.gradle` reads explicit version values from the environment,
   configures release signing only when local credentials exist, and refuses release
   tasks without those credentials. Debug builds keep the generated debug key.
@@ -112,6 +112,14 @@ Google Play application and credentials exist:
 ANDROID_VERSION_CODE=2 ANDROID_VERSION_NAME=0.2.0 make android-release-internal
 ANDROID_VERSION_CODE=2 make android-release-production
 ```
+
+Upload the localized listing independently from binary delivery:
+
+```sh
+ANDROID_VERSION_CODE=2 make android-store-listing
+```
+
+The listing lane skips APK and AAB upload and never promotes a release track.
 
 `ANDROID_VERSION_CODE` must be a positive integer. `ANDROID_VERSION_NAME` must be a
 semantic version without a `v` prefix. The internal lane sets both values before
