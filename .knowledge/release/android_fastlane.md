@@ -45,6 +45,8 @@ dependencies. The internal-release workflow therefore checks out `core`,
   tasks without those credentials. Debug builds keep the generated debug key.
 - `scripts/restore-google-play-service-account.mjs` validates and materializes the
   base64 CI secret into a temporary file with restricted permissions.
+- `scripts/verify-android-aab.mjs` checks the packaged version code, version name,
+  upload certificate, and optional artifact SHA-256 without printing credentials.
 - `.github/workflows/android-internal.yml` validates credentials, builds one signed
   artifact, and uploads that exact artifact to Google Play internal testing.
 - `.github/workflows/android-production-release.yml` accepts an existing successful
@@ -60,12 +62,16 @@ a semantic version name. CI validates the five required secrets, restores signin
 and Google Play credentials only in temporary or ignored paths, verifies the
 repositories, builds the signed AAB once, stores it as
 `openings-android-<version_code>`, and uploads that artifact to the internal track.
+The workflow verifies the exact AAB before artifact archival and verifies it again
+after download before upload. Bundletool is version-pinned and checksum-verified.
 
 For production, a maintainer supplies the same version information plus the
 successful internal workflow run ID. CI verifies the run, repository, workflow,
 commit, and single non-expired artifact. It does not rebuild. Promotion operates on
 the explicit internal version code. A GitHub Release remains a draft on failure and
 becomes public only after Google Play accepts the promotion.
+Before either action, CI checks the downloaded AAB against the requested manifest
+version, configured upload-certificate fingerprint, and source artifact digest.
 
 ## Failure handling and safety
 
@@ -73,11 +79,12 @@ becomes public only after Google Play accepts the promotion.
   debug key.
 - Invalid version codes, semantic versions, service-account JSON, workflow runs,
   duplicate tags, missing artifacts, and missing secrets fail with explicit errors.
+- Missing verification tools or mismatched AAB versions, digest, or signing
+  certificate stop delivery before Google Play or GitHub Release mutation.
 - Debug builds do not require release credentials.
 - Workflows are manual and dormant until the Google Play application and repository
   secrets are configured.
-- The initial scope excludes iOS delivery, store-listing metadata, EAS Submit,
-  advertising, analytics, Firebase, Sentry, and notification configuration.
+- The current release scope excludes iOS delivery, EAS Submit, and advertising.
 
 ## Testing
 
@@ -134,6 +141,11 @@ The manual workflows require these repository secrets:
 - `ANDROID_KEYSTORE_BASE64`
 - `ANDROID_STORE_PASSWORD`
 - `GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64`
+
+They also require the public repository variable
+`ANDROID_SIGNING_CERT_SHA256`. The `sync_github_config` lane derives this value
+from the local upload keystore and updates it without exposing passwords or key
+material.
 
 Run `Android internal release` first with an unused version code and semantic
 version name. After the internal upload succeeds, run `Android production release`

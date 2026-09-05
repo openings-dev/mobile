@@ -25,6 +25,7 @@ Other web areas are intentionally outside the mobile scope.
 - [Design system](design_system/README.md) — mobile visual authority and documentation index
   - [Foundations and components](design_system/foundations_and_components.md)
 - [Shared packages](integrations/shared_packages.md) — ownership and local consumption of public NPM packages
+- [Android versioning](integrations/android_versioning.md) — Firebase minimum version and Google Play update behavior
 
 ## Authority
 
