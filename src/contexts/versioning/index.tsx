@@ -86,7 +86,7 @@ export function VersioningProvider({
 
   useEffect(() => {
     active.current = true;
-    void refresh();
+    void Promise.resolve().then(refresh);
     return () => {
       active.current = false;
     };

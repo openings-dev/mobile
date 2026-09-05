@@ -58,4 +58,23 @@ describe("localized messages", () => {
       expect(copy?.jobs?.reportProblem).toBeTruthy();
     }
   });
+
+  it("provides complete Android update copy", () => {
+    const messages = moduleContract.messages as Record<
+      string,
+      { versioning?: Record<string, string> }
+    >;
+
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(messages[locale]?.versioning).toEqual({
+        description: expect.any(String),
+        dismiss: expect.any(String),
+        optionalDescription: expect.any(String),
+        optionalTitle: expect.any(String),
+        storeAction: expect.any(String),
+        title: expect.any(String),
+        updateAction: expect.any(String),
+      });
+    }
+  });
 });

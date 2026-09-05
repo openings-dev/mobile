@@ -3,16 +3,20 @@ import "../../../global.css";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { View } from "react-native";
 
+import { VersioningScreen } from "@/app/versioning";
 import { AppErrorBoundary } from "@/components/app-error-boundary";
 import { AnalyticsConsentBanner } from "@/components/analytics-consent-banner";
 import { NotificationConsentPrompt } from "@/components/notification-consent-prompt";
+import { OptionalUpdateBanner } from "@/components/optional-update-banner";
 import { CandidateStateProvider } from "@/contexts/candidate-state";
 import { LocaleProvider, useLocale } from "@/contexts/locale";
 import { OpeningsCatalogProvider } from "@/contexts/openings-catalog";
 import { ThemeProvider, useAppTheme } from "@/contexts/theme";
-import { startTelemetry } from "@/services/telemetry";
+import { VersioningProvider, useVersioning } from "@/contexts/versioning";
 import { startNotifications } from "@/services/notifications";
+import { startTelemetry } from "@/services/telemetry";
 
 startTelemetry();
 void startNotifications();
@@ -30,6 +34,13 @@ const queryClient = new QueryClient({
 function RootContent(): React.ReactNode {
   const { messages } = useLocale();
   const { name } = useAppTheme();
+  const { mandatoryUpdate, status } = useVersioning();
+
+  if (status === "loading") {
+    return <View className="flex-1 bg-canvas" />;
+  }
+
+  if (mandatoryUpdate) return <VersioningScreen />;
 
   return (
     <AppErrorBoundary
@@ -46,6 +57,7 @@ function RootContent(): React.ReactNode {
             <Stack screenOptions={{ headerShown: false }} />
             <NotificationConsentPrompt />
             <AnalyticsConsentBanner />
+            <OptionalUpdateBanner />
           </OpeningsCatalogProvider>
         </CandidateStateProvider>
       </QueryClientProvider>
@@ -57,7 +69,9 @@ export default function RootLayout(): React.ReactNode {
   return (
     <LocaleProvider>
       <ThemeProvider>
-        <RootContent />
+        <VersioningProvider>
+          <RootContent />
+        </VersioningProvider>
       </ThemeProvider>
     </LocaleProvider>
   );

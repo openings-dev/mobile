@@ -82,6 +82,15 @@ export interface FoundationMessages {
     purpose: string;
     title: string;
   };
+  versioning: {
+    description: string;
+    dismiss: string;
+    optionalDescription: string;
+    optionalTitle: string;
+    storeAction: string;
+    title: string;
+    updateAction: string;
+  };
   jobs: {
     allSources: string;
     areas: string;
