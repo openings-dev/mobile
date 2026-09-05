@@ -66,6 +66,8 @@ jobs:
   build:
     if: ${{ inputs.validate_only == false }}
     needs: preflight
+    outputs:
+      aab_sha256: ${{ steps.verify_aab.outputs.sha256 }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -151,6 +153,19 @@ jobs:
       - name: Build signed Android App Bundle
         working-directory: mobile
         run: bundle exec fastlane android bundle_release
+      - name: Install pinned bundletool
+        run: |
+          curl -fsSL https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o "$RUNNER_TEMP/bundletool.jar"
+          echo 'a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  '"$RUNNER_TEMP/bundletool.jar" | sha256sum --check
+      - name: Verify signed Android App Bundle
+        id: verify_aab
+        env:
+          AAB_EXPECTED_CERT_SHA256: ${{ vars.ANDROID_SIGNING_CERT_SHA256 }}
+          BUNDLETOOL_JAR: ${{ runner.temp }}/bundletool.jar
+        working-directory: mobile
+        run: |
+          node scripts/verify-android-aab.mjs android/app/build/outputs/bundle/release/app-release.aab
+          printf 'sha256=%s\n' "$(sha256sum android/app/build/outputs/bundle/release/app-release.aab | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
       - name: Preserve signed Android App Bundle
         uses: actions/upload-artifact@v6
         with:
@@ -178,6 +193,10 @@ jobs:
         with:
           node-version: "24"
           package-manager-cache: false
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
       - uses: ruby/setup-ruby@v1
         with:
           ruby-version: "3.3"
@@ -188,6 +207,19 @@ jobs:
         with:
           name: openings-android-${{ inputs.version_code }}
           path: dist
+      - name: Install pinned bundletool
+        run: |
+          curl -fsSL https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o "$RUNNER_TEMP/bundletool.jar"
+          echo 'a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  '"$RUNNER_TEMP/bundletool.jar" | sha256sum --check
+      - name: Verify downloaded Android App Bundle
+        env:
+          AAB_EXPECTED_CERT_SHA256: ${{ vars.ANDROID_SIGNING_CERT_SHA256 }}
+          AAB_EXPECTED_SHA256: ${{ needs.build.outputs.aab_sha256 }}
+          ANDROID_VERSION_CODE: ${{ inputs.version_code }}
+          ANDROID_VERSION_NAME: ${{ inputs.version_name }}
+          BUNDLETOOL_JAR: ${{ runner.temp }}/bundletool.jar
+        working-directory: mobile
+        run: node scripts/verify-android-aab.mjs ../dist/app-release.aab
       - name: Restore Google Play credentials
         env:
           GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON_BASE64 }}

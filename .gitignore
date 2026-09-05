@@ -25,6 +25,7 @@ fastlane/test_output/
 !.env.example
 
 # Local Android release credentials
+docs/credentials/
 android/keystore.properties
 android/app/keystore.jks
 google-play-service-account.json

@@ -23,6 +23,19 @@ def validate_signing!
   UI.user_error!("Missing android/app/keystore.jks") unless File.exist?(release_keystore)
 end
 
+def signing_certificate_sha256
+  validate_signing!
+  stdout, stderr, status = Open3.capture3(
+    "keytool", "-list", "-v",
+    "-keystore", release_keystore,
+    "-storepass", ENV.fetch("ANDROID_STORE_PASSWORD", ""),
+    "-alias", ENV.fetch("ANDROID_KEY_ALIAS", "")
+  )
+  fingerprint = stdout[/SHA-?256:\s*([0-9A-F:]+)/i, 1]
+  UI.user_error!("Unable to read Android signing certificate: #{stderr.strip}") unless status.success? && fingerprint
+  fingerprint.delete(":").upcase
+end
+
 def play_json_key
   path = ENV["GOOGLE_PLAY_JSON_KEY_FILE"] || File.join(project_root, "google-play-service-account.json")
   UI.user_error!("Google Play service-account JSON was not found at #{path}") unless File.exist?(path)
@@ -78,6 +91,7 @@ platform :android do
     github_config_set("secret", "ANDROID_KEY_ALIAS", ENV["ANDROID_KEY_ALIAS"])
     github_config_set("secret", "ANDROID_KEY_PASSWORD", ENV["ANDROID_KEY_PASSWORD"])
     github_config_set("secret", "ANDROID_STORE_PASSWORD", ENV["ANDROID_STORE_PASSWORD"])
+    github_config_set("variable", "ANDROID_SIGNING_CERT_SHA256", signing_certificate_sha256)
     github_config_set(
       "secret",
       "ANDROID_KEYSTORE_BASE64",

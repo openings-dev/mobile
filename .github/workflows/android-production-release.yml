@@ -131,6 +131,7 @@ jobs:
             }
 
             core.setOutput("artifact_name", artifactName);
+            core.setOutput("artifact_sha256", matchingArtifacts[0].digest?.replace(/^sha256:/, "") ?? "");
             core.setOutput("source_sha", run.head_sha);
             core.setOutput("source_url", run.html_url);
 
@@ -152,6 +153,25 @@ jobs:
             exit 1
           fi
           printf 'path=%s\n' "${aabs[0]}" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install pinned bundletool
+        run: |
+          curl -fsSL https://github.com/google/bundletool/releases/download/1.18.3/bundletool-all-1.18.3.jar -o "$RUNNER_TEMP/bundletool.jar"
+          echo 'a099cfa1543f55593bc2ed16a70a7c67fe54b1747bb7301f37fdfd6d91028e29  '"$RUNNER_TEMP/bundletool.jar" | sha256sum --check
+
+      - name: Verify downloaded Android App Bundle
+        env:
+          AAB_EXPECTED_CERT_SHA256: ${{ vars.ANDROID_SIGNING_CERT_SHA256 }}
+          AAB_EXPECTED_SHA256: ${{ steps.source.outputs.artifact_sha256 }}
+          ANDROID_VERSION_CODE: ${{ inputs.version_code }}
+          ANDROID_VERSION_NAME: ${{ inputs.version_name }}
+          BUNDLETOOL_JAR: ${{ runner.temp }}/bundletool.jar
+        run: node scripts/verify-android-aab.mjs "${{ steps.aab.outputs.path }}"
 
       - name: Create draft GitHub Release
         id: draft

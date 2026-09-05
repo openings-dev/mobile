@@ -22,6 +22,7 @@ describe("Android release automation", () => {
   const productionWorkflow = readProjectFile(
     ".github/workflows/android-production-release.yml",
   );
+  const verifier = readProjectFile("scripts/verify-android-aab.mjs");
 
   it("pins Fastlane and the Openings Android application identifier", () => {
     expect(gemfile).toContain('gem "fastlane", "~> 2.228"');
@@ -88,6 +89,7 @@ describe("Android release automation", () => {
   });
 
   it("keeps all local Android release credentials and artifacts untracked", () => {
+    expect(gitignore).toContain("docs/credentials/");
     expect(gitignore).toContain("android/keystore.properties");
     expect(gitignore).toContain("android/app/keystore.jks");
     expect(gitignore).toContain("google-play-service-account.json");
@@ -113,6 +115,21 @@ describe("Android release automation", () => {
     );
     expect(productionWorkflow).toContain(
       "bundle exec fastlane android production",
+    );
+  });
+
+  it("verifies the exact signed bundle before archive, upload, and promotion", () => {
+    expect(verifier).toContain("AAB_EXPECTED_CERT_SHA256");
+    expect(verifier).toContain("ANDROID_VERSION_CODE");
+    expect(verifier).toContain("ANDROID_VERSION_NAME");
+    expect(verifier).toContain("AAB_EXPECTED_SHA256");
+    expect(internalWorkflow.match(/node scripts\/verify-android-aab\.mjs/g)).toHaveLength(2);
+    expect(productionWorkflow).toContain("node scripts/verify-android-aab.mjs");
+    expect(internalWorkflow.indexOf("node scripts/verify-android-aab.mjs")).toBeLessThan(
+      internalWorkflow.indexOf("actions/upload-artifact@v6"),
+    );
+    expect(productionWorkflow.indexOf("node scripts/verify-android-aab.mjs")).toBeLessThan(
+      productionWorkflow.indexOf("fastlane android production"),
     );
   });
 
