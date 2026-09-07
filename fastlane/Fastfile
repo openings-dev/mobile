@@ -179,6 +179,9 @@ platform :android do
   desc "Promote an explicit internal version to production"
   lane :production do |options|
     version_code = positive_version_code(options)
+    release_status = options[:release_status] || "completed"
+    UI.user_error!("release_status must be completed, draft, halted, or inProgress") unless
+      %w[completed draft halted inProgress].include?(release_status)
     upload_to_play_store(
       json_key: play_json_key,
       package_name: "dev.openings.mobile",
@@ -188,6 +191,7 @@ platform :android do
       skip_upload_screenshots: true,
       track: "internal",
       track_promote_to: "production",
+      track_promote_release_status: release_status,
       version_code: version_code
     )
   end

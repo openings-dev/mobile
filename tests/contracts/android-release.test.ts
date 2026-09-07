@@ -118,6 +118,15 @@ describe("Android release automation", () => {
     );
   });
 
+  it("supports a draft production release while the Play app is unpublished", () => {
+    const productionLane = fastfile.match(/lane :production[\s\S]*?^  end$/m)?.[0] ?? "";
+
+    expect(productionLane).toContain('release_status = options[:release_status] || "completed"');
+    expect(productionLane).toContain("track_promote_release_status: release_status");
+    expect(productionWorkflow).toContain("default: draft");
+    expect(productionWorkflow).toContain('release_status:${{ inputs.release_status }}');
+  });
+
   it("verifies the exact signed bundle before archive, upload, and promotion", () => {
     expect(verifier).toContain("AAB_EXPECTED_CERT_SHA256");
     expect(verifier).toContain("ANDROID_VERSION_CODE");

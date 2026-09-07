@@ -15,6 +15,14 @@ on:
         description: Successful Android internal release workflow run ID
         required: true
         type: number
+      release_status:
+        description: Use draft while the Play application itself is unpublished
+        required: true
+        default: draft
+        type: choice
+        options:
+          - draft
+          - completed
 
 permissions:
   actions: read
@@ -211,7 +219,7 @@ jobs:
       - name: Promote internal version to Google Play production
         env:
           GOOGLE_PLAY_JSON_KEY_FILE: ${{ runner.temp }}/google-play-service-account.json
-        run: bundle exec fastlane android production "version_code:${{ inputs.version_code }}"
+        run: bundle exec fastlane android production "version_code:${{ inputs.version_code }}" "release_status:${{ inputs.release_status }}"
 
       - name: Publish GitHub Release
         env:
