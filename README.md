@@ -12,10 +12,12 @@ It consumes the generated public snapshot from `openings-dev/data-pipeline`. It 
 
 ## Local development
 
-The app consumes `@openingshq/core` and `@openingshq/design-tokens` from sibling local repositories. Build both packages before installing or starting the mobile application.
+The app consumes exact public npm releases of `@openingshq/core` and
+`@openingshq/design-tokens`. No sibling repositories or private registry token are
+required.
 
 ```sh
-npm install
+npm ci
 npm run check
 npm run start
 ```

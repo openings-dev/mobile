@@ -18,36 +18,13 @@ jobs:
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: mobile
-      - name: Check out public core package
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          path: core
-          ref: d141be36675f255caf2783da7cd6d9902224888f
-          repository: openings-dev/core
-      - name: Check out public design tokens package
-        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
-        with:
-          path: design-tokens
-          ref: 76ac0a1f14b56942fd3a34198b5d89c84319ad84
-          repository: openings-dev/design-tokens
       - name: Set up Node.js
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           cache: npm
-          cache-dependency-path: |
-            core/package-lock.json
-            design-tokens/package-lock.json
-            mobile/package-lock.json
+          cache-dependency-path: mobile/package-lock.json
           node-version: "24"
-      - name: Install public packages
-        run: |
-          npm ci --prefix core
-          npm ci --prefix design-tokens
       - name: Install mobile dependencies
         run: npm ci --prefix mobile
-      - name: Check public packages
-        run: |
-          npm run check --prefix core
-          npm run check --prefix design-tokens
       - name: Check mobile
         run: npm run check --prefix mobile

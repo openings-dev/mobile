@@ -32,8 +32,8 @@
   "dependencies": {
     "@expo-google-fonts/figtree": "0.4.1",
     "@expo-google-fonts/geist-mono": "^0.4.3",
-    "@openingshq/core": "file:../core",
-    "@openingshq/design-tokens": "file:../design-tokens",
+    "@openingshq/core": "0.1.0",
+    "@openingshq/design-tokens": "0.1.0",
     "@react-native-async-storage/async-storage": "2.2.0",
     "@react-native-firebase/app": "^26.3.3",
     "@react-native-firebase/crashlytics": "^26.3.3",

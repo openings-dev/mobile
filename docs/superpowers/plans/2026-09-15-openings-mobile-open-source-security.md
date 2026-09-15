@@ -305,7 +305,7 @@ git commit -m "security: classify mobile configuration boundaries"
 - Modify: `.knowledge/integrations/shared_packages.md`
 - Modify: `tests/contracts/shared-packages.test.ts`
 
-- [ ] **Step 1: Write the failing public-install contract**
+- [x] **Step 1: Write the failing public-install contract**
 
 ```ts
 expect(manifest.dependencies["@openingshq/core"]).toBe("0.1.0");
@@ -316,13 +316,13 @@ expect(JSON.stringify(lockfile)).not.toContain('"file:../design-tokens"');
 
 Also assert Metro does not require sibling paths for the default contributor build.
 
-- [ ] **Step 2: Run the contract and observe RED**
+- [x] **Step 2: Run the contract and observe RED**
 
 Run: `npm test -- --runInBand tests/contracts/shared-packages.test.ts`
 
 Expected: FAIL because both dependencies resolve through sibling `file:` paths.
 
-- [ ] **Step 3: Verify and install public versions**
+- [x] **Step 3: Verify and install public versions**
 
 Run `npm view @openingshq/core@0.1.0 dist.integrity version` and the equivalent command for `@openingshq/design-tokens`. Continue only if both public packages and expected exports are available. Then run:
 
@@ -332,13 +332,13 @@ npm install --save-exact @openingshq/core@0.1.0 @openingshq/design-tokens@0.1.0
 
 Do not make sibling repositories public or use a private registry token.
 
-- [ ] **Step 4: Prove a fresh secret-free install**
+- [x] **Step 4: Prove a fresh secret-free install**
 
 From a temporary clone with no sibling repositories and no `.env`, run `npm ci` and `npm run check`.
 
 Expected: installation and all checks pass using the public npm registry only.
 
-- [ ] **Step 5: Commit public dependency resolution**
+- [x] **Step 5: Commit public dependency resolution**
 
 ```sh
 git add package.json package-lock.json metro.config.js .knowledge/guides/development_setup.md .knowledge/integrations/shared_packages.md tests/contracts/shared-packages.test.ts
