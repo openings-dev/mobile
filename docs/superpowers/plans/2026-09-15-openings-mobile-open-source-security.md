@@ -17,7 +17,7 @@
 - Modify: `package-lock.json`
 - Test: `tests/contracts/app-config.test.ts`
 
-- [ ] **Step 1: Write the failing patch-alignment contract**
+- [x] **Step 1: Write the failing patch-alignment contract**
 
 Add a test that reads `package.json` and asserts the exact Expo Doctor-compatible patch ranges reported on September 15, 2026:
 
@@ -36,19 +36,19 @@ expect(manifest.dependencies).toMatchObject({
 });
 ```
 
-- [ ] **Step 2: Run the test and observe RED**
+- [x] **Step 2: Run the test and observe RED**
 
 Run: `npm test -- --runInBand tests/contracts/app-config.test.ts`
 
 Expected: FAIL because the manifest contains earlier SDK 57 patch releases.
 
-- [ ] **Step 3: Apply only Expo-compatible patch updates**
+- [x] **Step 3: Apply only Expo-compatible patch updates**
 
 Run: `npx expo install expo@~57.0.22 expo-application@~57.0.3 expo-constants@~57.0.18 expo-dev-client@~57.0.19 expo-font@~57.0.4 expo-linking@~57.0.10 expo-localization@~57.0.2 expo-router@~57.0.21 expo-splash-screen@~57.0.9 expo-system-ui@~57.0.4`
 
 Do not accept major/minor upgrades or unrelated automated dependency rewrites.
 
-- [ ] **Step 4: Verify JavaScript and native compatibility**
+- [x] **Step 4: Verify JavaScript and native compatibility**
 
 Run:
 

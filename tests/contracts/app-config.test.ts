@@ -39,6 +39,25 @@ function readExpoConfig(): ExpoConfig {
 }
 
 describe("native application identity", () => {
+  it("uses the Expo SDK 57 patch baseline accepted by Expo Doctor", () => {
+    const manifest = JSON.parse(
+      readFileSync(join(process.cwd(), "package.json"), "utf8"),
+    ) as { dependencies: Record<string, string> };
+
+    expect(manifest.dependencies).toMatchObject({
+      expo: "~57.0.22",
+      "expo-application": "~57.0.3",
+      "expo-constants": "~57.0.18",
+      "expo-dev-client": "~57.0.19",
+      "expo-font": "~57.0.4",
+      "expo-linking": "~57.0.10",
+      "expo-localization": "~57.0.2",
+      "expo-router": "~57.0.21",
+      "expo-splash-screen": "~57.0.9",
+      "expo-system-ui": "~57.0.4",
+    });
+  });
+
   it("configures privacy-safe observability and OneSignal native plugins", () => {
     const expo = readExpoConfig();
     const pluginNames = expo.plugins?.map((plugin) =>
