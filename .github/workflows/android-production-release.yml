@@ -34,10 +34,11 @@ concurrency:
 
 jobs:
   release:
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
 
       - name: Validate release inputs
         env:
@@ -56,7 +57,7 @@ jobs:
 
       - name: Validate source workflow and artifact
         id: source
-        uses: actions/github-script@v8
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           VERSION_CODE: ${{ inputs.version_code }}
@@ -83,7 +84,9 @@ jobs:
             if (
               run.status !== "completed" ||
               run.conclusion !== "success" ||
+              run.event !== "workflow_dispatch" ||
               run.path !== expectedWorkflow ||
+              run.head_branch !== "main" ||
               sourceRepository !== repository
             ) {
               core.setFailed(
@@ -144,7 +147,7 @@ jobs:
             core.setOutput("source_url", run.html_url);
 
       - name: Download existing signed Android App Bundle
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
         with:
           github-token: ${{ github.token }}
           name: openings-android-${{ inputs.version_code }}
@@ -162,7 +165,7 @@ jobs:
           fi
           printf 'path=%s\n' "${aabs[0]}" >> "$GITHUB_OUTPUT"
 
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: "17"
@@ -199,12 +202,12 @@ jobs:
           printf 'url=%s\n' "$draft_url" >> "$GITHUB_OUTPUT"
           printf 'Draft release: %s\n' "$draft_url" >> "$GITHUB_STEP_SUMMARY"
 
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24"
           package-manager-cache: false
 
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@bec3f19a76460dbe12f60def7d1a77585f07516c # v1
         with:
           ruby-version: "3.3"
 

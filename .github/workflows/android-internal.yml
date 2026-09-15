@@ -22,15 +22,16 @@ permissions:
 
 jobs:
   preflight:
+    if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-java@v5
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: "17"
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24"
           package-manager-cache: false
@@ -85,18 +86,20 @@ jobs:
       SENTRY_PROJECT: ${{ vars.SENTRY_PROJECT }}
     steps:
       - name: Check out mobile
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: mobile
       - name: Check out public core package
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: core
+          ref: d141be36675f255caf2783da7cd6d9902224888f
           repository: openings-dev/core
       - name: Check out public design-tokens package
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: design-tokens
+          ref: 76ac0a1f14b56942fd3a34198b5d89c84319ad84
           repository: openings-dev/design-tokens
       - name: Free disk space for the Android native build
         run: |
@@ -105,11 +108,11 @@ jobs:
           sudo rm -rf /usr/local/.ghcup
           sudo rm -rf /opt/hostedtoolcache/CodeQL
           df -h /
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: "17"
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           cache: npm
           cache-dependency-path: |
@@ -117,10 +120,10 @@ jobs:
             design-tokens/package-lock.json
             mobile/package-lock.json
           node-version: "24"
-      - uses: gradle/actions/setup-gradle@v6
+      - uses: gradle/actions/setup-gradle@9c971963bec38e04b3d30dcc455b5382be2fdbfb # v6
         with:
           cache-provider: basic
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@bec3f19a76460dbe12f60def7d1a77585f07516c # v1
         with:
           ruby-version: "3.3"
       - name: Install and verify public packages
@@ -167,7 +170,7 @@ jobs:
           node scripts/verify-android-aab.mjs android/app/build/outputs/bundle/release/app-release.aab
           printf 'sha256=%s\n' "$(sha256sum android/app/build/outputs/bundle/release/app-release.aab | cut -d ' ' -f 1)" >> "$GITHUB_OUTPUT"
       - name: Preserve signed Android App Bundle
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           compression-level: 0
           if-no-files-found: error
@@ -186,24 +189,24 @@ jobs:
       group: android-google-play-publish
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           path: mobile
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: "24"
           package-manager-cache: false
-      - uses: actions/setup-java@v5
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
         with:
           distribution: temurin
           java-version: "17"
-      - uses: ruby/setup-ruby@v1
+      - uses: ruby/setup-ruby@bec3f19a76460dbe12f60def7d1a77585f07516c # v1
         with:
           ruby-version: "3.3"
       - name: Install Fastlane
         working-directory: mobile
         run: bundle install --jobs 4 --retry 3
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
         with:
           name: openings-android-${{ inputs.version_code }}
           path: dist

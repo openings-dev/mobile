@@ -118,6 +118,14 @@ describe("Android release automation", () => {
     );
   });
 
+  it("keeps privileged releases manual and bound to trusted main revisions", () => {
+    expect(internalWorkflow).toContain("workflow_dispatch:");
+    expect(internalWorkflow).toContain("github.ref == 'refs/heads/main'");
+    expect(productionWorkflow).toContain("workflow_dispatch:");
+    expect(productionWorkflow).toContain('run.head_branch !== "main"');
+    expect(productionWorkflow).toContain('run.event !== "workflow_dispatch"');
+  });
+
   it("supports a draft production release while the Play app is unpublished", () => {
     const productionLane = fastfile.match(/lane :production[\s\S]*?^  end$/m)?.[0] ?? "";
 
@@ -135,7 +143,7 @@ describe("Android release automation", () => {
     expect(internalWorkflow.match(/node scripts\/verify-android-aab\.mjs/g)).toHaveLength(2);
     expect(productionWorkflow).toContain("node scripts/verify-android-aab.mjs");
     expect(internalWorkflow.indexOf("node scripts/verify-android-aab.mjs")).toBeLessThan(
-      internalWorkflow.indexOf("actions/upload-artifact@v6"),
+      internalWorkflow.indexOf("actions/upload-artifact@"),
     );
     expect(productionWorkflow.indexOf("node scripts/verify-android-aab.mjs")).toBeLessThan(
       productionWorkflow.indexOf("fastlane android production"),

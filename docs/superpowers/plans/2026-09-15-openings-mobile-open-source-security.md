@@ -184,7 +184,7 @@ git commit -m "feat: inventory public repository surfaces"
 - Modify: `.github/workflows/android-production-release.yml`
 - Modify: `tests/contracts/android-release.test.ts`
 
-- [ ] **Step 1: Write failing workflow security contracts**
+- [x] **Step 1: Write failing workflow security contracts**
 
 Assert ordinary CI uses `pull_request` and `push` without secrets or write permissions; release workflows remain manual and reject untrusted provenance:
 
@@ -198,13 +198,13 @@ expect(production).toContain('run.head_branch !== "main"');
 
 Also require every external `uses:` reference to match `owner/repository@[a-f0-9]{40}`; local actions may use `./` paths.
 
-- [ ] **Step 2: Run workflow tests and observe RED**
+- [x] **Step 2: Run workflow tests and observe RED**
 
 Run: `npm test -- --runInBand tests/contracts/public-ci.test.ts tests/contracts/android-release.test.ts`
 
 Expected: FAIL because no public CI exists, actions use mutable major tags, and production does not yet require the source run's `main` ref.
 
-- [ ] **Step 3: Add secret-free public CI**
+- [x] **Step 3: Add secret-free public CI**
 
 The workflow must use:
 
@@ -223,11 +223,11 @@ jobs:
 
 Checkout mobile plus the two public package repositories at reviewed immutable SHAs, install with `npm ci`, and run package checks followed by mobile `npm run check`. Do not run on a self-hosted runner or receive production environment/secrets.
 
-- [ ] **Step 4: Pin release actions and strengthen source provenance**
+- [x] **Step 4: Pin release actions and strengthen source provenance**
 
 Resolve each currently used action tag with `git ls-remote` against its official repository, record the reviewed tag-to-SHA mapping in `docs/security/public_repository_audit.md`, replace every tag with the exact 40-character commit, and require the production source run to have `head_branch === "main"`, `event === "workflow_dispatch"`, the expected workflow path and this repository identity.
 
-- [ ] **Step 5: Verify and commit CI isolation**
+- [x] **Step 5: Verify and commit CI isolation**
 
 Run: `npm test -- --runInBand tests/contracts/public-ci.test.ts tests/contracts/android-release.test.ts`
 
