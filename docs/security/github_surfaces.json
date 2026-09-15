@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-09-15T14:51:58.161Z",
+  "clearance": "blocked",
+  "repository": {
+    "nameWithOwner": "openings-dev/mobile",
+    "visibility": "PRIVATE",
+    "defaultBranch": "main"
+  },
+  "surfaces": {
+    "branches": [
+      {
+        "name": "main",
+        "protected": false,
+        "headSha": "83a7399aaad877cb08445b84c34b0e59dcf6f609"
+      }
+    ],
+    "tags": [],
+    "releases": [],
+    "workflows": [
+      {
+        "id": 348738980,
+        "name": "Android internal release",
+        "path": ".github/workflows/android-internal.yml",
+        "state": "active"
+      },
+      {
+        "id": 348738981,
+        "name": "Android production release",
+        "path": ".github/workflows/android-production-release.yml",
+        "state": "active"
+      }
+    ],
+    "artifacts": [],
+    "rulesets": {
+      "status": "inaccessible"
+    },
+    "environments": []
+  },
+  "metadata": {
+    "actionsPermissions": {
+      "status": "accessible",
+      "enabled": true,
+      "allowedActions": "all"
+    },
+    "actionsPublicKey": {
+      "status": "accessible",
+      "keyId": "3380204578043523366"
+    }
+  }
+}

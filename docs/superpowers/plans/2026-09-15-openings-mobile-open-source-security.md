@@ -133,7 +133,7 @@ git commit -m "feat: add redacted public readiness audit"
 - Create: `docs/security/github_surfaces.json`
 - Modify: `docs/security/public_repository_audit.md`
 
-- [ ] **Step 1: Write failing tests for allowlisted remote metadata**
+- [x] **Step 1: Write failing tests for allowlisted remote metadata**
 
 Require the report to contain only counts, names, visibility, permissions and timestamps from these endpoint classes:
 
@@ -152,23 +152,23 @@ expect(result).toMatchObject({
 
 Reject response keys matching `/secret|token|credential|value/i` before serialization.
 
-- [ ] **Step 2: Run the test and observe RED**
+- [x] **Step 2: Run the test and observe RED**
 
 Run: `npm test -- --runInBand tests/scripts/audit-github-surfaces.test.ts`
 
 Expected: FAIL because the GitHub surface audit does not exist.
 
-- [ ] **Step 3: Implement read-only GitHub inventory**
+- [x] **Step 3: Implement read-only GitHub inventory**
 
 Use `gh api` only with GET requests for repository visibility, branches, tags, releases, Actions permissions, workflows, artifact metadata, rulesets, environments and public-key/application metadata. Do not request Actions secret values, download artifacts, read logs, mutate settings or expose collaborator identities in the public report.
 
-- [ ] **Step 4: Record accessible and inaccessible surfaces**
+- [x] **Step 4: Record accessible and inaccessible surfaces**
 
 Run: `node scripts/audit-github-surfaces.mjs --repository openings-dev/mobile --output docs/security/github_surfaces.json`
 
 Expected: a redacted metadata file or an explicit `inaccessible` entry per endpoint; partial access must block public clearance rather than be reported as clean.
 
-- [ ] **Step 5: Commit the remote inventory**
+- [x] **Step 5: Commit the remote inventory**
 
 ```sh
 git add scripts/audit-github-surfaces.mjs tests/scripts/audit-github-surfaces.test.ts docs/security/public_repository_audit.md docs/security/github_surfaces.json

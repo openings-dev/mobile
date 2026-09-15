@@ -25,7 +25,18 @@ Scanned refs:
 
 ## Remote surfaces
 
-Status: **inaccessible** — Requires the separate read-only GitHub surface audit.
+Status: **blocked** — the read-only inventory is recorded in
+`docs/security/github_surfaces.json`.
+
+- Repository visibility: private
+- Default branch: `main` (reported as unprotected by the branches endpoint)
+- Workflows: 2 active privileged Android release workflows
+- Releases, tags, artifacts and environments: 0
+- Actions policy: enabled; all actions allowed
+- Rulesets: inaccessible with the current GitHub authorization
+
+Public clearance remains blocked until every endpoint is accessible and the branch,
+workflow and Actions boundaries are reviewed.
 
 ## Redacted findings
 
