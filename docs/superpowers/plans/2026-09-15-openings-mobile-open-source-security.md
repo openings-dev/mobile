@@ -74,7 +74,7 @@ git commit -m "chore: align Expo SDK 57 patches"
 - Create: `docs/security/public_repository_audit.md`
 - Modify: `package.json`
 
-- [ ] **Step 1: Write failing tests for redaction and coverage**
+- [x] **Step 1: Write failing tests for redaction and coverage**
 
 Test an injected command runner and fixture refs. Require paths, ref names, finding classes and SHA-256 fingerprints while forbidding matched values:
 
@@ -91,13 +91,13 @@ expect(report.findings[0]).toMatchObject({
 });
 ```
 
-- [ ] **Step 2: Run the audit tests and observe RED**
+- [x] **Step 2: Run the audit tests and observe RED**
 
 Run: `npm test -- --runInBand tests/scripts/audit-public-readiness.test.ts`
 
 Expected: FAIL because the audit module does not exist.
 
-- [ ] **Step 3: Implement the bounded scanner**
+- [x] **Step 3: Implement the bounded scanner**
 
 The script must:
 
@@ -112,13 +112,13 @@ const coverageCommands = [
 
 Scan blobs with size caps, never emit matching text, hash findings with Node's `crypto`, reject output paths outside `docs/security`, and distinguish `confirmed`, `review-required`, `public-client-config`, and `false-positive`. Exit nonzero only for confirmed or unresolved review-required findings.
 
-- [ ] **Step 4: Generate the first redacted report**
+- [x] **Step 4: Generate the first redacted report**
 
 Run: `npm run security:audit -- --output docs/security/public_repository_audit.md`
 
 Expected: report includes exact local ref/file/LFS/submodule coverage, inaccessible remote surfaces, finding fingerprints and no secret values.
 
-- [ ] **Step 5: Commit the audit mechanism and report**
+- [x] **Step 5: Commit the audit mechanism and report**
 
 ```sh
 git add package.json scripts/audit-public-readiness.mjs tests/scripts/audit-public-readiness.test.ts docs/security/public_repository_audit.md

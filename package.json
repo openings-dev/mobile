@@ -24,6 +24,7 @@
     "ios:debug": "expo run:ios --configuration Debug",
     "lint": "eslint . --max-warnings=0",
     "prebuild": "expo prebuild",
+    "security:audit": "node scripts/audit-public-readiness.mjs",
     "start": "expo start --dev-client",
     "test": "jest",
     "typecheck": "tsc --noEmit"
