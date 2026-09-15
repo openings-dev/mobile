@@ -63,6 +63,9 @@ jobs:
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/keystore.jks"
           keytool -list -keystore "$RUNNER_TEMP/keystore.jks" -storepass "$ANDROID_STORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS" >/dev/null
           node scripts/restore-google-play-service-account.mjs "$RUNNER_TEMP/google-play-service-account.json"
+      - name: Remove generated credentials
+        if: always()
+        run: rm -f "$RUNNER_TEMP/keystore.jks" "$RUNNER_TEMP/google-play-service-account.json"
 
   build:
     if: ${{ inputs.validate_only == false }}
@@ -177,6 +180,14 @@ jobs:
           name: openings-android-${{ inputs.version_code }}
           path: mobile/android/app/build/outputs/bundle/release/app-release.aab
           retention-days: 7
+      - name: Remove generated credentials
+        if: always()
+        run: |
+          rm -f mobile/android/app/keystore.jks
+          rm -f mobile/android/keystore.properties
+          rm -f mobile/google-services.json
+          rm -f mobile/android/app/google-services.json
+          rm -f "$RUNNER_TEMP/google-play-service-account.json"
 
   publish:
     if: ${{ inputs.validate_only == false }}
@@ -232,6 +243,6 @@ jobs:
           GOOGLE_PLAY_JSON_KEY_FILE: ${{ runner.temp }}/google-play-service-account.json
         working-directory: mobile
         run: bundle exec fastlane android upload_internal aab:../dist/app-release.aab
-      - name: Remove Google Play credentials
+      - name: Remove generated credentials
         if: always()
         run: rm -f "$RUNNER_TEMP/google-play-service-account.json"

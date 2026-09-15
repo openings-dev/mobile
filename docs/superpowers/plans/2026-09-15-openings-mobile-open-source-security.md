@@ -248,7 +248,7 @@ git commit -m "ci: isolate public checks from Android release"
 - Modify: `.env.example`
 - Modify: `README.md`
 
-- [ ] **Step 1: Write failing configuration-boundary tests**
+- [x] **Step 1: Write failing configuration-boundary tests**
 
 Create an allowlist classifying every configured name without values:
 
@@ -272,21 +272,21 @@ const privileged = [
 
 Assert privileged names appear only under `secrets`, public client inputs are documented as extractable, release credentials are scoped to their consuming steps/jobs, and generated files are deleted under `if: always()`.
 
-- [ ] **Step 2: Run configuration tests and observe RED**
+- [x] **Step 2: Run configuration tests and observe RED**
 
 Run: `npm test -- --runInBand tests/contracts/configuration-boundary.test.ts`
 
 Expected: FAIL until the inventory and cleanup guarantees exist.
 
-- [ ] **Step 3: Implement the inventory and cleanup contract**
+- [x] **Step 3: Implement the inventory and cleanup contract**
 
 Document owner, consumer, privilege, delivery path and classification for every name. Keep client configuration out of ordinary contributor CI. Add an unconditional cleanup step for the keystore, `keystore.properties`, Firebase configuration and Play JSON. Keep `ANDROID_SIGNING_CERT_SHA256`, Sentry organization/project names and package identity classified as public metadata unless the audit proves a different risk.
 
-- [ ] **Step 4: Handle confirmed exposure safely**
+- [x] **Step 4: Handle confirmed exposure safely**
 
 If the redacted audit finds a privileged value in Git history, logs or artifacts, stop this task before repository visibility, rotate/revoke the exact credential through its owner, preserve signing continuity, and record only the credential name, fingerprint and rotation result. Any history rewrite or release deletion requires a separate explicit approval.
 
-- [ ] **Step 5: Verify and commit configuration boundaries**
+- [x] **Step 5: Verify and commit configuration boundaries**
 
 Run: `npm test -- --runInBand tests/contracts/configuration-boundary.test.ts tests/contracts/android-release.test.ts`
 

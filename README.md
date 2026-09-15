@@ -21,3 +21,12 @@ npm run start
 ```
 
 The application identifier is `dev.openings.mobile` on both platforms.
+
+## Configuration boundary
+
+Public client configuration is not secret: every `EXPO_PUBLIC_*` value can be
+extracted from an installed application. Local development and pull-request checks
+work with those values unset. Official Android delivery receives signing, Google
+Play and build-service credentials only inside manual workflows restricted to the
+trusted `main` branch. See `docs/security/configuration_inventory.md` for the
+name-only inventory and ownership boundaries.
