@@ -183,6 +183,7 @@ jobs:
         run: node scripts/verify-android-aab.mjs "${{ steps.aab.outputs.path }}"
 
       - name: Create draft GitHub Release
+        continue-on-error: true
         id: draft
         env:
           AAB_PATH: ${{ steps.aab.outputs.path }}
@@ -223,6 +224,7 @@ jobs:
         run: bundle exec fastlane android production "version_code:${{ inputs.version_code }}" "release_status:${{ inputs.release_status }}"
 
       - name: Publish GitHub Release
+        if: ${{ steps.draft.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |

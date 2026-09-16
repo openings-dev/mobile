@@ -153,6 +153,15 @@ describe("Android release automation", () => {
     expect(productionWorkflow).toContain('release_status:${{ inputs.release_status }}');
   });
 
+  it("does not let GitHub release permissions block Google Play promotion", () => {
+    expect(productionWorkflow).toMatch(
+      /- name: Create draft GitHub Release\n\s+continue-on-error: true/,
+    );
+    expect(productionWorkflow).toContain(
+      "if: ${{ steps.draft.outcome == 'success' }}",
+    );
+  });
+
   it("verifies the exact signed bundle before archive, upload, and promotion", () => {
     expect(verifier).toContain("AAB_EXPECTED_CERT_SHA256");
     expect(verifier).toContain("ANDROID_VERSION_CODE");
