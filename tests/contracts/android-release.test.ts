@@ -19,6 +19,9 @@ describe("Android release automation", () => {
   const internalWorkflow = readProjectFile(
     ".github/workflows/android-internal.yml",
   );
+  const androidManifest = readProjectFile(
+    "android/app/src/main/AndroidManifest.xml",
+  );
   const productionWorkflow = readProjectFile(
     ".github/workflows/android-production-release.yml",
   );
@@ -65,6 +68,20 @@ describe("Android release automation", () => {
     expect(internalWorkflow).toContain("GOOGLE_SERVICES_JSON_BASE64");
     expect(internalWorkflow).toContain("mobile/google-services.json");
     expect(internalWorkflow).toContain("mobile/android/app/google-services.json");
+  });
+
+  it("removes advertising identifier permissions from the merged app", () => {
+    const advertisingPermissions = [
+      "com.google.android.gms.permission.AD_ID",
+      "android.permission.ACCESS_ADSERVICES_ATTRIBUTION",
+      "android.permission.ACCESS_ADSERVICES_AD_ID",
+    ];
+
+    for (const permission of advertisingPermissions) {
+      expect(androidManifest).toContain(
+        `<uses-permission android:name="${permission}" tools:node="remove"/>`,
+      );
+    }
   });
 
   it("syncs Android signing and Google Play credentials through Fastlane", () => {
