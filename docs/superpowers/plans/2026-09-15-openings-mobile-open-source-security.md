@@ -355,7 +355,7 @@ git commit -m "build: use public Openings packages"
 - Modify: `README.md`
 - Modify after owner choice: `LICENSE`
 
-- [ ] **Step 1: Write failing documentation contracts**
+- [x] **Step 1: Write failing documentation contracts**
 
 Assert README includes secret-free setup and the official-release boundary, contributing guidance forbids secrets in reports, SECURITY documents a private reporting route without inventing an address, and every tracked redistributable asset has an owner/rights classification.
 
@@ -366,21 +366,21 @@ expect(security).not.toContain("security@example.invalid");
 expect(assetInventory).toContain("fastlane/metadata/android");
 ```
 
-- [ ] **Step 2: Run documentation tests and observe RED**
+- [x] **Step 2: Run documentation tests and observe RED**
 
 Run: `npm test -- --runInBand tests/contracts/open-source-readiness.test.ts`
 
 Expected: FAIL because these public policy files and the rights inventory do not exist.
 
-- [ ] **Step 3: Inventory and document redistributable material**
+- [x] **Step 3: Inventory and document redistributable material**
 
 Record source/owner/license or `owner-review-required` for app icons, screenshots, feature graphics, fonts and store text. A missing right blocks visibility; it does not authorize deleting or replacing an asset silently.
 
-- [ ] **Step 4: Obtain the owner's explicit source-license choice**
+- [x] **Step 4: Obtain the owner's explicit source-license choice**
 
 Present the verified existing dependency licenses and repository goals. Add `LICENSE` only after the owner selects its terms. Brand/trademark permission must be documented separately from source-code licensing.
 
-- [ ] **Step 5: Verify and commit open-source documentation**
+- [x] **Step 5: Verify and commit open-source documentation**
 
 Run: `npm test -- --runInBand tests/contracts/open-source-readiness.test.ts`
 

@@ -2,6 +2,7 @@
   "name": "@openingshq/mobile",
   "version": "0.1.1",
   "description": "Private Expo application for Openings on iOS and Android.",
+  "license": "MIT",
   "private": true,
   "repository": {
     "type": "git",
