@@ -19,14 +19,14 @@ contents.
 
 ## Local development
 
-Mobile currently resolves the packages through sibling `file:` dependencies. Metro
-watches those sibling repositories, but their package exports still point to built
-`dist` artifacts. Run each package build after changing source before validating the
-mobile integration.
+Mobile resolves exact public npm releases and Metro uses the standard project
+configuration. A fresh clone needs no sibling repository. Changes to either shared
+package must be published under semantic versioning before mobile deliberately
+updates its exact dependency.
 
 Jest transforms the package boundary explicitly, and the contract test imports the
 same public exports the application consumes. Do not bypass package exports with a
-relative import into a sibling `src` folder.
+relative import into another repository's `src` folder.
 
 ## Ownership rules
 

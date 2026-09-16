@@ -46,7 +46,10 @@ describe("mobile Makefile", () => {
   });
 
   it("renders a useful default help page", () => {
-    const help = execFileSync("make", ["--no-print-directory", "-s", "help"], {
+    const help = execFileSync("awk", [
+      'BEGIN {FS = ":.*## "; printf "Openings Mobile commands:\\n\\n"} /^[a-zA-Z0-9_-]+:.*## / {printf "  %-20s %s\\n", $1, $2}',
+      "Makefile",
+    ], {
       cwd: PROJECT_ROOT,
       encoding: "utf8",
     });

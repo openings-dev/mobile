@@ -4,33 +4,16 @@
 
 ## Repository layout
 
-During local foundation development, the mobile repository expects two sibling
-repositories:
-
-```text
-openings.dev/
-├── core/                 # @openingshq/core
-├── design-tokens/        # @openingshq/design-tokens
-└── mobile/               # @openingshq/mobile
-```
-
-`package.json` currently uses `file:../core` and `file:../design-tokens`. Metro
-watches both sibling folders. Build the public packages before installing or
-starting mobile whenever their generated `dist` output changes.
+The mobile repository is self-contained for contributors. It installs exact public
+npm releases of `@openingshq/core` and `@openingshq/design-tokens`; sibling clones,
+private registry access and repository credentials are not required.
 
 ## Install and check
 
-From each public package, run:
+From `mobile`:
 
 ```sh
-npm install
-npm run check
-```
-
-Then from `mobile`:
-
-```sh
-npm install
+npm ci
 npm run check
 ```
 

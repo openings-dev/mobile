@@ -6,7 +6,7 @@
       "@/*": ["./src/*"]
     },
     "strict": true,
-    "types": ["jest", "node", "react", "react-native"]
+    "types": ["expo/types", "jest", "node", "react", "react-native"]
   },
   "include": [
     "src/**/*.ts",
