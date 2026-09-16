@@ -142,7 +142,6 @@ jobs:
             }
 
             core.setOutput("artifact_name", artifactName);
-            core.setOutput("artifact_sha256", matchingArtifacts[0].digest?.replace(/^sha256:/, "") ?? "");
             core.setOutput("source_sha", run.head_sha);
             core.setOutput("source_url", run.html_url);
 
@@ -178,7 +177,6 @@ jobs:
       - name: Verify downloaded Android App Bundle
         env:
           AAB_EXPECTED_CERT_SHA256: ${{ vars.ANDROID_SIGNING_CERT_SHA256 }}
-          AAB_EXPECTED_SHA256: ${{ steps.source.outputs.artifact_sha256 }}
           ANDROID_VERSION_CODE: ${{ inputs.version_code }}
           ANDROID_VERSION_NAME: ${{ inputs.version_name }}
           BUNDLETOOL_JAR: ${{ runner.temp }}/bundletool.jar
