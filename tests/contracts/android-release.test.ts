@@ -160,6 +160,9 @@ describe("Android release automation", () => {
     expect(verifier).toContain("AAB_EXPECTED_SHA256");
     expect(internalWorkflow.match(/node scripts\/verify-android-aab\.mjs/g)).toHaveLength(2);
     expect(productionWorkflow).toContain("node scripts/verify-android-aab.mjs");
+    expect(productionWorkflow).not.toContain(
+      "AAB_EXPECTED_SHA256: ${{ steps.source.outputs.artifact_sha256 }}",
+    );
     expect(internalWorkflow.indexOf("node scripts/verify-android-aab.mjs")).toBeLessThan(
       internalWorkflow.indexOf("actions/upload-artifact@"),
     );
