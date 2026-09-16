@@ -394,7 +394,7 @@ git commit -m "docs: prepare public mobile contribution policy"
 **Files:**
 - Modify: `docs/security/public_repository_audit.md`
 
-- [ ] **Step 1: Re-run local redacted scans over every available ref**
+- [x] **Step 1: Re-run local redacted scans over every available ref**
 
 Run: `npm run security:audit -- --output docs/security/public_repository_audit.md`
 
@@ -418,11 +418,11 @@ Expected: all commands exit zero without release credentials or a Play upload.
 
 Clone the candidate branch into a temporary directory, confirm there are no sibling Openings repositories or production environment files, then run `npm ci`, `npm run check` and the Android debug build.
 
-- [ ] **Step 4: Review diff and remote coverage**
+- [x] **Step 4: Review diff and remote coverage**
 
 Review every changed file, re-run the GitHub surface inventory, verify the repository remains private, and record inaccessible surfaces as blockers. Do not download or expose logs/artifacts merely to make the report appear complete.
 
-- [ ] **Step 5: Commit final audit evidence**
+- [x] **Step 5: Commit final audit evidence**
 
 ```sh
 git add docs/security/public_repository_audit.md docs/security/github_surfaces.json

@@ -1,18 +1,18 @@
 # Public Repository Audit
 
-Generated: 2026-09-15T14:48:24.607Z
+Generated: 2026-09-16T17:21:46.154Z
 
-Clearance: **blocked**
+Clearance: **local-clear**
 
 ## Coverage
 
 - Local heads: 3
 - Remote refs: 2
 - Tags: 0
-- Tracked files: 354
-- Scanned historical blobs: 565
+- Tracked files: 371
+- Scanned historical blobs: 615
 - Large blobs skipped for manual review: 0
-- Git LFS: inaccessible
+- Git LFS: complete-via-pointer-scan (0 entries)
 - Submodules: 0
 
 Scanned refs:
@@ -25,37 +25,16 @@ Scanned refs:
 
 ## Remote surfaces
 
-Status: **blocked** — the read-only inventory is recorded in
-`docs/security/github_surfaces.json`.
+Status: **blocked** — see `docs/security/github_surfaces.json`, generated on
+September 16, 2026.
 
-- Repository visibility: private
-- Default branch: `main` (reported as unprotected by the branches endpoint)
-- Workflows: 2 active privileged Android release workflows
-- Releases, tags, artifacts and environments: 0
-- Actions policy: enabled; all actions allowed
-- Rulesets: inaccessible with the current GitHub authorization
-
-Public clearance remains blocked until every endpoint is accessible and the branch,
-workflow and Actions boundaries are reviewed.
-
-## Immutable CI references
-
-Resolved from the official repositories on September 15, 2026:
-
-| Reference | Reviewed commit |
-| --- | --- |
-| `actions/checkout@v6` | `d23441a48e516b6c34aea4fa41551a30e30af803` |
-| `actions/setup-java@v5` | `b6effb05e454b25005698d916606bdc6ffcbf961` |
-| `actions/setup-node@v6` | `249970729cb0ef3589644e2896645e5dc5ba9c38` |
-| `gradle/actions/setup-gradle@v6` | `9c971963bec38e04b3d30dcc455b5382be2fdbfb` |
-| `ruby/setup-ruby@v1` | `bec3f19a76460dbe12f60def7d1a77585f07516c` |
-| `actions/upload-artifact@v6` | `b7c566a772e6b6bfb58ed0dc250532a479d7789f` |
-| `actions/download-artifact@v6` | `018cc2cf5baa6db3ef3c5f8a56943fffe632ef53` |
-| `actions/github-script@v8` | `ed597411d8f924073f98dfc5c65a23a2325f34cd` |
-
-The temporary sibling-package checkouts are also fixed to reviewed public commits:
-`openings-dev/core@d141be36675f255caf2783da7cd6d9902224888f` and
-`openings-dev/design-tokens@76ac0a1f14b56942fd3a34198b5d89c84319ad84`.
+- Repository remains `PRIVATE`; default branch is `main`.
+- The branches endpoint reports `main` as unprotected.
+- Two privileged Android release workflows are active.
+- Actions are enabled with `allowedActions: all`.
+- Tags, releases, artifacts and environments are empty.
+- Rulesets are inaccessible with the current authorization, so remote clearance is
+  not granted.
 
 ## Redacted findings
 
@@ -63,4 +42,26 @@ Matched values are never written to this report. Fingerprints are one-way SHA-25
 
 | Path | Object | Pattern | Disposition | Fingerprint |
 | --- | --- | --- | --- | --- |
+| tests/scripts/audit-public-readiness.test.ts | 240ffc11b81e59a236add02d0d5b01850bc9d7bb | private-key | false-positive | sha256:5f0a8c7e99e43b146241f97e4b80bce96a0d04bbd119cf959aeddbb06e6969da |
+| tests/scripts/audit-public-readiness.test.ts | 240ffc11b81e59a236add02d0d5b01850bc9d7bb | credential-assignment | false-positive | sha256:e7e200fbe4b94df833e4976bcde42a16c4339b1f562ec511f1ad6d69e3cfec9e |
 | tests/scripts/restore-google-play-service-account.test.ts | c9878c18d84e45c3df57b3b34eddb4ede5e66df6 | private-key | false-positive | sha256:5f0a8c7e99e43b146241f97e4b80bce96a0d04bbd119cf959aeddbb06e6969da |
+
+## Candidate validation
+
+Validation on September 16, 2026 produced the following evidence:
+
+- Exact public dependency installation with `npm ci`: passed.
+- ESLint, strict TypeScript and Jest: passed; the isolated clone ran 65 suites and
+  234 tests without sibling repositories or environment files.
+- Android debug build from that isolated clone: passed without `google-services.json`
+  or a repository-local debug keystore; Firebase build plugins were intentionally
+  disabled for the credential-free contributor build.
+- Android debug build in the candidate worktree: passed with Expo 57.0.23.
+- Fastlane Ruby syntax validation: passed.
+- Expo Doctor: 19/20; dependency validation passed, but CocoaPods inspection is
+  blocked because the host requires the user to accept the Xcode license.
+- Fastlane lane enumeration: blocked because the host system Ruby 2.6 cannot load
+  the lockfile's Bundler 2.7.2. No release command or upload was attempted.
+
+Local source/history clearance is granted. Public visibility remains blocked by the
+remote ruleset/branch-protection evidence and the two host-tooling checks above.
