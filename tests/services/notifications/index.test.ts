@@ -3,9 +3,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   acceptNotifications,
   declineNotifications,
+  withdrawNotifications,
   startNotifications,
 } from "@/services/notifications";
-import { resetNotificationConsentForTests } from "@/services/notifications/consent";
+import { readNotificationConsent, resetNotificationConsentForTests } from "@/services/notifications/consent";
 
 const mockInitOneSignal = jest.fn();
 const mockGrant = jest.fn().mockResolvedValue(true);
@@ -40,5 +41,11 @@ describe("notifications entry point", () => {
     expect(await declineNotifications()).toBe(true);
     expect(mockDeny).toHaveBeenCalledTimes(1);
     expect(mockGrant).not.toHaveBeenCalled();
+  });
+
+  it("withdraws notification consent without requesting permission", async () => {
+    await acceptNotifications();
+    expect(await withdrawNotifications()).toBe(true);
+    expect(await readNotificationConsent()).toBe("denied");
   });
 });

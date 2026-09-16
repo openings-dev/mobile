@@ -79,6 +79,7 @@ export interface FoundationMessages {
   notificationConsent: {
     accept: string;
     decline: string;
+    disable: string;
     purpose: string;
     title: string;
   };

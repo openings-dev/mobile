@@ -1,12 +1,12 @@
 import type { MessageCatalog } from "./types";
 
 const notificationConsentMessages = {
-  en: { accept: "Enable notifications", decline: "Not now", purpose: "Get occasional editorial updates from Openings. Your searches and saved jobs are never used for notifications.", title: "Stay informed" },
-  "pt-BR": { accept: "Ativar notificações", decline: "Agora não", purpose: "Receba comunicados editoriais ocasionais do Openings. Suas buscas e vagas salvas nunca são usadas para notificações.", title: "Fique por dentro" },
-  es: { accept: "Activar notificaciones", decline: "Ahora no", purpose: "Recibe novedades editoriales ocasionales de Openings. Tus búsquedas y vacantes guardadas nunca se usan para notificaciones.", title: "Mantente al día" },
-  it: { accept: "Attiva le notifiche", decline: "Non ora", purpose: "Ricevi occasionali aggiornamenti editoriali da Openings. Le tue ricerche e le offerte salvate non vengono mai usate per le notifiche.", title: "Resta aggiornato" },
-  fr: { accept: "Activer les notifications", decline: "Pas maintenant", purpose: "Recevez occasionnellement des nouvelles éditoriales d’Openings. Vos recherches et offres enregistrées ne servent jamais aux notifications.", title: "Restez informé" },
-  de: { accept: "Benachrichtigungen aktivieren", decline: "Nicht jetzt", purpose: "Erhalte gelegentlich redaktionelle Neuigkeiten von Openings. Deine Suchen und gespeicherten Stellen werden nie für Benachrichtigungen verwendet.", title: "Bleib informiert" },
+  en: { accept: "Enable job alerts", decline: "Not now", disable: "Disable job alerts", purpose: "Get an alert when Openings publishes a new job. Your searches, viewed jobs, and saved jobs are never used for targeting.", title: "New job alerts" },
+  "pt-BR": { accept: "Ativar alertas de vagas", decline: "Agora não", disable: "Desativar alertas de vagas", purpose: "Receba um alerta quando o Openings publicar uma nova vaga. Suas buscas e vagas vistas ou salvas nunca são usadas para segmentação.", title: "Alertas de novas vagas" },
+  es: { accept: "Activar alertas de empleo", decline: "Ahora no", disable: "Desactivar alertas de empleo", purpose: "Recibe un aviso cuando Openings publique una nueva vacante. Tus búsquedas y vacantes vistas o guardadas nunca se usan para segmentar.", title: "Alertas de nuevas vacantes" },
+  it: { accept: "Attiva gli avvisi di lavoro", decline: "Non ora", disable: "Disattiva gli avvisi di lavoro", purpose: "Ricevi un avviso quando Openings pubblica una nuova offerta. Ricerche e offerte visualizzate o salvate non vengono mai usate per il targeting.", title: "Avvisi per nuove offerte" },
+  fr: { accept: "Activer les alertes emploi", decline: "Pas maintenant", disable: "Désactiver les alertes emploi", purpose: "Recevez une alerte quand Openings publie une nouvelle offre. Vos recherches et offres consultées ou enregistrées ne servent jamais au ciblage.", title: "Alertes nouvelles offres" },
+  de: { accept: "Job-Benachrichtigungen aktivieren", decline: "Nicht jetzt", disable: "Job-Benachrichtigungen deaktivieren", purpose: "Erhalte eine Nachricht, wenn Openings eine neue Stelle veröffentlicht. Suchen sowie angesehene oder gespeicherte Stellen werden nie fürs Targeting genutzt.", title: "Neue Job-Benachrichtigungen" },
 } as const;
 
 const analyticsConsentMessages = {

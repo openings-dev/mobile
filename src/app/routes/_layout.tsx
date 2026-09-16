@@ -9,6 +9,7 @@ import { VersioningScreen } from "@/app/versioning";
 import { AppErrorBoundary } from "@/components/app-error-boundary";
 import { AnalyticsConsentBanner } from "@/components/analytics-consent-banner";
 import { NotificationConsentPrompt } from "@/components/notification-consent-prompt";
+import { NotificationNavigation } from "@/components/notification-navigation";
 import { OptionalUpdateBanner } from "@/components/optional-update-banner";
 import { CandidateStateProvider } from "@/contexts/candidate-state";
 import { LocaleProvider, useLocale } from "@/contexts/locale";
@@ -55,6 +56,7 @@ function RootContent(): React.ReactNode {
           <OpeningsCatalogProvider>
             <StatusBar style={name === "dark" ? "light" : "dark"} />
             <Stack screenOptions={{ headerShown: false }} />
+            <NotificationNavigation />
             <NotificationConsentPrompt />
             <AnalyticsConsentBanner />
             <OptionalUpdateBanner />

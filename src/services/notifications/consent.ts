@@ -3,7 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export type NotificationConsentState = "undecided" | "granted" | "denied";
 
 const STORAGE_KEY = "openings:notification-consent";
-const STORAGE_VERSION = 1;
+// Version 1 covered editorial updates only. Version 2 requires a fresh choice for
+// the materially different new-job alert purpose.
+const STORAGE_VERSION = 2;
 const listeners = new Set<(state: NotificationConsentState) => void>();
 let cachedState: NotificationConsentState | null = null;
 
