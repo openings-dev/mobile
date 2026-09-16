@@ -7,6 +7,7 @@ import {
   grantOneSignalConsentAndRequestPermission,
   initOneSignal,
 } from "./onesignal-client";
+export { withdrawNotifications } from "./preferences";
 
 export async function startNotifications(): Promise<void> {
   const consent = await readNotificationConsent();

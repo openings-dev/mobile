@@ -38,13 +38,13 @@ describe("NotificationConsentPrompt", () => {
     resetAnalyticsConsentForTests();
     resetNotificationConsentForTests();
     const screen = await renderPrompt();
-    await waitFor(() => expect(screen.queryByText("Stay informed")).toBeNull());
+    await waitFor(() => expect(screen.queryByText("New job alerts")).toBeNull());
   });
 
   it("explains notifications before accepting or declining", async () => {
     const screen = await renderPrompt();
-    expect(await screen.findByText("Stay informed")).toBeTruthy();
-    fireEvent.press(screen.getByRole("button", { name: "Enable notifications" }));
+    expect(await screen.findByText("New job alerts")).toBeTruthy();
+    fireEvent.press(screen.getByRole("button", { name: "Enable job alerts" }));
     await waitFor(() => expect(mockAccept).toHaveBeenCalledTimes(1));
   });
 

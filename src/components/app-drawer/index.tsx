@@ -2,6 +2,7 @@ import type { SupportedLocale } from "@openingshq/core";
 import { useRouter } from "expo-router";
 import {
   BriefcaseBusiness,
+  BellOff,
   ChevronUp,
   Globe2,
   Moon,
@@ -10,7 +11,7 @@ import {
   UsersRound,
   X,
 } from "lucide-react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -19,6 +20,8 @@ import { PreferencePopover, type PreferenceOption } from "@/components/preferenc
 import { SupportCard } from "@/components/support-card";
 import { useLocale } from "@/contexts/locale";
 import { useAppTheme, type ThemePreference } from "@/contexts/theme";
+import { readNotificationConsent, subscribeNotificationConsent, type NotificationConsentState } from "@/services/notifications/consent";
+import { withdrawNotifications } from "@/services/notifications/preferences";
 
 const LOCALE_OPTIONS = [
   { label: "English", value: "en" },
@@ -52,6 +55,20 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
   const { name, preference, setPreference, theme } = useAppTheme();
   const [languageOpen, setLanguageOpen] = useState(false);
   const [appearanceOpen, setAppearanceOpen] = useState(false);
+  const [notificationConsent, setNotificationConsent] = useState<NotificationConsentState | null>(null);
+  const [notificationPending, setNotificationPending] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    void readNotificationConsent().then((state) => {
+      if (active) setNotificationConsent(state);
+    });
+    const unsubscribe = subscribeNotificationConsent(setNotificationConsent);
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, []);
   const themeOptions: readonly PreferenceOption<ThemePreference>[] = [
     { label: messages.header.system, value: "system" },
     { label: messages.header.light, value: "light" },
@@ -127,6 +144,25 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
                 testID="app-drawer-footer"
               >
                 <SupportCard />
+                {notificationConsent === "granted" ? (
+                  <Pressable
+                    accessibilityLabel={messages.notificationConsent.disable}
+                    accessibilityRole="button"
+                    className="min-h-11 flex-row items-center gap-3 rounded-control border border-line bg-paper px-3 disabled:opacity-50"
+                    disabled={notificationPending}
+                    onPress={() => {
+                      setNotificationPending(true);
+                      void withdrawNotifications().then((succeeded) => {
+                        if (!succeeded) setNotificationPending(false);
+                      }).catch(() => setNotificationPending(false));
+                    }}
+                  >
+                    <BellOff color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                    <Text className="font-body text-product-body font-medium text-foreground">
+                      {messages.notificationConsent.disable}
+                    </Text>
+                  </Pressable>
+                ) : null}
                 <View className="flex-row gap-2">
                   <Pressable
                     accessibilityLabel={messages.header.appearanceLabel}

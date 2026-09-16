@@ -1,4 +1,6 @@
 import {
+  addNotificationClickListener,
+  denyOneSignalConsent,
   grantOneSignalConsentAndRequestPermission,
   initOneSignal,
   resetOneSignalClientForTests,
@@ -8,10 +10,17 @@ const mockSetConsentRequired = jest.fn();
 const mockInitialize = jest.fn();
 const mockSetConsentGiven = jest.fn();
 const mockRequestPermission = jest.fn().mockResolvedValue(true);
+const mockOptIn = jest.fn();
+const mockOptOut = jest.fn();
+const mockAddEventListener = jest.fn();
+const mockRemoveEventListener = jest.fn();
 
 jest.mock("react-native-onesignal", () => ({
   OneSignal: {
+    User: { pushSubscription: { optIn: () => mockOptIn(), optOut: () => mockOptOut() } },
     Notifications: {
+      addEventListener: (...args: unknown[]) => mockAddEventListener(...args),
+      removeEventListener: (...args: unknown[]) => mockRemoveEventListener(...args),
       requestPermission: (...args: unknown[]) => mockRequestPermission(...args),
     },
     initialize: (...args: unknown[]) => mockInitialize(...args),
@@ -29,6 +38,10 @@ describe("OneSignal client", () => {
     mockInitialize.mockClear();
     mockSetConsentGiven.mockClear();
     mockRequestPermission.mockClear();
+    mockAddEventListener.mockClear();
+    mockRemoveEventListener.mockClear();
+    mockOptIn.mockClear();
+    mockOptOut.mockClear();
     delete process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID;
   });
 
@@ -65,5 +78,36 @@ describe("OneSignal client", () => {
     await grantOneSignalConsentAndRequestPermission();
     expect(mockSetConsentGiven).toHaveBeenCalledWith(true);
     expect(mockRequestPermission).toHaveBeenCalledWith(false);
+    expect(mockOptIn).toHaveBeenCalledTimes(1);
+  });
+
+  it("opts an existing subscription out when consent is absent", () => {
+    process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID = "app-id";
+    initOneSignal("undecided");
+    expect(mockSetConsentGiven).toHaveBeenCalledWith(false);
+    expect(mockOptOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("opts out when consent is withdrawn", () => {
+    process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID = "app-id";
+    initOneSignal("granted");
+    denyOneSignalConsent();
+    expect(mockSetConsentGiven).toHaveBeenCalledWith(false);
+    expect(mockOptOut).toHaveBeenCalledTimes(1);
+  });
+
+  it("accepts only the versioned new-job payload and removes the exact listener", () => {
+    const onJob = jest.fn();
+    const unsubscribe = addNotificationClickListener(onJob);
+    const listener = mockAddEventListener.mock.calls[0]?.[1] as (event: unknown) => void;
+
+    listener({ notification: { additionalData: { type: "openings.job", version: 1, jobId: "gh_1234567890abcdef12345678" } } });
+    listener({ notification: { additionalData: { type: "openings.job", version: 1, jobId: "../settings" } } });
+    listener({ notification: { additionalData: { url: "https://example.com", jobId: "gh_456" } } });
+
+    expect(onJob).toHaveBeenCalledTimes(1);
+    expect(onJob).toHaveBeenCalledWith("gh_1234567890abcdef12345678");
+    unsubscribe();
+    expect(mockRemoveEventListener).toHaveBeenCalledWith("click", listener);
   });
 });

@@ -1,16 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fireEvent, render, within } from "@testing-library/react-native";
+import { fireEvent, render, waitFor, within } from "@testing-library/react-native";
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider, type Metrics } from "react-native-safe-area-context";
 
 import { AppHeader } from "@/components/app-header";
 import { LocaleProvider } from "@/contexts/locale";
 import { ThemeProvider } from "@/contexts/theme";
+import { resetNotificationConsentForTests } from "@/services/notifications/consent";
 
 const mockReplace = jest.fn();
+const mockWithdrawNotifications = jest.fn().mockResolvedValue(true);
 
 jest.mock("expo-router", () => ({
   useRouter: () => ({ replace: mockReplace }),
+}));
+
+jest.mock("@/services/notifications/preferences", () => ({
+  withdrawNotifications: () => mockWithdrawNotifications(),
 }));
 
 jest.mock("@react-native-async-storage/async-storage", () => ({
@@ -38,8 +44,21 @@ function renderAppHeader(metrics: Metrics = DEFAULT_METRICS) {
 describe("AppHeader", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    resetNotificationConsentForTests();
     jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
     jest.mocked(AsyncStorage.setItem).mockResolvedValue();
+  });
+
+  it("lets a granted user withdraw job alerts without leaving browsing", async () => {
+    jest.mocked(AsyncStorage.getItem).mockImplementation(async (key) => (
+      key === "openings:notification-consent"
+        ? JSON.stringify({ version: 2, state: "granted", updatedAt: "2026-09-16T12:00:00.000Z" })
+        : null
+    ));
+    const screen = await renderAppHeader();
+    await fireEvent.press(await screen.findByLabelText("Open navigation menu"));
+    await fireEvent.press(await screen.findByRole("button", { name: "Disable job alerts" }));
+    await waitFor(() => expect(mockWithdrawNotifications).toHaveBeenCalledTimes(1));
   });
 
   it("renders the Openings brand and opens the native navigation drawer", async () => {
