@@ -131,7 +131,9 @@ jobs:
       - name: Restore Firebase Android configuration
         env:
           GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.GOOGLE_SERVICES_JSON_BASE64 }}
-        run: printf '%s' "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > mobile/google-services.json
+        run: |
+          printf '%s' "$GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > mobile/google-services.json
+          install -m 600 mobile/google-services.json mobile/android/app/google-services.json
       - name: Verify the mobile repository
         working-directory: mobile
         run: bundle exec fastlane android check

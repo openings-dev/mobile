@@ -30,6 +30,7 @@ describe("configuration boundary", () => {
   const readme = read("README.md");
   const ci = read(".github/workflows/ci.yml");
   const internal = read(".github/workflows/android-internal.yml");
+  const androidGradle = read("android/app/build.gradle");
 
   it("classifies every public-client and privileged configuration name", () => {
     for (const name of [...publicClient, ...privileged]) expect(inventory).toContain(`\`${name}\``);
@@ -61,5 +62,11 @@ describe("configuration boundary", () => {
       "mobile/android/app/google-services.json",
       "$RUNNER_TEMP/google-play-service-account.json",
     ]) expect(internal).toContain(generated);
+  });
+
+  it("allows a contributor debug build without ignored release configuration", () => {
+    expect(androidGradle).toContain("if (debugKeystoreFile.exists())");
+    expect(androidGradle).toContain("if (googleServicesFile.exists())");
+    expect(androidGradle).toContain("Firebase plugins disabled for credential-free contributor build");
   });
 });

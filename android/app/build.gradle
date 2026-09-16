@@ -3,6 +3,8 @@ apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
 
 def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
+def debugKeystoreFile = file("debug.keystore")
+def googleServicesFile = file("google-services.json")
 def keystorePropertiesFile = rootProject.file("keystore.properties")
 def releaseKeystoreProperties = new Properties()
 if (keystorePropertiesFile.exists()) {
@@ -108,10 +110,12 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            if (debugKeystoreFile.exists()) {
+                storeFile debugKeystoreFile
+                storePassword 'android'
+                keyAlias 'androiddebugkey'
+                keyPassword 'android'
+            }
         }
         if (hasReleaseSigning) {
             release {
@@ -155,6 +159,9 @@ gradle.taskGraph.whenReady { taskGraph ->
     }
     if (requiresReleaseSigning && !hasReleaseSigning) {
         throw new GradleException("Release signing requires android/keystore.properties")
+    }
+    if (requiresReleaseSigning && !googleServicesFile.exists()) {
+        throw new GradleException("Release builds require android/app/google-services.json")
     }
 }
 
@@ -207,5 +214,9 @@ dependencies {
     }
 }
 
-apply plugin: 'com.google.gms.google-services'
-apply plugin: 'com.google.firebase.crashlytics'
+if (googleServicesFile.exists()) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
+} else {
+    logger.lifecycle("Firebase plugins disabled for credential-free contributor build")
+}

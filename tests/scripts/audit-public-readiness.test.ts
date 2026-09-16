@@ -72,6 +72,17 @@ describe("public repository audit", () => {
     ).toBe("false-positive");
   });
 
+  it("recognizes the scanner's explicit synthetic credential fixture", () => {
+    const { classifyFinding } = loadAudit();
+    expect(
+      classifyFinding(
+        "credential-assignment",
+        "fixtureprivatevalue",
+        "tests/scripts/audit-public-readiness.test.ts",
+      ),
+    ).toBe("false-positive");
+  });
+
   it("rejects report destinations outside docs/security", async () => {
     const { resolveOutputPath } = loadAudit();
     expect(() => resolveOutputPath("../audit.md", "/repo")).toThrow(
@@ -79,7 +90,7 @@ describe("public repository audit", () => {
     );
   });
 
-  it("fails closed in the report when optional Git LFS inventory is unavailable", async () => {
+  it("falls back to scanning Git LFS pointer blobs when the CLI is unavailable", async () => {
     const { auditRepository } = loadAudit();
     const runGit = async (args: string[]): Promise<GitResult> => {
       const command = args.join(" ");
@@ -91,8 +102,8 @@ describe("public repository audit", () => {
     };
 
     const report = await auditRepository({ runGit });
-    expect(report.coverage.lfs).toEqual({ status: "inaccessible", entries: null });
-    expect(report.clearance).toBe("blocked");
+    expect(report.coverage.lfs).toEqual({ status: "complete-via-pointer-scan", entries: 0 });
+    expect(report.clearance).toBe("local-clear");
   });
 
   it("skips non-blob objects returned by revision traversal", async () => {

@@ -64,6 +64,7 @@ describe("Android release automation", () => {
     expect(internalWorkflow).toContain("SENTRY_AUTH_TOKEN");
     expect(internalWorkflow).toContain("GOOGLE_SERVICES_JSON_BASE64");
     expect(internalWorkflow).toContain("mobile/google-services.json");
+    expect(internalWorkflow).toContain("mobile/android/app/google-services.json");
   });
 
   it("syncs Android signing and Google Play credentials through Fastlane", () => {
