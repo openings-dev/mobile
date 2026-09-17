@@ -96,6 +96,51 @@ describe("GooglePlayUpdateProvider", () => {
     expect(loadSdk).not.toHaveBeenCalled();
   });
 
+  it("does not report APP_NOT_OWNED while checking availability", async () => {
+    const sdk = createSdk();
+    sdk.checkForUpdate.mockRejectedValue(
+      new Error(
+        "Failed to check for updates: -10: Install Error(-10): The app is not owned by any user on this device.",
+      ),
+    );
+    const report = jest.fn();
+    const provider = new GooglePlayUpdateProvider(
+      async () => sdk,
+      () => "android",
+      () => true,
+      report,
+    );
+
+    await expect(provider.checkAvailability()).resolves.toEqual({
+      available: false,
+      flexibleAllowed: false,
+      immediateAllowed: false,
+      storeVersion: null,
+      updateInProgress: false,
+    });
+    expect(report).not.toHaveBeenCalled();
+  });
+
+  it("does not report APP_NOT_OWNED while starting an update", async () => {
+    const sdk = createSdk();
+    sdk.checkForUpdate.mockRejectedValue(
+      new Error(
+        "Failed to check for updates: -10: Install Error(-10): The app is not owned by any user on this device.",
+      ),
+    );
+    const report = jest.fn();
+    const provider = new GooglePlayUpdateProvider(
+      async () => sdk,
+      () => "android",
+      () => true,
+      report,
+    );
+
+    await expect(provider.startFlexibleUpdate()).resolves.toBe(false);
+    expect(report).not.toHaveBeenCalled();
+    expect(sdk.startUpdate).not.toHaveBeenCalled();
+  });
+
   it("contains and reports native failures", async () => {
     const report = jest.fn();
     const provider = new GooglePlayUpdateProvider(
