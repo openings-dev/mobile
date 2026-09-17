@@ -10,6 +10,16 @@ interface NotificationClickPayload {
   version: 1;
 }
 
+interface NotificationClickEvent {
+  notification?: { additionalData?: unknown };
+}
+
+interface NotificationClickRegistration {
+  active: boolean;
+  attached: boolean;
+  listener: (event: NotificationClickEvent) => void;
+}
+
 function parseNotificationClickPayload(value: unknown): NotificationClickPayload | null {
   if (value === null || typeof value !== "object" || Array.isArray(value)) return null;
   const candidate = value as Record<string, unknown>;
@@ -19,6 +29,19 @@ function parseNotificationClickPayload(value: unknown): NotificationClickPayload
 }
 
 let initialized = false;
+const clickRegistrations = new Set<NotificationClickRegistration>();
+
+function attachNotificationClickListener(
+  registration: NotificationClickRegistration,
+): void {
+  if (!initialized || !registration.active || registration.attached) return;
+  try {
+    OneSignal.Notifications.addEventListener("click", registration.listener);
+    registration.attached = true;
+  } catch {
+    // Listener failures never block application startup.
+  }
+}
 
 export function initOneSignal(consent: NotificationConsentState): boolean {
   const appId = process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID;
@@ -28,6 +51,9 @@ export function initOneSignal(consent: NotificationConsentState): boolean {
     OneSignal.setConsentRequired(true);
     OneSignal.initialize(appId);
     initialized = true;
+    for (const registration of clickRegistrations) {
+      attachNotificationClickListener(registration);
+    }
     if (consent === "granted") {
       OneSignal.setConsentGiven(true);
     } else {
@@ -62,19 +88,32 @@ export function denyOneSignalConsent(): void {
   }
 }
 
-export function addNotificationClickListener(onJob: (jobId: string) => void): () => void {
-  const listener = (event: { notification?: { additionalData?: unknown } }): void => {
-    const payload = parseNotificationClickPayload(event.notification?.additionalData);
-    if (payload) onJob(payload.jobId);
+export function addNotificationClickListener(
+  onJob: (jobId: string) => void,
+): () => void {
+  const registration: NotificationClickRegistration = {
+    active: true,
+    attached: false,
+    listener: (event) => {
+      const payload = parseNotificationClickPayload(
+        event.notification?.additionalData,
+      );
+      if (payload) onJob(payload.jobId);
+    },
   };
-  try {
-    OneSignal.Notifications.addEventListener("click", listener);
-  } catch {
-    return () => {};
-  }
+  clickRegistrations.add(registration);
+  attachNotificationClickListener(registration);
+
   return () => {
+    if (!registration.active) return;
+    registration.active = false;
+    clickRegistrations.delete(registration);
+    if (!registration.attached) return;
     try {
-      OneSignal.Notifications.removeEventListener("click", listener);
+      OneSignal.Notifications.removeEventListener(
+        "click",
+        registration.listener,
+      );
     } catch {
       // Listener cleanup failure must not affect app navigation.
     }
@@ -83,4 +122,5 @@ export function addNotificationClickListener(onJob: (jobId: string) => void): ()
 
 export function resetOneSignalClientForTests(): void {
   initialized = false;
+  clickRegistrations.clear();
 }
