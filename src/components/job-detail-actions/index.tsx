@@ -48,10 +48,10 @@ export function JobDetailActions({
       onLayout={handleLayout}
       testID="job-detail-actions"
     >
-      <View className="gap-2 px-4 py-3">
+      <View className="gap-2 px-16 py-3">
         <Pressable
           accessibilityRole="button"
-          className="min-h-11 flex-row items-center justify-center gap-2 rounded-pill bg-primary px-4"
+          className="min-h-11 flex-row items-center justify-center gap-2 rounded-pill bg-primary px-16"
           onPress={onOpenOriginal}
         >
           <ExternalLink accessibilityElementsHidden color={theme.colors["primary-foreground"]} size={17} strokeWidth={1.8} />
@@ -61,7 +61,7 @@ export function JobDetailActions({
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-line bg-paper px-4"
+          className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-line bg-paper px-16"
           onPress={onShare}
         >
           <Share2 accessibilityElementsHidden color={theme.colors.foreground} size={17} strokeWidth={1.8} />
@@ -72,7 +72,7 @@ export function JobDetailActions({
         <Pressable
           accessibilityRole="button"
           accessibilityState={{ selected: isSaved }}
-          className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-line bg-paper px-4"
+          className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-line bg-paper px-16"
           onPress={onToggleSaved}
         >
           <Bookmark accessibilityElementsHidden color={theme.colors.foreground} fill={isSaved ? theme.colors.foreground : "none"} size={17} strokeWidth={1.8} />
@@ -82,7 +82,7 @@ export function JobDetailActions({
         </Pressable>
         <Pressable
           accessibilityRole="button"
-          className="min-h-11 flex-row items-center justify-center gap-2 rounded-control px-4"
+          className="min-h-11 flex-row items-center justify-center gap-2 rounded-control px-16"
           onPress={onReport}
         >
           <CircleAlert accessibilityElementsHidden color={theme.colors["muted-foreground"]} size={17} strokeWidth={1.8} />

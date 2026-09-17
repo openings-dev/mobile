@@ -56,12 +56,12 @@ export function CommunityProfileScreen({ repository }: CommunityProfileScreenPro
           subtitle={profile.repository}
           title={profile.name}
         />
-        <View className="mx-4 gap-3">
+        <View className="mx-16 gap-3">
           <ActionButton primary icon="github" label={messages.communities.github} onPress={() => void openHttpsUrl(profile.repositoryUrl)} />
           <ActionButton icon="share-2" label={messages.communities.share} onPress={() => void shareUrl(profile.name, canonical)} />
         </View>
         <View className="gap-3">
-          <Text className="mx-4 font-display text-card-title font-semibold text-foreground">{messages.jobs.title}</Text>
+          <Text className="mx-16 font-display text-card-title font-semibold text-foreground">{messages.jobs.title}</Text>
           {jobs.length === 0 ? (
             <CatalogState message={messages.common.noResults} />
           ) : jobs.map((item) => (

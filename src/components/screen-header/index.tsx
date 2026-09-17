@@ -12,7 +12,7 @@ export function ScreenHeader({
   title,
 }: ScreenHeaderProps): React.ReactNode {
   return (
-    <View className="gap-3 px-4 pb-4 pt-5">
+    <View className="gap-3 px-16 pb-16 pt-5">
       <Text className="font-body text-label font-semibold text-primary-deep">
         {eyebrow}
       </Text>

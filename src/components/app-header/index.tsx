@@ -18,7 +18,7 @@ export function AppHeader(): React.ReactNode {
   return (
     <>
       <SafeAreaView className="bg-paper" edges={["top", "left", "right"]}>
-        <View className="h-[72px] flex-row items-center justify-between gap-3 border-b border-line px-4">
+        <View className="h-[72px] flex-row items-center justify-between gap-3 border-b border-line px-16">
           <Pressable
             accessibilityLabel={messages.header.brandLabel}
             accessibilityRole="button"

@@ -64,7 +64,7 @@ export function SelectionSheet<TValue extends string>({
       visible={visible}
     >
       <SafeAreaView className="flex-1 bg-canvas" edges={["top", "bottom"]}>
-        <View className="min-h-14 flex-row items-center justify-between border-b border-line bg-paper px-4">
+        <View className="min-h-14 flex-row items-center justify-between border-b border-line bg-paper px-16">
           <Text
             accessibilityRole="header"
             className="flex-1 font-display text-card-title font-semibold text-foreground"
@@ -80,7 +80,7 @@ export function SelectionSheet<TValue extends string>({
             <X accessibilityElementsHidden size={20} strokeWidth={1.8} color={theme.colors.foreground} />
           </Pressable>
         </View>
-        <ScrollView className="flex-1" contentContainerClassName="p-4">
+        <ScrollView className="flex-1" contentContainerClassName="p-16">
           {options.length === 0 ? (
             <Text className="py-12 text-center font-body text-product-body text-muted-foreground">
               {emptyLabel}
@@ -97,8 +97,8 @@ export function SelectionSheet<TValue extends string>({
                     accessibilityRole="button"
                     accessibilityState={{ selected }}
                     className={index === 0
-                      ? "min-h-[52px] flex-row items-center gap-3 px-4"
-                      : "min-h-[52px] flex-row items-center gap-3 border-t border-line px-4"}
+                      ? "min-h-[52px] flex-row items-center gap-3 px-16"
+                      : "min-h-[52px] flex-row items-center gap-3 border-t border-line px-16"}
                     onPress={() => select(option.value)}
                   >
                     <Text

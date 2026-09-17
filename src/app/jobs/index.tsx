@@ -111,7 +111,7 @@ export function JobsScreen(): React.ReactNode {
     ? messages.common.offline
     : messages.common.sourceError;
   const header = (
-    <View className="pb-4">
+    <View className="pb-16">
       <JobsWorkspaceHeader
         activeFilters={activeFilters}
         filters={filters}
@@ -169,7 +169,7 @@ export function JobsScreen(): React.ReactNode {
         keyExtractor={(item) => item.id}
         ListHeaderComponent={header}
         ListEmptyComponent={emptyState}
-        ListFooterComponent={visibleCount < filtered.length ? <Pressable accessibilityRole="button" className="mx-4 min-h-12 items-center justify-center rounded-control border border-line bg-paper" onPress={() => setVisibleCount((count) => count + PAGE_SIZE)}><Text className="font-body text-label font-semibold text-primary-deep">{messages.common.loadMore}</Text></Pressable> : <View className="h-5" />}
+        ListFooterComponent={visibleCount < filtered.length ? <Pressable accessibilityRole="button" className="mx-16 min-h-12 items-center justify-center rounded-control border border-line bg-paper" onPress={() => setVisibleCount((count) => count + PAGE_SIZE)}><Text className="font-body text-label font-semibold text-primary-deep">{messages.common.loadMore}</Text></Pressable> : <View className="h-5" />}
         maxToRenderPerBatch={8}
         refreshControl={<RefreshControl refreshing={catalog.isRefreshing} onRefresh={() => void catalog.refresh()} tintColor={theme.colors["primary-deep"]} />}
         renderItem={({ item }) => {

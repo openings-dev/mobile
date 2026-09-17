@@ -13,7 +13,7 @@ interface DetailHeaderProps {
 export function DetailHeader(props: DetailHeaderProps): React.ReactNode {
   const { theme } = useAppTheme();
   return (
-    <View className="min-h-16 flex-row items-center justify-between gap-3 border-b border-line bg-paper px-4">
+    <View className="min-h-16 flex-row items-center justify-between gap-3 border-b border-line bg-paper px-16">
       <BrandWordmark height={28} width={154} />
       <Pressable accessibilityHint={props.title} accessibilityLabel={props.backLabel} accessibilityRole="button" className="h-11 w-11 items-center justify-center rounded-control border border-line bg-paper" onPress={props.onBack}>
         <X accessibilityElementsHidden size={20} strokeWidth={1.8} color={theme.colors.foreground} />

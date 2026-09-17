@@ -18,8 +18,8 @@ interface ProfileHeroProps {
 export function ProfileHero(props: ProfileHeroProps): React.ReactNode {
   const { theme } = useAppTheme();
   return (
-    <View className="mx-4 gap-6">
-      <View className="flex-row items-center gap-4">
+    <View className="mx-16 gap-6">
+      <View className="flex-row items-center gap-16">
         <EntityAvatar name={props.title} size="large" uri={props.avatarUrl} />
         <View className="min-w-0 flex-1 gap-1.5">
           {props.status ? (
@@ -37,8 +37,8 @@ export function ProfileHero(props: ProfileHeroProps): React.ReactNode {
           </Text>
         </View>
       </View>
-      <View className="gap-4 rounded-card border border-line bg-surface-muted p-5">
-        <View className="flex-row items-center gap-2 border-b border-line pb-4">
+      <View className="gap-16 rounded-card border border-line bg-surface-muted p-5">
+        <View className="flex-row items-center gap-2 border-b border-line pb-16">
           <BriefcaseBusiness accessibilityElementsHidden size={19} strokeWidth={1.8} color={theme.colors["primary-deep"]} />
           <Text className="font-mono text-card-title font-semibold text-primary-deep">
             {props.countLabel}

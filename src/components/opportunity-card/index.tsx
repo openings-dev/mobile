@@ -77,7 +77,7 @@ export function OpportunityCard({ item, ...props }: OpportunityCardProps): React
     <Pressable
       accessibilityLabel={`${messages.jobs.viewDetails}: ${item.title}`}
       accessibilityRole="button"
-      className="relative mx-4 mb-3 gap-3 overflow-hidden rounded-card border border-line bg-paper p-4 active:bg-surface-elevated"
+      className="relative mx-16 mb-3 gap-3 overflow-hidden rounded-card border border-line bg-paper p-16 active:bg-surface-elevated"
       onPress={props.onPress}
     >
       <Pressable

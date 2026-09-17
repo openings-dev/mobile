@@ -13,7 +13,7 @@ export function SupportCard(): React.ReactNode {
   const copy = messages.header.support;
 
   return (
-    <View className="rounded-card border border-primary/40 bg-primary-soft p-4">
+    <View className="rounded-card border border-primary/40 bg-primary-soft p-16">
       <View className="flex-row items-start gap-3">
         <View className="h-9 w-9 shrink-0 items-center justify-center rounded-pill bg-primary">
           <Star color={theme.colors["primary-foreground"]} size={17} strokeWidth={1.8} />
@@ -30,7 +30,7 @@ export function SupportCard(): React.ReactNode {
       <Pressable
         accessibilityLabel={copy.ariaLabel}
         accessibilityRole="link"
-        className="mt-4 min-h-11 flex-row items-center justify-center gap-2 rounded-pill bg-primary px-4"
+        className="mt-16 min-h-11 flex-row items-center justify-center gap-2 rounded-pill bg-primary px-16"
         onPress={() => void openHttpsUrl(OPENINGS_WEB_REPOSITORY_URL)}
       >
         <Star color={theme.colors["primary-foreground"]} size={16} strokeWidth={1.8} />

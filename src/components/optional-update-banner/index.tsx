@@ -41,11 +41,11 @@ export function OptionalUpdateBanner(): React.ReactNode {
       <Text className="mt-2 font-body text-product-body text-muted-foreground">
         {copy.optionalDescription}
       </Text>
-      <View className="mt-4 flex-row gap-3">
+      <View className="mt-16 flex-row gap-3">
         <Pressable
           accessibilityLabel={copy.updateAction}
           accessibilityRole="button"
-          className="min-h-touch flex-1 items-center justify-center rounded-control bg-primary px-4 disabled:opacity-50"
+          className="min-h-touch flex-1 items-center justify-center rounded-control bg-primary px-16 disabled:opacity-50"
           disabled={pending}
           onPress={() => void run(startOptionalUpdate)}
           testID="optional-update-action"
@@ -59,7 +59,7 @@ export function OptionalUpdateBanner(): React.ReactNode {
         <Pressable
           accessibilityLabel={copy.dismiss}
           accessibilityRole="button"
-          className="min-h-touch flex-1 items-center justify-center rounded-control border border-line bg-canvas px-4 disabled:opacity-50"
+          className="min-h-touch flex-1 items-center justify-center rounded-control border border-line bg-canvas px-16 disabled:opacity-50"
           disabled={pending}
           onPress={() => void run(dismissOptionalUpdate)}
           testID="optional-update-dismiss"

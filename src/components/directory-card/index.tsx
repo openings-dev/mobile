@@ -26,7 +26,7 @@ export function DirectoryCard(props: DirectoryCardProps): React.ReactNode {
     <Pressable
       accessibilityLabel={`${props.actionLabel}: ${props.title}`}
       accessibilityRole="button"
-      className="mx-4 mb-3 gap-4 rounded-card border border-line bg-paper p-4 active:bg-primary-soft"
+      className="mx-16 mb-3 gap-16 rounded-card border border-line bg-paper p-16 active:bg-primary-soft"
       onPress={props.onPress}
     >
       <View className="flex-row items-center gap-3">
