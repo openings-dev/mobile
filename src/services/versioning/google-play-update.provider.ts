@@ -25,6 +25,11 @@ const NO_UPDATE: GooglePlayUpdateAvailability = {
   updateInProgress: false,
 };
 
+function isAppNotOwnedError(error: unknown): boolean {
+  const message = error instanceof Error ? error.message : String(error);
+  return /(?:^|\s)Install Error\(-10\):/.test(message);
+}
+
 function reportVersioningError(error: Error): void {
   void import("@/services/telemetry")
     .then(({ captureTechnicalException }) => {
@@ -56,7 +61,7 @@ export class GooglePlayUpdateProvider {
         updateInProgress: result.updateInProgress === true,
       };
     } catch (error) {
-      this.reportSafely(error);
+      if (!isAppNotOwnedError(error)) this.reportSafely(error);
       return NO_UPDATE;
     }
   }
@@ -88,7 +93,7 @@ export class GooglePlayUpdateProvider {
       if (!allowed) return false;
       return await sdk.startUpdate(mode === "immediate");
     } catch (error) {
-      this.reportSafely(error);
+      if (!isAppNotOwnedError(error)) this.reportSafely(error);
       return false;
     }
   }

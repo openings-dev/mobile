@@ -96,7 +96,46 @@ describe("OneSignal client", () => {
     expect(mockOptOut).toHaveBeenCalledTimes(1);
   });
 
+  it("defers click listener registration until initialization", () => {
+    const onJob = jest.fn();
+    const unsubscribe = addNotificationClickListener(onJob);
+    expect(mockAddEventListener).not.toHaveBeenCalled();
+
+    process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID = "app-id";
+    expect(initOneSignal("undecided")).toBe(true);
+    expect(mockAddEventListener).toHaveBeenCalledTimes(1);
+
+    const listener = mockAddEventListener.mock.calls[0]?.[1] as (
+      event: unknown,
+    ) => void;
+    listener({
+      notification: {
+        additionalData: {
+          type: "openings.job",
+          version: 1,
+          jobId: "gh_1234567890abcdef12345678",
+        },
+      },
+    });
+    expect(onJob).toHaveBeenCalledWith("gh_1234567890abcdef12345678");
+
+    unsubscribe();
+    expect(mockRemoveEventListener).toHaveBeenCalledWith("click", listener);
+  });
+
+  it("cancels a pending click listener without touching the native SDK", () => {
+    const unsubscribe = addNotificationClickListener(jest.fn());
+    unsubscribe();
+
+    process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID = "app-id";
+    expect(initOneSignal("undecided")).toBe(true);
+    expect(mockAddEventListener).not.toHaveBeenCalled();
+    expect(mockRemoveEventListener).not.toHaveBeenCalled();
+  });
+
   it("accepts only the versioned new-job payload and removes the exact listener", () => {
+    process.env.EXPO_PUBLIC_ONESIGNAL_APP_ID = "app-id";
+    initOneSignal("undecided");
     const onJob = jest.fn();
     const unsubscribe = addNotificationClickListener(onJob);
     const listener = mockAddEventListener.mock.calls[0]?.[1] as (event: unknown) => void;
