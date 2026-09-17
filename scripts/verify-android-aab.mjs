@@ -59,6 +59,17 @@ const keytoolOutput = run(process.env.KEYTOOL_COMMAND?.trim() || "keytool", [
 const certificateMatch = keytoolOutput.match(/SHA-?256:\s*([0-9A-F:]+)/i);
 if (!certificateMatch || normalizeFingerprint(certificateMatch[1]) !== expectedCertificate) fail();
 
+const requiredNativeEntries = [
+  "base/lib/armeabi-v7a/libreactnative.so",
+  "base/lib/arm64-v8a/libreactnative.so",
+];
+const listCommand = process.env.AAB_LIST_COMMAND?.trim();
+const entryOutput = listCommand
+  ? run(listCommand, [aab])
+  : run("unzip", ["-Z1", aab]);
+const entries = new Set(entryOutput.split("\n").filter(Boolean));
+if (requiredNativeEntries.some((entry) => !entries.has(entry))) fail();
+
 const digest = createHash("sha256").update(readFileSync(aab)).digest("hex");
 const expectedDigest = process.env.AAB_EXPECTED_SHA256?.trim().toLowerCase();
 if (expectedDigest && digest !== expectedDigest) fail();

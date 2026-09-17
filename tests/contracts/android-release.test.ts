@@ -173,6 +173,9 @@ describe("Android release automation", () => {
     expect(verifier).toContain("ANDROID_VERSION_CODE");
     expect(verifier).toContain("ANDROID_VERSION_NAME");
     expect(verifier).toContain("AAB_EXPECTED_SHA256");
+    expect(verifier).toContain("base/lib/armeabi-v7a/libreactnative.so");
+    expect(verifier).toContain("base/lib/arm64-v8a/libreactnative.so");
+    expect(verifier).toContain('run("unzip", ["-Z1", aab])');
     expect(internalWorkflow.match(/node scripts\/verify-android-aab\.mjs/g)).toHaveLength(2);
     expect(productionWorkflow).toContain("node scripts/verify-android-aab.mjs");
     expect(productionWorkflow).not.toContain(
