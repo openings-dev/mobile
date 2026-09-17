@@ -33,7 +33,7 @@ export function PreferencePopover<TValue extends string>({
     <Pressable
       accessibilityLabel={title}
       accessibilityViewIsModal
-      className="absolute inset-0 z-20 justify-end bg-overlay/20 px-4 pb-24"
+      className="absolute inset-0 z-20 justify-end bg-overlay/20 px-16 pb-24"
       onPress={onClose}
     >
       <Pressable
@@ -42,7 +42,7 @@ export function PreferencePopover<TValue extends string>({
       >
         <Text
           accessibilityRole="header"
-          className="px-4 pb-2 pt-3 font-body text-label font-semibold text-muted-foreground"
+          className="px-16 pb-2 pt-3 font-body text-label font-semibold text-muted-foreground"
         >
           {title}
         </Text>

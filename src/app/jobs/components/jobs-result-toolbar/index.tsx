@@ -77,7 +77,7 @@ export function JobsResultToolbar({
     .replace("{count}", formatCount(resultCount, locale));
 
   return (
-    <View className="gap-3 border-y border-line px-4 py-3">
+    <View className="gap-3 border-y border-line px-16 py-3">
       <View className="flex-row items-center justify-between gap-3">
         <View className="gap-1">
           <Text className="font-mono text-label font-semibold text-foreground">

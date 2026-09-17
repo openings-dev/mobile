@@ -13,8 +13,8 @@ export function FilterChip({ icon, label, onPress, selected = false }: FilterChi
       accessibilityRole="button"
       accessibilityState={{ selected }}
       className={selected
-        ? "min-h-11 flex-row items-center justify-center gap-2 rounded-pill border border-primary bg-primary px-4"
-        : "min-h-11 flex-row items-center justify-center gap-2 rounded-pill border border-line bg-paper px-4"}
+        ? "min-h-11 flex-row items-center justify-center gap-2 rounded-pill border border-primary bg-primary px-16"
+        : "min-h-11 flex-row items-center justify-center gap-2 rounded-pill border border-line bg-paper px-16"}
       onPress={onPress}
     >
       {icon}

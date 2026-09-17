@@ -18,7 +18,7 @@ export function NewMatchesCard({
   const { theme } = useAppTheme();
 
   return (
-    <View className="mx-4 my-5 rounded-card border border-primary/40 bg-primary-soft p-5">
+    <View className="mx-16 my-5 rounded-card border border-primary/40 bg-primary-soft p-5">
       <View className="flex-row items-start gap-3">
         <View className="h-10 w-10 shrink-0 items-center justify-center rounded-pill bg-primary">
           <Sparkles
@@ -56,7 +56,7 @@ export function NewMatchesCard({
       </View>
       <Pressable
         accessibilityRole="button"
-        className="mt-4 min-h-11 self-start justify-center rounded-pill bg-primary px-5"
+        className="mt-16 min-h-11 self-start justify-center rounded-pill bg-primary px-5"
         onPress={onShow}
       >
         <Text className="font-body text-label font-semibold text-primary-foreground">

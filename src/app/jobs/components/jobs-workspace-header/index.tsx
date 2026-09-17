@@ -149,7 +149,7 @@ export function JobsWorkspaceHeader({
         );
 
   return (
-    <View className="gap-3 px-4 pb-4 pt-3">
+    <View className="gap-3 px-16 pb-16 pt-3">
       <SearchField
         label={messages.jobs.workspace.searchLabel}
         onChangeText={(query) => onChange({ ...filters, query })}
@@ -174,7 +174,7 @@ export function JobsWorkspaceHeader({
       <Pressable
         accessibilityRole="button"
         accessibilityState={{ expanded: filtersOpen }}
-        className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-control bg-paper px-4"
+        className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-control bg-paper px-16"
         onPress={onOpenFilters}
       >
         <SlidersHorizontal
@@ -195,7 +195,7 @@ export function JobsWorkspaceHeader({
         ) : null}
       </Pressable>
       {activeFilters.length > 0 ? (
-        <View className="gap-3 border-t border-line pt-4">
+        <View className="gap-3 border-t border-line pt-16">
           <View className="flex-row flex-wrap gap-2">
             {activeFilters.map((filter) => {
               const label = activeLabel(filter, messages);

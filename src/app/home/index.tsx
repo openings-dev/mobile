@@ -19,7 +19,7 @@ export function HomeScreen(): React.ReactNode {
     >
       <StatusBar style={name === "dark" ? "light" : "dark"} />
       <View className="flex-1 justify-between px-6 py-8">
-        <View className="flex-row items-center justify-between border-b border-line pb-4">
+        <View className="flex-row items-center justify-between border-b border-line pb-16">
           <Text className="font-display text-card-title font-semibold text-foreground">
             openings.dev
           </Text>
@@ -32,13 +32,13 @@ export function HomeScreen(): React.ReactNode {
         </View>
 
         <View className="gap-6">
-          <View className="self-start rounded-pill bg-primary-soft px-4 py-2">
+          <View className="self-start rounded-pill bg-primary-soft px-16 py-2">
             <Text className="font-body text-label font-semibold text-primary-deep">
               {messages.eyebrow}
             </Text>
           </View>
 
-          <View className="gap-4">
+          <View className="gap-16">
             <Text className="font-display text-section-title font-semibold text-foreground">
               {messages.title}
             </Text>

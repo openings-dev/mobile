@@ -147,7 +147,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
         contentContainerClassName="gap-8 py-6"
         contentContainerStyle={{ paddingBottom: dockHeight + 24 }}
       >
-        <View className="mx-4 gap-5">
+        <View className="mx-16 gap-5">
           <Text className="font-body text-label font-semibold text-primary-deep">
             {messages.jobs.detailsTitle}
           </Text>
@@ -213,7 +213,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
           >
             {item.title}
           </Text>
-          <View className="flex-row flex-wrap items-center gap-3 border-y border-line py-4">
+          <View className="flex-row flex-wrap items-center gap-3 border-y border-line py-16">
             {salary ? (
               <View className="flex-row items-center gap-2">
                 <WalletCards
@@ -251,7 +251,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
         </View>
 
         <Text
-          className="mx-4 font-body text-product-body leading-7 text-foreground"
+          className="mx-16 font-body text-product-body leading-7 text-foreground"
           selectable
         >
           {description}
@@ -266,7 +266,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
         />
 
         {presentation.supportingTags.length > 0 ? (
-          <View className="mx-4 flex-row flex-wrap gap-2 border-t border-line pt-6">
+          <View className="mx-16 flex-row flex-wrap gap-2 border-t border-line pt-6">
             {presentation.supportingTags.map((tag) => (
               <View
                 className={detailTagClasses(tag.category)}
@@ -282,7 +282,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
 
         {similar.length > 0 ? (
           <View className="gap-3 border-t border-line pt-6">
-            <Text className="mx-4 font-display text-card-title font-semibold text-foreground">
+            <Text className="mx-16 font-display text-card-title font-semibold text-foreground">
               {messages.jobs.similar}
             </Text>
             {similar.map((opportunity) => (

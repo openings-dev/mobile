@@ -44,7 +44,7 @@ export class AppErrorBoundary extends Component<
 
     return (
       <View className="flex-1 items-center justify-center bg-canvas px-6">
-        <View className="w-full max-w-xl items-start gap-4 rounded-panel border border-line bg-paper p-6">
+        <View className="w-full max-w-xl items-start gap-16 rounded-panel border border-line bg-paper p-6">
           <Text className="font-display text-product-title font-semibold text-foreground">
             {fallback.title}
           </Text>

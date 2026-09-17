@@ -64,9 +64,9 @@ export function CommunitiesScreen(): React.ReactNode {
   }
 
   const header = (
-    <View className="gap-3 pb-4">
+    <View className="gap-3 pb-16">
       <ScreenHeader title={messages.communities.title} description={messages.communities.description} />
-      <View className="gap-3 px-4">
+      <View className="gap-3 px-16">
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2">
           <FilterChip label={`${messages.communities.active} · ${activityCounts.healthy}`} selected={activity === "healthy"} onPress={() => setActivity("healthy")} />
           <FilterChip label={`${messages.communities.noOpenings} · ${activityCounts["no-openings"]}`} selected={activity === "no-openings"} onPress={() => setActivity("no-openings")} />

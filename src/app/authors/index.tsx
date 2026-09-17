@@ -61,9 +61,9 @@ export function AuthorsScreen(): React.ReactNode {
   }
 
   const header = (
-    <View className="gap-3 pb-4">
+    <View className="gap-3 pb-16">
       <ScreenHeader title={messages.authors.title} description={messages.authors.description} />
-      <View className="gap-3 px-4">
+      <View className="gap-3 px-16">
         <SearchField
           label={messages.common.search}
           onChangeText={(query) => setFilters({ ...filters, query })}

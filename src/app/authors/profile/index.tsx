@@ -48,12 +48,12 @@ export function AuthorProfileScreen({ handle }: AuthorProfileScreenProps): React
           subtitle={`@${profile.handle}`}
           title={profile.name}
         />
-        <View className="mx-4 gap-3">
+        <View className="mx-16 gap-3">
           <ActionButton primary icon="github" label={messages.authors.github} onPress={() => void openHttpsUrl(githubUrl)} />
           <ActionButton icon="share-2" label={messages.authors.share} onPress={() => void shareUrl(profile.name, canonical)} />
         </View>
         <View className="gap-3">
-          <Text className="mx-4 font-display text-card-title font-semibold text-foreground">{messages.jobs.title}</Text>
+          <Text className="mx-16 font-display text-card-title font-semibold text-foreground">{messages.jobs.title}</Text>
           {jobs.map((item) => (
             <OpportunityCard
               hideAuthorIdentity

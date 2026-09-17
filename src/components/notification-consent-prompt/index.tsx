@@ -58,11 +58,11 @@ export function NotificationConsentPrompt(): React.ReactNode {
     >
       <Text className="font-display text-product-title font-semibold text-foreground">{copy.title}</Text>
       <Text className="mt-2 font-body text-product-body text-muted-foreground">{copy.purpose}</Text>
-      <View className="mt-4 flex-row gap-3">
-        <Pressable accessibilityRole="button" accessibilityLabel={copy.accept} className="min-h-touch flex-1 items-center justify-center rounded-control bg-primary px-4 disabled:opacity-50" disabled={pending} onPress={() => void decide("accept")}>
+      <View className="mt-16 flex-row gap-3">
+        <Pressable accessibilityRole="button" accessibilityLabel={copy.accept} className="min-h-touch flex-1 items-center justify-center rounded-control bg-primary px-16 disabled:opacity-50" disabled={pending} onPress={() => void decide("accept")}>
           <Text className="font-body text-product-body font-semibold text-primary-foreground">{copy.accept}</Text>
         </Pressable>
-        <Pressable accessibilityRole="button" accessibilityLabel={copy.decline} className="min-h-touch flex-1 items-center justify-center rounded-control border border-line bg-canvas px-4 disabled:opacity-50" disabled={pending} onPress={() => void decide("decline")}>
+        <Pressable accessibilityRole="button" accessibilityLabel={copy.decline} className="min-h-touch flex-1 items-center justify-center rounded-control border border-line bg-canvas px-16 disabled:opacity-50" disabled={pending} onPress={() => void decide("decline")}>
           <Text className="font-body text-product-body font-semibold text-foreground">{copy.decline}</Text>
         </Pressable>
       </View>

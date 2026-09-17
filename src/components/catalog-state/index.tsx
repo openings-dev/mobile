@@ -12,7 +12,7 @@ interface CatalogStateProps {
 export function CatalogState({ actionLabel, message, onAction, pending }: CatalogStateProps): React.ReactNode {
   const { theme } = useAppTheme();
   return (
-    <View className="flex-1 items-center justify-center gap-4 px-8 py-16">
+    <View className="flex-1 items-center justify-center gap-16 px-8 py-16">
       {pending ? <ActivityIndicator color={theme.colors["primary-deep"]} /> : null}
       <Text className="text-center font-body text-product-body text-muted-foreground">{message}</Text>
       {actionLabel && onAction ? (

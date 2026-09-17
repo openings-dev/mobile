@@ -59,7 +59,7 @@ export function DataConfidenceCard({
     : [{ id: item.id, repository: item.repository, url: item.url }];
 
   return (
-    <View className="mx-4 gap-5 rounded-card border border-line bg-paper p-5">
+    <View className="mx-16 gap-5 rounded-card border border-line bg-paper p-5">
       <View className="gap-2">
         <Text className="font-display text-card-title font-semibold text-foreground">
           {copy.title}
@@ -70,17 +70,17 @@ export function DataConfidenceCard({
       </View>
 
       {summary.stale ? (
-        <Text className="rounded-control border border-warning-foreground/25 bg-warning px-4 py-3 font-body text-label leading-5 text-warning-foreground">
+        <Text className="rounded-control border border-warning-foreground/25 bg-warning px-16 py-3 font-body text-label leading-5 text-warning-foreground">
           {copy.staleWarning}
         </Text>
       ) : null}
       {summary.incomplete ? (
-        <Text className="rounded-control border border-line bg-surface-muted px-4 py-3 font-body text-label leading-5 text-muted-foreground">
+        <Text className="rounded-control border border-line bg-surface-muted px-16 py-3 font-body text-label leading-5 text-muted-foreground">
           {copy.incompleteWarning}
         </Text>
       ) : null}
 
-      <View className="gap-4">
+      <View className="gap-16">
         <View className="gap-1">
           <Text className="font-body text-metadata text-muted-foreground">
             {copy.lastVerified}

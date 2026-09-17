@@ -55,7 +55,7 @@ function MultiSection({
   if (options.length === 0) return null;
 
   return (
-    <View className="gap-3 rounded-card border border-line bg-paper p-4">
+    <View className="gap-3 rounded-card border border-line bg-paper p-16">
       <Text className="font-display text-card-title font-semibold text-foreground">
         {label}
       </Text>
@@ -151,7 +151,7 @@ export function JobsFilterModal({
       visible={open}
     >
       <SafeAreaView className="flex-1 bg-canvas" edges={["top", "bottom"]}>
-        <View className="min-h-16 flex-row items-center justify-between border-b border-line bg-paper px-4 py-3">
+        <View className="min-h-16 flex-row items-center justify-between border-b border-line bg-paper px-16 py-3">
           <View className="min-w-0 flex-1 gap-1">
             <Text className="font-mono text-metadata font-semibold uppercase tracking-widest text-primary-deep">
               {messages.jobs.title}
@@ -184,10 +184,10 @@ export function JobsFilterModal({
 
         <ScrollView
           className="flex-1"
-          contentContainerClassName="gap-4 p-5"
+          contentContainerClassName="gap-16 p-5"
           keyboardShouldPersistTaps="handled"
         >
-          <View className="gap-3 rounded-card border border-primary-deep bg-primary-soft p-4">
+          <View className="gap-3 rounded-card border border-primary-deep bg-primary-soft p-16">
             <View className="flex-row items-center gap-2">
               <Sparkles
                 accessibilityElementsHidden

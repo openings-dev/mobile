@@ -98,7 +98,7 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
             className="flex-1"
             style={{ paddingRight: insets.right, paddingTop: insets.top }}
           >
-            <View className="min-h-[72px] flex-row items-center justify-between border-b border-line px-4">
+            <View className="min-h-[72px] flex-row items-center justify-between border-b border-line px-16">
               <BrandWordmark height={32} width={176} />
               <Pressable
                 accessibilityLabel={messages.header.closeMenu}
@@ -115,7 +115,7 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
               contentContainerClassName="grow"
               testID="app-drawer-scroll"
             >
-              <View className="gap-1 p-4">
+              <View className="gap-1 p-16">
                 {navigationItems.map((item) => {
                   const Icon = item.icon;
 
@@ -139,7 +139,7 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
               </View>
 
               <View
-                className="mt-auto gap-3 border-t border-line bg-surface px-4 pt-4"
+                className="mt-auto gap-3 border-t border-line bg-surface px-16 pt-16"
                 style={{ paddingBottom: insets.bottom + DRAWER_FOOTER_PADDING }}
                 testID="app-drawer-footer"
               >
