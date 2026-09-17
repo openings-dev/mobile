@@ -14,6 +14,7 @@ describe("Android release automation", () => {
   const fastfile = readProjectFile("fastlane/Fastfile");
   const gemfile = readProjectFile("Gemfile");
   const gradle = readProjectFile("android/app/build.gradle");
+  const gradleProperties = readProjectFile("android/gradle.properties");
   const gitignore = readProjectFile(".gitignore");
   const eslintConfig = readProjectFile("eslint.config.mjs");
   const internalWorkflow = readProjectFile(
@@ -104,6 +105,11 @@ describe("Android release automation", () => {
     expect(gradle).not.toMatch(
       /release\s*\{[^}]*signingConfig signingConfigs\.debug/,
     );
+  });
+
+  it("extracts native libraries for Android 11 compatibility", () => {
+    expect(gradleProperties).toMatch(/^expo\.useLegacyPackaging=true$/m);
+    expect(gradleProperties).toMatch(/^newArchEnabled=true$/m);
   });
 
   it("keeps all local Android release credentials and artifacts untracked", () => {
