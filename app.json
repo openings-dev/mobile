@@ -48,7 +48,9 @@
       [
         "onesignal-expo-plugin",
         {
-          "mode": "development"
+          "mode": "production",
+          "smallIcons": ["./assets/images/ic_stat_onesignal_default.png"],
+          "smallIconAccentColor": "#187A68"
         }
       ],
       "@react-native-firebase/app",

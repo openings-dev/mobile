@@ -75,6 +75,23 @@ describe("native application identity", () => {
     expect(expo.ios?.googleServicesFile).toBeUndefined();
     expect(expo.ios?.infoPlist).toBeUndefined();
     expect(expo.ios?.entitlements).toBeUndefined();
+
+    const oneSignalPlugin = expo.plugins?.find(
+      (plugin): plugin is [string, Record<string, unknown>] =>
+        Array.isArray(plugin) && plugin[0] === "onesignal-expo-plugin",
+    );
+    expect(oneSignalPlugin?.[1]).toMatchObject({
+      mode: "production",
+      smallIconAccentColor: "#187A68",
+      smallIcons: ["./assets/images/ic_stat_onesignal_default.png"],
+    });
+    expect(existsSync(join(process.cwd(), "assets/images/ic_stat_onesignal_default.png"))).toBe(true);
+    ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"].forEach((density) => {
+      expect(existsSync(join(
+        process.cwd(),
+        `android/app/src/main/res/drawable-${density}/ic_stat_onesignal_default.png`,
+      ))).toBe(true);
+    });
   });
 
   it("configures canonical app, adaptive, monochrome, and splash artwork", () => {
