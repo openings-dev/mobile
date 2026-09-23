@@ -137,6 +137,8 @@ export interface FoundationMessages {
     noDescription: string;
     oldest: string;
     olderBadge: string;
+    actions: string;
+    closeActions: string;
     openOriginal: string;
     posted: string;
     regions: string;

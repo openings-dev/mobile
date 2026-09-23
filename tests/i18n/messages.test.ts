@@ -38,6 +38,8 @@ describe("localized messages", () => {
             fields?: { location?: string };
             title?: string;
           };
+          actions?: string;
+          closeActions?: string;
           newMatches?: { action?: string; title?: string };
           reportProblem?: string;
         };
@@ -55,6 +57,8 @@ describe("localized messages", () => {
       expect(copy?.jobs?.newMatches?.action).toBeTruthy();
       expect(copy?.jobs?.dataConfidence?.title).toBeTruthy();
       expect(copy?.jobs?.dataConfidence?.fields?.location).toBeTruthy();
+      expect(copy?.jobs?.actions).toBeTruthy();
+      expect(copy?.jobs?.closeActions).toBeTruthy();
       expect(copy?.jobs?.reportProblem).toBeTruthy();
     }
   });
