@@ -63,7 +63,7 @@ export function JobDetailActions({
         <View className="flex-row gap-2 px-16 py-3">
           <Pressable
             accessibilityRole="button"
-            className="min-h-11 flex-1 flex-row items-center justify-center gap-2 rounded-pill bg-primary px-4"
+            className="min-h-11 flex-1 flex-row items-center justify-center gap-2 rounded-pill bg-primary px-3"
             onPress={onOpenOriginal}
           >
             <ExternalLink accessibilityElementsHidden color={theme.colors["primary-foreground"]} size={17} strokeWidth={1.8} />
@@ -73,7 +73,7 @@ export function JobDetailActions({
           </Pressable>
           <Pressable
             accessibilityRole="button"
-            className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-line bg-paper px-4"
+            className="min-h-11 flex-row items-center justify-center gap-2 rounded-control border border-line bg-paper px-3"
             onPress={() => setActionsVisible(true)}
           >
             <MoreHorizontal accessibilityElementsHidden color={theme.colors.foreground} size={18} strokeWidth={1.8} />
