@@ -1,6 +1,59 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
+interface PngImage {
+  data: Uint8Array;
+  height: number;
+  width: number;
+}
+
+interface PngModule {
+  PNG: {
+    sync: {
+      read(buffer: Buffer): PngImage;
+    };
+  };
+}
+
+const { PNG } = jest.requireActual<PngModule>("pngjs");
+
+function getOpaqueBounds(imagePath: string): {
+  height: number;
+  width: number;
+} {
+  const image = PNG.sync.read(readFileSync(imagePath));
+  let minX = image.width;
+  let minY = image.height;
+  let maxX = -1;
+  let maxY = -1;
+
+  for (let y = 0; y < image.height; y += 1) {
+    for (let x = 0; x < image.width; x += 1) {
+      const alpha = image.data[(y * image.width + x) * 4 + 3] ?? 0;
+
+      if (alpha > 0) {
+        minX = Math.min(minX, x);
+        minY = Math.min(minY, y);
+        maxX = Math.max(maxX, x);
+        maxY = Math.max(maxY, y);
+      }
+    }
+  }
+
+  return {
+    height: maxY - minY + 1,
+    width: maxX - minX + 1,
+  };
+}
+
+function expectNotificationIconOccupancy(imagePath: string): void {
+  const image = PNG.sync.read(readFileSync(imagePath));
+  const glyph = getOpaqueBounds(imagePath);
+
+  expect(glyph.width / image.width).toBeGreaterThanOrEqual(0.75);
+  expect(glyph.height / image.height).toBeGreaterThanOrEqual(0.55);
+}
+
 interface ExpoConfig {
   android?: {
     adaptiveIcon?: {
@@ -85,12 +138,22 @@ describe("native application identity", () => {
       smallIconAccentColor: "#187A68",
       smallIcons: ["./assets/images/ic_stat_onesignal_default.png"],
     });
-    expect(existsSync(join(process.cwd(), "assets/images/ic_stat_onesignal_default.png"))).toBe(true);
+    const notificationIconPath = join(
+      process.cwd(),
+      "assets/images/ic_stat_onesignal_default.png",
+    );
+
+    expect(existsSync(notificationIconPath)).toBe(true);
+    expectNotificationIconOccupancy(notificationIconPath);
+
     ["mdpi", "hdpi", "xhdpi", "xxhdpi", "xxxhdpi"].forEach((density) => {
-      expect(existsSync(join(
+      const nativeIconPath = join(
         process.cwd(),
         `android/app/src/main/res/drawable-${density}/ic_stat_onesignal_default.png`,
-      ))).toBe(true);
+      );
+
+      expect(existsSync(nativeIconPath)).toBe(true);
+      expectNotificationIconOccupancy(nativeIconPath);
     });
   });
 
