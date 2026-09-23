@@ -85,12 +85,14 @@ result toolbar. Dismissal persists locally and the action applies the existing
 `newOnly` filter contract.
 
 Job details use a wordmark/X header, identity-first hierarchy, 32-point title,
-`Data confidence` card, and a fixed safe-area action dock. The dock exposes opening
-the original listing, sharing, saving, and reporting as four independent 44-point
-actions. `Data confidence` shows verification availability, publication time,
-source count, ordered provenance fields, and source links without inventing missing
-facts. Community and author screens are identity-led destinations, not generic
-search results with a label changed.
+`Data confidence` card, and a fixed safe-area action dock. The compact dock keeps
+opening the original listing as its persistent primary action and exposes sharing,
+saving, and reporting through a native secondary-action sheet. Every dock control
+and sheet row preserves the minimum interactive target. `Data confidence` shows
+verification availability, publication time, source count, ordered provenance
+fields, and source links without inventing missing facts. Community and author
+screens are identity-led destinations, not generic search results with a label
+changed.
 
 Lucide React Native is the application icon language. Use the icon that matches the
 responsive web surface, an explicit semantic color, and a consistent 1.8 stroke.

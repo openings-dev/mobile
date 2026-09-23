@@ -41,9 +41,11 @@ modal dismissal, and focus restoration. A full-screen detail experience may requ
 a different native presentation from the web dialog while preserving the same
 information hierarchy and source-of-truth action.
 
-The job-detail action dock lives outside its `ScrollView`, reports its measured
-height, and adds that height to the scroll content inset. This keeps the last source,
-tag, or similar job reachable above the bottom safe area.
+The job-detail action dock lives outside its `ScrollView` as a compact single row,
+reports its measured height, and adds that height to the scroll content inset. Its
+native action sheet owns sharing, saving, and reporting without increasing the
+persistent dock height. This keeps the last source, tag, or similar job reachable
+above the bottom safe area.
 
 Deep links and outbound GitHub links are security boundaries. Internal routes encode
 stable IDs, repositories, and handles. External actions accept deliberate HTTPS
