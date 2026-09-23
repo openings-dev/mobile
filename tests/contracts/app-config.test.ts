@@ -98,14 +98,14 @@ describe("native application identity", () => {
     ) as { dependencies: Record<string, string> };
 
     expect(manifest.dependencies).toMatchObject({
-      expo: "~57.0.23",
+      expo: "~57.0.24",
       "expo-application": "~57.0.3",
-      "expo-constants": "~57.0.18",
+      "expo-constants": "~57.0.19",
       "expo-dev-client": "~57.0.19",
       "expo-font": "~57.0.4",
       "expo-linking": "~57.0.10",
       "expo-localization": "~57.0.2",
-      "expo-router": "~57.0.21",
+      "expo-router": "~57.0.22",
       "expo-splash-screen": "~57.0.9",
       "expo-system-ui": "~57.0.4",
     });
