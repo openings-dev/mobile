@@ -27,7 +27,7 @@ describe("JobDetailsScreen", () => {
     expect(screen.getByText("React Native")).toBeTruthy();
     expect(screen.getByText("Data confidence")).toBeTruthy();
     expect(screen.getAllByText("Declared in source")).toHaveLength(2);
-    expect(screen.getByText("Report a problem")).toBeTruthy();
+    expect(screen.queryByText("Report a problem")).toBeNull();
     await waitFor(() => expect(markViewed).toHaveBeenCalledWith("gh_123"));
     await fireEvent.press(screen.getByLabelText("Show jobs from Openings"));
     expect(mockPush).toHaveBeenLastCalledWith("/communities/openings-dev/jobs");
@@ -35,6 +35,7 @@ describe("JobDetailsScreen", () => {
     expect(mockPush).toHaveBeenLastCalledWith("/authors/alice");
     await fireEvent.press(screen.getByText("Open original listing"));
     expect(open).toHaveBeenCalledWith("https://github.com/openings-dev/jobs/issues/gh_123");
+    await fireEvent.press(screen.getByText("Actions"));
     await fireEvent.press(screen.getByText("Share job"));
     expect(Share.share).toHaveBeenCalled();
   });
