@@ -304,6 +304,8 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
       <JobDetailActions
         isSaved={candidate.isSaved(item.id)}
         labels={{
+          actions: messages.jobs.actions,
+          closeActions: messages.jobs.closeActions,
           openOriginal: messages.jobs.openOriginal,
           report: messages.jobs.reportProblem,
           save: candidate.isSaved(item.id)
