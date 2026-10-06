@@ -9,10 +9,11 @@ import { ThemeProvider } from "@/contexts/theme";
 import { resetNotificationConsentForTests } from "@/services/notifications/consent";
 
 const mockReplace = jest.fn();
+const mockPush = jest.fn();
 const mockWithdrawNotifications = jest.fn().mockResolvedValue(true);
 
 jest.mock("expo-router", () => ({
-  useRouter: () => ({ replace: mockReplace }),
+  useRouter: () => ({ push: mockPush, replace: mockReplace }),
 }));
 
 jest.mock("@/services/notifications/preferences", () => ({
@@ -74,6 +75,8 @@ describe("AppHeader", () => {
     expect(screen.getByText("Authors")).toBeTruthy();
     expect(screen.getByText("Support openings.dev")).toBeTruthy();
     expect(screen.getByText("Star on GitHub")).toBeTruthy();
+    expect(screen.getByText("Privacy policy")).toBeTruthy();
+    expect(screen.getByText("Terms of service")).toBeTruthy();
     expect(screen.getByLabelText("Language")).toBeTruthy();
     expect(screen.getByLabelText("Appearance")).toBeTruthy();
 
@@ -88,6 +91,18 @@ describe("AppHeader", () => {
     expect(screen.getByText("Usar configuração do aparelho")).toBeTruthy();
     expect(screen.getByText("Claro")).toBeTruthy();
     expect(screen.getByText("Escuro")).toBeTruthy();
+  });
+
+  it("opens legal documents inside the managed content route", async () => {
+    const screen = await renderAppHeader();
+
+    await fireEvent.press(await screen.findByLabelText("Open navigation menu"));
+    await fireEvent.press(screen.getByText("Privacy policy"));
+
+    expect(mockPush).toHaveBeenCalledWith({
+      pathname: "/web-content",
+      params: { kind: "privacy" },
+    });
   });
 
   it("uses the wordmark as a native destination back to Jobs", async () => {

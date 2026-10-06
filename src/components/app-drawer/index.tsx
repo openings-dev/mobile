@@ -4,9 +4,11 @@ import {
   BriefcaseBusiness,
   BellOff,
   ChevronUp,
+  FileLock2,
   Globe2,
   Moon,
   Sun,
+  ScrollText,
   UserRound,
   UsersRound,
   X,
@@ -143,6 +145,38 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
                 style={{ paddingBottom: insets.bottom + DRAWER_FOOTER_PADDING }}
                 testID="app-drawer-footer"
               >
+                <View className="gap-1">
+                  {([
+                    { icon: FileLock2, kind: "privacy", label: messages.legal.privacy },
+                    { icon: ScrollText, kind: "terms", label: messages.legal.terms },
+                  ] as const).map((item) => {
+                    const Icon = item.icon;
+
+                    return (
+                      <Pressable
+                        accessibilityRole="button"
+                        className="min-h-11 flex-row items-center gap-3 rounded-control px-3"
+                        key={item.kind}
+                        onPress={() => {
+                          router.push({
+                            pathname: "/web-content",
+                            params: { kind: item.kind },
+                          });
+                          close();
+                        }}
+                      >
+                        <Icon
+                          color={theme.colors["muted-foreground"]}
+                          size={18}
+                          strokeWidth={1.8}
+                        />
+                        <Text className="font-body text-product-body font-medium text-foreground">
+                          {item.label}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
                 <SupportCard />
                 {notificationConsent === "granted" ? (
                   <Pressable
