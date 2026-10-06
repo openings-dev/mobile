@@ -27,6 +27,15 @@ const versioningMessages = {
   de: { description: "Installiere die neueste Version von Openings, um fortzufahren.", dismiss: "Nicht jetzt", optionalDescription: "Aktualisiere Openings, um die neuesten Verbesserungen zu erhalten.", optionalTitle: "Eine neue Version ist verfügbar", storeAction: "Google Play öffnen", title: "Ein Update ist erforderlich", updateAction: "Jetzt aktualisieren" },
 } as const;
 
+const legalMessages = {
+  en: { errorDescription: "Try again or open this document in your browser.", errorTitle: "This document could not be loaded", loading: "Loading document…", openBrowser: "Open in browser", privacy: "Privacy policy", retry: "Try again", terms: "Terms of service" },
+  "pt-BR": { errorDescription: "Tente novamente ou abra este documento no navegador.", errorTitle: "Não foi possível carregar este documento", loading: "Carregando documento…", openBrowser: "Abrir no navegador", privacy: "Política de privacidade", retry: "Tentar novamente", terms: "Termos de serviço" },
+  es: { errorDescription: "Inténtalo de nuevo o abre este documento en el navegador.", errorTitle: "No se pudo cargar este documento", loading: "Cargando documento…", openBrowser: "Abrir en el navegador", privacy: "Política de privacidad", retry: "Intentar de nuevo", terms: "Términos del servicio" },
+  it: { errorDescription: "Riprova o apri questo documento nel browser.", errorTitle: "Impossibile caricare questo documento", loading: "Caricamento documento…", openBrowser: "Apri nel browser", privacy: "Informativa sulla privacy", retry: "Riprova", terms: "Termini di servizio" },
+  fr: { errorDescription: "Réessayez ou ouvrez ce document dans votre navigateur.", errorTitle: "Impossible de charger ce document", loading: "Chargement du document…", openBrowser: "Ouvrir dans le navigateur", privacy: "Politique de confidentialité", retry: "Réessayer", terms: "Conditions d’utilisation" },
+  de: { errorDescription: "Versuche es erneut oder öffne dieses Dokument im Browser.", errorTitle: "Dieses Dokument konnte nicht geladen werden", loading: "Dokument wird geladen…", openBrowser: "Im Browser öffnen", privacy: "Datenschutzerklärung", retry: "Erneut versuchen", terms: "Nutzungsbedingungen" },
+} as const;
+
 const webNativeMessages = {
   en: {
     analyticsConsent: analyticsConsentMessages.en,
@@ -265,6 +274,7 @@ export const messages = {
     communities: { active: "Active", allSources: "All sources", description: "GitHub communities that publish open tech roles.", errors: "With errors", github: "Open repository", latestActivity: "Latest activity", noOpenings: "No openings", open: "View community", profileTitle: "Community", searchPlaceholder: "Search communities or repositories", share: "Share community", title: "Communities" },
     description: "Tech jobs shared by GitHub communities, made easier to discover.",
     analyticsConsent: analyticsConsentMessages.en,
+    legal: legalMessages.en,
     notificationConsent: notificationConsentMessages.en,
     versioning: versioningMessages.en,
     errorMessage: "Please try loading Openings again.", errorTitle: "Openings could not start", eyebrow: "Mobile foundation", localeLabel: "Language", retry: "Try again", status: "Foundation ready", title: "Openings",
@@ -277,6 +287,7 @@ export const messages = {
     communities: { active: "Ativas", allSources: "Todas as fontes", description: "Comunidades do GitHub que publicam vagas abertas de tecnologia.", errors: "Com erros", github: "Abrir repositório", latestActivity: "Atividade mais recente", noOpenings: "Sem vagas", open: "Ver comunidade", profileTitle: "Comunidade", searchPlaceholder: "Buscar comunidades ou repositórios", share: "Compartilhar comunidade", title: "Comunidades" },
     description: "Vagas de tecnologia compartilhadas por comunidades do GitHub, mais fáceis de descobrir.",
     analyticsConsent: analyticsConsentMessages["pt-BR"],
+    legal: legalMessages["pt-BR"],
     notificationConsent: notificationConsentMessages["pt-BR"],
     versioning: versioningMessages["pt-BR"],
     errorMessage: "Tente carregar o Openings novamente.", errorTitle: "O Openings não conseguiu iniciar", eyebrow: "Base mobile", localeLabel: "Idioma", retry: "Tentar novamente", status: "A base está pronta", title: "Openings",
@@ -289,6 +300,7 @@ export const messages = {
     communities: { active: "Activas", allSources: "Todas las fuentes", description: "Comunidades de GitHub que publican empleos tecnológicos.", errors: "Con errores", github: "Abrir repositorio", latestActivity: "Actividad reciente", noOpenings: "Sin vacantes", open: "Ver comunidad", profileTitle: "Comunidad", searchPlaceholder: "Buscar comunidades o repositorios", share: "Compartir comunidad", title: "Comunidades" },
     description: "Empleos de tecnología compartidos por comunidades de GitHub, más fáciles de descubrir.",
     analyticsConsent: analyticsConsentMessages.es,
+    legal: legalMessages.es,
     notificationConsent: notificationConsentMessages.es,
     versioning: versioningMessages.es,
     errorMessage: "Intenta cargar Openings de nuevo.", errorTitle: "Openings no pudo iniciarse", eyebrow: "Base móvil", localeLabel: "Idioma", retry: "Intentar de nuevo", status: "La base está lista", title: "Openings",
@@ -301,6 +313,7 @@ export const messages = {
     communities: { active: "Attive", allSources: "Tutte le fonti", description: "Community GitHub che pubblicano ruoli tech aperti.", errors: "Con errori", github: "Apri repository", latestActivity: "Attività recente", noOpenings: "Nessuna offerta", open: "Vedi community", profileTitle: "Community", searchPlaceholder: "Cerca community o repository", share: "Condividi community", title: "Community" },
     description: "Offerte di lavoro tech condivise dalle community GitHub, più facili da trovare.",
     analyticsConsent: analyticsConsentMessages.it,
+    legal: legalMessages.it,
     notificationConsent: notificationConsentMessages.it,
     versioning: versioningMessages.it,
     errorMessage: "Prova a caricare di nuovo Openings.", errorTitle: "Openings non è riuscito ad avviarsi", eyebrow: "Base mobile", localeLabel: "Lingua", retry: "Riprova", status: "La base è pronta", title: "Openings",
@@ -313,6 +326,7 @@ export const messages = {
     communities: { active: "Actives", allSources: "Toutes les sources", description: "Communautés GitHub publiant des postes tech ouverts.", errors: "Avec erreurs", github: "Ouvrir le dépôt", latestActivity: "Activité récente", noOpenings: "Aucune offre", open: "Voir la communauté", profileTitle: "Communauté", searchPlaceholder: "Rechercher communautés ou dépôts", share: "Partager la communauté", title: "Communautés" },
     description: "Des offres tech partagées par les communautés GitHub, plus faciles à découvrir.",
     analyticsConsent: analyticsConsentMessages.fr,
+    legal: legalMessages.fr,
     notificationConsent: notificationConsentMessages.fr,
     versioning: versioningMessages.fr,
     errorMessage: "Essayez de charger Openings à nouveau.", errorTitle: "Openings n’a pas pu démarrer", eyebrow: "Base mobile", localeLabel: "Langue", retry: "Réessayer", status: "La base est prête", title: "Openings",
@@ -325,6 +339,7 @@ export const messages = {
     communities: { active: "Aktiv", allSources: "Alle Quellen", description: "GitHub-Communitys mit offenen Tech-Stellen.", errors: "Mit Fehlern", github: "Repository öffnen", latestActivity: "Letzte Aktivität", noOpenings: "Keine Stellen", open: "Community ansehen", profileTitle: "Community", searchPlaceholder: "Communitys oder Repositorys suchen", share: "Community teilen", title: "Communitys" },
     description: "Tech-Stellen aus GitHub-Communitys, einfacher zu entdecken.",
     analyticsConsent: analyticsConsentMessages.de,
+    legal: legalMessages.de,
     notificationConsent: notificationConsentMessages.de,
     versioning: versioningMessages.de,
     errorMessage: "Bitte lade Openings erneut.", errorTitle: "Openings konnte nicht gestartet werden", eyebrow: "Mobile Grundlage", localeLabel: "Sprache", retry: "Erneut versuchen", status: "Die Grundlage ist bereit", title: "Openings",

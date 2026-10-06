@@ -81,4 +81,23 @@ describe("localized messages", () => {
       });
     }
   });
+
+  it("provides complete legal content copy", () => {
+    const messages = moduleContract.messages as Record<
+      string,
+      { legal?: Record<string, string> }
+    >;
+
+    for (const locale of SUPPORTED_LOCALES) {
+      expect(messages[locale]?.legal).toEqual({
+        errorDescription: expect.any(String),
+        errorTitle: expect.any(String),
+        loading: expect.any(String),
+        openBrowser: expect.any(String),
+        privacy: expect.any(String),
+        retry: expect.any(String),
+        terms: expect.any(String),
+      });
+    }
+  });
 });

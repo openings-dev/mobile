@@ -76,6 +76,15 @@ export interface FoundationMessages {
     system: string;
   };
   localeLabel: string;
+  legal: {
+    errorDescription: string;
+    errorTitle: string;
+    loading: string;
+    openBrowser: string;
+    privacy: string;
+    retry: string;
+    terms: string;
+  };
   notificationConsent: {
     accept: string;
     decline: string;

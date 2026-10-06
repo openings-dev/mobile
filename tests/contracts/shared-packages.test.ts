@@ -41,4 +41,13 @@ describe("shared package integration", () => {
     expect(darkRuntimeTheme.colors.canvas).toBe("#0D1211");
     expect(nativewindPreset.theme.extend.spacing.touch).toBe(44);
   });
+
+  it("pins the public managed WebView and its native peer", () => {
+    const manifest = JSON.parse(
+      readFileSync(path.join(projectRoot, "package.json"), "utf8"),
+    );
+
+    expect(manifest.dependencies["@trebla/managed-webview"]).toBe("0.2.0");
+    expect(manifest.dependencies["react-native-webview"]).toBe("13.16.1");
+  });
 });

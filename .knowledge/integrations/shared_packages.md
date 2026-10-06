@@ -1,6 +1,6 @@
 # Shared Packages
 
-> Define ownership and local consumption of the two public Openings foundation packages.
+> Define ownership and local consumption of public packages used by Openings Mobile.
 
 ## Packages
 
@@ -17,6 +17,12 @@ Both packages are public, MIT-licensed, independently versioned NPM artifacts. T
 mobile application is private and must never be published as part of their package
 contents.
 
+`@trebla/managed-webview` is a public React Native infrastructure package. It owns
+HTTPS origin and path policy, readiness, timeout, challenge detection, failure
+unmounting, retry, and explicit browser fallback. Openings owns its document URL
+catalog, navigation route, localization, theme, and recovery presentation. See
+[Embedded content](embedded_content.md) for the consumer contract.
+
 ## Local development
 
 Mobile resolves exact public npm releases and Metro uses the standard project
@@ -24,7 +30,7 @@ configuration. A fresh clone needs no sibling repository. Changes to either shar
 package must be published under semantic versioning before mobile deliberately
 updates its exact dependency.
 
-Jest transforms the package boundary explicitly, and the contract test imports the
+Jest transforms package boundaries explicitly, and contract tests import the
 same public exports the application consumes. Do not bypass package exports with a
 relative import into another repository's `src` folder.
 
@@ -35,6 +41,8 @@ relative import into another repository's `src` folder.
   system, not a screen-specific layout choice.
 - Keep React Native components, Expo APIs, device services, navigation, and native
   persistence inside mobile.
+- Keep Openings-specific URLs, copy, and visual presentation out of
+  `@trebla/managed-webview`.
 - Keep Next.js, DOM, and browser-only behavior inside web.
 - Preserve semantic versioning and add package tests before changing an exported
   contract.
