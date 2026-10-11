@@ -25,9 +25,12 @@ const NO_UPDATE: GooglePlayUpdateAvailability = {
   updateInProgress: false,
 };
 
-function isAppNotOwnedError(error: unknown): boolean {
+function isExpectedPlayAvailabilityError(error: unknown): boolean {
   const message = error instanceof Error ? error.message : String(error);
-  return /(?:^|\s)Install Error\(-10\):/.test(message);
+  return (
+    /(?:^|\s)Install Error\(-10\):/.test(message) ||
+    message.includes("Failed to bind to the service.")
+  );
 }
 
 function reportVersioningError(error: Error): void {
@@ -61,7 +64,7 @@ export class GooglePlayUpdateProvider {
         updateInProgress: result.updateInProgress === true,
       };
     } catch (error) {
-      if (!isAppNotOwnedError(error)) this.reportSafely(error);
+      if (!isExpectedPlayAvailabilityError(error)) this.reportSafely(error);
       return NO_UPDATE;
     }
   }
@@ -93,7 +96,7 @@ export class GooglePlayUpdateProvider {
       if (!allowed) return false;
       return await sdk.startUpdate(mode === "immediate");
     } catch (error) {
-      if (!isAppNotOwnedError(error)) this.reportSafely(error);
+      if (!isExpectedPlayAvailabilityError(error)) this.reportSafely(error);
       return false;
     }
   }
