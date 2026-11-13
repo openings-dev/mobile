@@ -7,10 +7,15 @@
     "icon": "./assets/images/icon.png",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "platforms": ["android"],
+    "platforms": ["android", "ios"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.openings.mobile",
+      "appleTeamId": "VD2G3CWSCR",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "AppStoreID": "6834098510"
+      },
       "buildNumber": "1",
       "icon": "./assets/images/icon.png",
       "privacyManifests": {
@@ -49,12 +54,15 @@
         "onesignal-expo-plugin",
         {
           "mode": "production",
+          "iPhoneDeploymentTarget": "16.4",
           "smallIcons": ["./assets/images/ic_stat_onesignal_default.png"],
           "smallIconAccentColor": "#187A68"
         }
       ],
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
+      "./plugins/with-ios-firebase.cjs",
+      "./plugins/with-ios-release.cjs",
       "@sentry/react-native/expo",
       [
         "expo-router",

@@ -5,6 +5,7 @@ import {
   FIREBASE_MINIMUM_FETCH_INTERVAL_MS,
   FirebaseRemoteConfigProvider,
 } from "@/services/versioning/firebase-remote-config.provider";
+import { Platform } from "react-native";
 
 type FakeValue = {
   asBoolean: () => boolean;
@@ -56,6 +57,36 @@ function createSdk({
 }
 
 describe("FirebaseRemoteConfigProvider", () => {
+  beforeEach(() => {
+    jest.replaceProperty(Platform, "OS", "android");
+  });
+  afterEach(() => jest.restoreAllMocks());
+
+  it("reads independent iOS keys so Android rollout thresholds cannot block iPhones", async () => {
+    jest.replaceProperty(Platform, "OS", "ios");
+    const { remoteConfig, sdk } = createSdk();
+    sdk.getValue.mockImplementation((_config, key) => key === "ios_force_update_enabled"
+      ? value({ boolean: true, source: "remote" })
+      : value({ number: 5, source: "remote" }));
+    const provider = new FirebaseRemoteConfigProvider(async () => sdk as never);
+
+    await expect(provider.resolveRule()).resolves.toEqual({
+      rule: { enabled: true, minimumBuildNumber: 5, source: "remote" },
+    });
+    expect(remoteConfig.defaultConfig).toEqual({ ios_force_update_enabled: false, ios_minimum_build_number: 0 });
+    expect(sdk.getValue.mock.calls.map(([, key]) => key)).toEqual([
+      "ios_force_update_enabled", "ios_minimum_build_number",
+    ]);
+  });
+
+  it("does not load native Remote Config for unsupported platforms", async () => {
+    jest.replaceProperty(Platform, "OS", "web");
+    const loadSdk = jest.fn();
+    await expect(new FirebaseRemoteConfigProvider(loadSdk).resolveRule()).resolves.toEqual({
+      rule: { enabled: false, minimumBuildNumber: 0, source: "static" },
+    });
+    expect(loadSdk).not.toHaveBeenCalled();
+  });
   it("sets permissive defaults and bounded settings", async () => {
     const { remoteConfig, sdk } = createSdk();
     const provider = new FirebaseRemoteConfigProvider(async () => sdk as never);

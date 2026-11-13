@@ -1,6 +1,7 @@
 require "shellwords"
 require "base64"
 require "open3"
+require_relative "ios_release"
 
 default_platform(:android)
 
@@ -8,6 +9,92 @@ OPENINGS_ANDROID_PACKAGE = "dev.openings.mobile"
 
 def project_root
   File.expand_path("..", __dir__)
+end
+
+def ios_environment
+  require "dotenv"
+  Dotenv.load(File.join(project_root, ".env"))
+end
+
+def ios_required_environment(*names)
+  ios_environment
+  names.each { |name| UI.user_error!("Missing #{name}") if ENV[name].to_s.strip.empty? }
+end
+
+def ios_store_api
+  ios_required_environment("ASC_KEY_ID", "ASC_ISSUER_ID", "ASC_KEY_FILE")
+  key = File.expand_path(ENV.fetch("ASC_KEY_FILE"), project_root)
+  UI.user_error!("ASC_KEY_FILE does not exist") unless File.file?(key)
+  app_store_connect_api_key(key_id: ENV.fetch("ASC_KEY_ID"), issuer_id: ENV.fetch("ASC_ISSUER_ID"), key_filepath: key)
+end
+
+platform :ios do
+  desc "Verify source and compile the regenerated iOS Simulator application"
+  lane :verify do
+    ios_environment
+    UI.user_error!("Run Expo prebuild and pod install first") unless File.file?(File.join(project_root, "ios/Pods/Manifest.lock"))
+    sh("cd #{project_root.shellescape} && npm run check")
+    sh("cd #{project_root.shellescape} && SENTRY_DISABLE_AUTO_UPLOAD=true xcodebuild -workspace ios/Openings.xcworkspace -scheme Openings -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build")
+  end
+
+  desc "Archive an explicitly versioned distribution IPA and record its SHA-256"
+  lane :archive do |options|
+    identity = OpeningsIosRelease.parameters(project_root, options)
+    UI.user_error!("Refusing to overwrite an existing IPA") if File.exist?(identity[:path])
+    ios_required_environment("IOS_SIGNING_IDENTITY", "IOS_APP_PROFILE_SPECIFIER", "IOS_NOTIFICATION_PROFILE_SPECIFIER")
+    integration_checks = OpeningsIosRelease.integration_preflight!(ENV)
+    UI.user_error!("Run Expo prebuild and pod install first") unless File.file?(File.join(project_root, "ios/Pods/Manifest.lock"))
+    ensure_git_status_clean
+    sh("cd #{project_root.shellescape} && npm run check")
+    project = File.join(project_root, "ios/Openings.xcodeproj")
+    project_file = File.join(project, "project.pbxproj")
+    original_project = File.binread(project_file)
+    profiles = {
+      OpeningsIosRelease::IDENTIFIER => ENV.fetch("IOS_APP_PROFILE_SPECIFIER"),
+      OpeningsIosRelease::EXTENSION_IDENTIFIER => ENV.fetch("IOS_NOTIFICATION_PROFILE_SPECIFIER")
+    }
+    begin
+      { "Openings" => "IOS_APP_PROFILE_SPECIFIER", "OneSignalNotificationServiceExtension" => "IOS_NOTIFICATION_PROFILE_SPECIFIER" }.each do |target, profile|
+        update_code_signing_settings(path: project, use_automatic_signing: false,
+          team_id: OpeningsIosRelease::TEAM_ID, code_sign_identity: ENV.fetch("IOS_SIGNING_IDENTITY"),
+          targets: [target], build_configurations: ["Release"], profile_name: ENV.fetch(profile))
+      end
+      output = build_app(workspace: File.join(project_root, "ios/Openings.xcworkspace"), scheme: "Openings", configuration: "Release", clean: true,
+        export_method: "app-store", output_directory: File.dirname(identity[:path]), output_name: File.basename(identity[:path]),
+        codesigning_identity: ENV.fetch("IOS_SIGNING_IDENTITY"), export_team_id: OpeningsIosRelease::TEAM_ID,
+        export_options: { signingStyle: "manual", teamID: OpeningsIosRelease::TEAM_ID, provisioningProfiles: profiles, manageAppVersionAndBuildNumber: false },
+        xcargs: Shellwords.join(["CURRENT_PROJECT_VERSION=#{identity[:build]}", "MARKETING_VERSION=#{identity[:version]}", "DEVELOPMENT_TEAM=#{OpeningsIosRelease::TEAM_ID}"]))
+      UI.user_error!("Unexpected archive output path") unless output && File.expand_path(output) == identity[:path]
+      report = OpeningsIosRelease.inspect_ipa(project_root, options, require_tested_hash: false, require_archive_manifest: false)
+      report[:schema_version] = 1
+      report[:app_identifier] = OpeningsIosRelease::IDENTIFIER
+      report[:source_commit] = last_git_commit[:commit_hash]
+      report[:checks] = integration_checks.merge(source_checks: true, archive: true)
+      File.write(identity[:path].sub(/\.ipa\z/, ".json"), JSON.pretty_generate(report) + "\n")
+      UI.success("Signed IPA SHA-256: #{report[:sha256]}")
+    ensure
+      File.binwrite(project_file, original_project)
+    end
+  end
+
+  desc "Upload the exact device-tested IPA to internal TestFlight without rebuilding"
+  lane :beta do |options|
+    identity = OpeningsIosRelease.inspect_ipa(project_root, options)
+    api = ios_store_api
+    latest = latest_testflight_build_number(api_key: api, app_identifier: OpeningsIosRelease::IDENTIFIER,
+      version: identity[:version], initial_build_number: 0)
+    UI.user_error!("build_number must exceed the latest TestFlight build") unless identity[:build].to_i > latest.to_i
+    upload_to_testflight(api_key: api, ipa: identity[:path], app_identifier: OpeningsIosRelease::IDENTIFIER,
+      distribute_external: false, skip_submission: true)
+  end
+
+  desc "Submit the exact tested TestFlight build for review and manual release"
+  lane :release do |options|
+    identity = OpeningsIosRelease.inspect_ipa(project_root, options)
+    deliver(api_key: ios_store_api, app_identifier: OpeningsIosRelease::IDENTIFIER,
+      app_version: identity[:version], build_number: identity[:build], skip_binary_upload: true,
+      skip_metadata: true, skip_screenshots: true, submit_for_review: true, automatic_release: false, force: true)
+  end
 end
 
 def signing_properties

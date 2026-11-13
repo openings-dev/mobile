@@ -123,10 +123,10 @@ describe("native application identity", () => {
       "@react-native-firebase/crashlytics",
       "@sentry/react-native/expo",
     ]));
-    expect(expo.platforms).toEqual(["android"]);
+    expect(expo.platforms).toEqual(["android", "ios"]);
     expect(expo.android?.googleServicesFile).toBe("./google-services.json");
-    expect(expo.ios?.googleServicesFile).toBeUndefined();
-    expect(expo.ios?.infoPlist).toBeUndefined();
+    expect(expo.ios?.googleServicesFile).toBe("./GoogleService-Info.plist");
+    expect(expo.ios?.infoPlist).toMatchObject({ AppStoreID: "6834098510" });
     expect(expo.ios?.entitlements).toBeUndefined();
 
     const oneSignalPlugin = expo.plugins?.find(
@@ -135,6 +135,7 @@ describe("native application identity", () => {
     );
     expect(oneSignalPlugin?.[1]).toMatchObject({
       mode: "production",
+      iPhoneDeploymentTarget: "16.4",
       smallIconAccentColor: "#187A68",
       smallIcons: ["./assets/images/ic_stat_onesignal_default.png"],
     });

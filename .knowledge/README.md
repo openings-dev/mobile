@@ -21,12 +21,13 @@ Other web areas are intentionally outside the mobile scope.
 - [Development setup](guides/development_setup.md) — local package, JavaScript, and native workflows
 - [Testing](guides/testing.md) — behavioral, package-integration, and native verification
 - [Android Fastlane](release/android_fastlane.md) — signing, internal delivery, and production promotion
+- [iOS integration parity](release/ios_parity.md) — native provider configuration, Apple prerequisites and verification limits
 - [Google Play listing](release/google_play_listing.md) — localized store copy, artwork, and data-safety declarations
 - [Design system](design_system/README.md) — mobile visual authority and documentation index
   - [Foundations and components](design_system/foundations_and_components.md)
 - [Shared packages](integrations/shared_packages.md) — ownership and local consumption of public NPM packages
 - [Embedded content](integrations/embedded_content.md) — trusted legal-document WebView and recovery policy
-- [Android versioning](integrations/android_versioning.md) — Firebase minimum version and Google Play update behavior
+- [Native app versioning](integrations/android_versioning.md) — independent Firebase minimum versions and native store update behavior
 
 ## Authority
 

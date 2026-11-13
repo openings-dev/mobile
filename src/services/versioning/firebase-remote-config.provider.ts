@@ -1,4 +1,6 @@
-import type { AndroidVersionRule } from "./android-version-policy";
+import { Platform } from "react-native";
+
+import type { AppVersionRule } from "./app-version-policy";
 
 type RemoteConfigSdk = Pick<
   typeof import("@react-native-firebase/remote-config"),
@@ -7,19 +9,21 @@ type RemoteConfigSdk = Pick<
 
 type LoadRemoteConfigSdk = () => Promise<RemoteConfigSdk>;
 
-export type AndroidVersionRuleResolution = {
+export type AppVersionRuleResolution = {
   error?: Error;
-  rule: AndroidVersionRule;
+  rule: AppVersionRule;
 };
 
 export const ANDROID_FORCE_UPDATE_ENABLED_KEY =
   "android_force_update_enabled";
 export const ANDROID_MINIMUM_VERSION_CODE_KEY =
   "android_minimum_version_code";
+export const IOS_FORCE_UPDATE_ENABLED_KEY = "ios_force_update_enabled";
+export const IOS_MINIMUM_BUILD_NUMBER_KEY = "ios_minimum_build_number";
 export const FIREBASE_FETCH_TIMEOUT_MS = 2_500;
 export const FIREBASE_MINIMUM_FETCH_INTERVAL_MS = 12 * 60 * 60 * 1_000;
 
-const DISABLED_RULE: AndroidVersionRule = {
+const DISABLED_RULE: AppVersionRule = {
   enabled: false,
   minimumBuildNumber: 0,
   source: "static",
@@ -35,13 +39,20 @@ export class FirebaseRemoteConfigProvider {
       import("@react-native-firebase/remote-config"),
   ) {}
 
-  async resolveRule(): Promise<AndroidVersionRuleResolution> {
+  async resolveRule(): Promise<AppVersionRuleResolution> {
+    if (Platform.OS !== "android" && Platform.OS !== "ios") {
+      return { rule: DISABLED_RULE };
+    }
+    const enabledKey = Platform.OS === "ios"
+      ? IOS_FORCE_UPDATE_ENABLED_KEY : ANDROID_FORCE_UPDATE_ENABLED_KEY;
+    const minimumKey = Platform.OS === "ios"
+      ? IOS_MINIMUM_BUILD_NUMBER_KEY : ANDROID_MINIMUM_VERSION_CODE_KEY;
     try {
       const sdk = await this.loadSdk();
       const remoteConfig = sdk.getRemoteConfig();
       remoteConfig.defaultConfig = {
-        [ANDROID_FORCE_UPDATE_ENABLED_KEY]: false,
-        [ANDROID_MINIMUM_VERSION_CODE_KEY]: 0,
+        [enabledKey]: false,
+        [minimumKey]: 0,
       };
       remoteConfig.settings = {
         fetchTimeoutMillis: FIREBASE_FETCH_TIMEOUT_MS,
@@ -56,11 +67,11 @@ export class FirebaseRemoteConfigProvider {
 
       const enabled = sdk.getValue(
         remoteConfig,
-        ANDROID_FORCE_UPDATE_ENABLED_KEY,
+        enabledKey,
       );
       const minimum = sdk.getValue(
         remoteConfig,
-        ANDROID_MINIMUM_VERSION_CODE_KEY,
+        minimumKey,
       );
       const enabledSource = enabled.getSource();
       const minimumSource = minimum.getSource();

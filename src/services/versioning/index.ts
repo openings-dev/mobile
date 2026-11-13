@@ -1,9 +1,9 @@
-import { AndroidVersioningService } from "./android-versioning.service";
-import { GooglePlayUpdateProvider } from "./google-play-update.provider";
+import { AppVersioningService } from "./app-versioning.service";
+import { StoreUpdateProvider } from "./store-update.provider";
 
-export const androidVersioningService = new AndroidVersioningService();
-export const googlePlayUpdateService = new GooglePlayUpdateProvider();
+export const appVersioningService = new AppVersioningService();
+export const storeUpdateService = new StoreUpdateProvider();
 
-export { AndroidVersioningService } from "./android-versioning.service";
-export { GooglePlayUpdateProvider } from "./google-play-update.provider";
-export type { GooglePlayUpdateAvailability } from "./google-play-update.provider";
+export { AppVersioningService } from "./app-versioning.service";
+export { StoreUpdateProvider } from "./store-update.provider";
+export type { StoreUpdateAvailability } from "./store-update.provider";

@@ -1,13 +1,13 @@
 import * as Application from "expo-application";
 
-import { parseAndroidBuildNumber, requiresAndroidUpdate } from "./android-version-policy";
+import { parseBuildNumber, requiresAppUpdate } from "./app-version-policy";
 import {
   FirebaseRemoteConfigProvider,
-  type AndroidVersionRuleResolution,
+  type AppVersionRuleResolution,
 } from "./firebase-remote-config.provider";
 
-export interface AndroidVersionRuleProvider {
-  resolveRule(): Promise<AndroidVersionRuleResolution>;
+export interface AppVersionRuleProvider {
+  resolveRule(): Promise<AppVersionRuleResolution>;
 }
 
 type InstalledBuildVersion = () => string | null;
@@ -22,9 +22,9 @@ function reportVersioningError(error: Error): void {
     .catch(() => undefined);
 }
 
-export class AndroidVersioningService {
+export class AppVersioningService {
   constructor(
-    private readonly provider: AndroidVersionRuleProvider =
+    private readonly provider: AppVersionRuleProvider =
       new FirebaseRemoteConfigProvider(),
     private readonly getInstalledBuildVersion: InstalledBuildVersion = () =>
       Application.nativeBuildVersion,
@@ -42,11 +42,11 @@ export class AndroidVersioningService {
       if (
         resolution.rule.enabled &&
         resolution.rule.source === "remote" &&
-        parseAndroidBuildNumber(resolution.rule.minimumBuildNumber) === null
+        parseBuildNumber(resolution.rule.minimumBuildNumber) === null
       ) {
-        this.reportSafely(new Error("Invalid Android minimum version code"));
+        this.reportSafely(new Error("Invalid minimum app build number"));
       }
-      return requiresAndroidUpdate(resolution.rule, installedBuildVersion);
+      return requiresAppUpdate(resolution.rule, installedBuildVersion);
     } catch (error) {
       this.reportSafely(error instanceof Error ? error : new Error(String(error)));
       return false;

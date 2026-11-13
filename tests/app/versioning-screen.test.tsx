@@ -1,5 +1,5 @@
 import { fireEvent, render } from "@testing-library/react-native";
-import { BackHandler, Linking } from "react-native";
+import { BackHandler, Linking, Platform } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { VersioningScreen } from "@/app/versioning";
@@ -14,6 +14,7 @@ jest.mock("@/contexts/versioning", () => ({
 
 describe("VersioningScreen", () => {
   beforeEach(() => {
+    mockStartImmediateUpdate.mockClear();
     mockStartImmediateUpdate.mockResolvedValue(true);
   });
 
@@ -21,7 +22,11 @@ describe("VersioningScreen", () => {
     jest.restoreAllMocks();
   });
 
-  it("blocks hardware back and offers immediate update with a store fallback", async () => {
+  it.each([
+    ["android", "https://play.google.com/store/apps/details?id=dev.openings.mobile"],
+    ["ios", "https://apps.apple.com/app/id6834098510"],
+  ] as const)("uses the correct store and update fallback on %s", async (platform, storeUrl) => {
+    jest.replaceProperty(Platform, "OS", platform);
     const remove = jest.fn();
     let handler: (() => boolean) | undefined;
     jest.spyOn(BackHandler, "addEventListener").mockImplementation((_event, next) => {
@@ -44,9 +49,11 @@ describe("VersioningScreen", () => {
     expect(mockStartImmediateUpdate).toHaveBeenCalledTimes(1);
 
     await fireEvent.press(screen.getByTestId("versioning-open-store"));
-    expect(openUrl).toHaveBeenCalledWith(
-      "https://play.google.com/store/apps/details?id=dev.openings.mobile",
-    );
+    expect(openUrl).toHaveBeenCalledWith(storeUrl);
+    mockStartImmediateUpdate.mockResolvedValueOnce(false);
+    openUrl.mockClear();
+    await fireEvent.press(screen.getByTestId("versioning-update"));
+    expect(openUrl).toHaveBeenCalledWith(storeUrl);
 
     await screen.unmount();
     expect(remove).toHaveBeenCalledTimes(1);

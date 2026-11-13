@@ -15,6 +15,10 @@ fastlane/screenshots/
 fastlane/test_output/
 *.apk
 *.aab
+*.ipa
+*.xcarchive/
+*.dSYM/
+*.dSYM.zip
 *.jks
 *.keystore
 *.p8

@@ -10,9 +10,9 @@ import {
 } from "react";
 
 import {
-  androidVersioningService,
-  googlePlayUpdateService,
-  type GooglePlayUpdateAvailability,
+  appVersioningService,
+  storeUpdateService,
+  type StoreUpdateAvailability,
 } from "@/services/versioning";
 import {
   dismissOptionalUpdate as persistOptionalUpdateDismissal,
@@ -20,7 +20,7 @@ import {
 } from "@/services/versioning/optional-update-dismissal";
 
 export interface VersioningServices {
-  checkAvailability(): Promise<GooglePlayUpdateAvailability>;
+  checkAvailability(): Promise<StoreUpdateAvailability>;
   isUpdateRequired(): Promise<boolean>;
   startFlexibleUpdate(): Promise<boolean>;
   startImmediateUpdate(): Promise<boolean>;
@@ -37,10 +37,10 @@ interface VersioningContextValue {
 }
 
 const DEFAULT_SERVICES: VersioningServices = {
-  checkAvailability: () => googlePlayUpdateService.checkAvailability(),
-  isUpdateRequired: () => androidVersioningService.isUpdateRequired(),
-  startFlexibleUpdate: () => googlePlayUpdateService.startFlexibleUpdate(),
-  startImmediateUpdate: () => googlePlayUpdateService.startImmediateUpdate(),
+  checkAvailability: () => storeUpdateService.checkAvailability(),
+  isUpdateRequired: () => appVersioningService.isUpdateRequired(),
+  startFlexibleUpdate: () => storeUpdateService.startFlexibleUpdate(),
+  startImmediateUpdate: () => storeUpdateService.startImmediateUpdate(),
 };
 
 const VersioningContext = createContext<VersioningContextValue | null>(null);
