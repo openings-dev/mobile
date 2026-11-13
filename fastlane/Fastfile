@@ -34,7 +34,7 @@ platform :ios do
     ios_environment
     UI.user_error!("Run Expo prebuild and pod install first") unless File.file?(File.join(project_root, "ios/Pods/Manifest.lock"))
     sh("cd #{project_root.shellescape} && npm run check")
-    sh("cd #{project_root.shellescape} && SENTRY_DISABLE_AUTO_UPLOAD=true xcodebuild -workspace ios/Openings.xcworkspace -scheme Openings -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' CODE_SIGNING_ALLOWED=NO build")
+    sh("cd #{project_root.shellescape} && SENTRY_DISABLE_AUTO_UPLOAD=true xcodebuild -workspace ios/Openings.xcworkspace -scheme Openings -configuration Release -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath build/ios-verify CODE_SIGNING_ALLOWED=NO build")
   end
 
   desc "Archive an explicitly versioned distribution IPA and record its SHA-256"
@@ -77,7 +77,7 @@ platform :ios do
     end
   end
 
-  desc "Upload the exact device-tested IPA to internal TestFlight without rebuilding"
+  desc "Upload the exact validated IPA candidate to internal TestFlight without rebuilding"
   lane :beta do |options|
     identity = OpeningsIosRelease.inspect_ipa(project_root, options)
     api = ios_store_api
