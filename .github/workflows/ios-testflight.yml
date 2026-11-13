@@ -36,6 +36,7 @@ jobs:
       FASTLANE_HIDE_CHANGELOG: "1"
       FASTLANE_DISABLE_COLORS: "1"
       CI: "true"
+      USE_FRAMEWORKS: dynamic
       NODE_AUTH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
