@@ -1,8 +1,7 @@
 name: iOS TestFlight
+# Production signing runs in the private openings-dev/ios-release repository.
 
 on:
-  push:
-    branches: [ios/testflight-20261113]
   workflow_dispatch:
     inputs:
       version_name:
