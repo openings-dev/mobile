@@ -177,3 +177,15 @@ References: [RNFirebase setup](https://rnfirebase.io/),
 [Expo SDK 57 config plugins](https://docs.expo.dev/config-plugins/introduction/),
 [OneSignal Expo setup](https://documentation.onesignal.com/docs/en/react-native-expo-sdk-setup),
 [OneSignal free-plan changes](https://onesignal.com/blog/whats-changing-on-onesignals-free-plan/).
+
+## Local verification on November 14
+
+Simulator verification uses ad hoc signing and verifies the entire application
+signature before installation. The launch probe preserves the original error even
+when diagnostic commands time out. Three isolated regression tests cover invalid
+signatures, bundle mismatch and diagnostics failing after a terminated process.
+Swift package versions are locked by the committed Package.resolved in both verify
+and archive. Local source checks (285 tests, lint, types, Expo Doctor 20/20),
+18 Fastlane tests and CocoaPods --deployment passed. CoreSimulator remains
+unavailable in the managed local executor, so these results do not prove launch
+success. The next Fastlane deployment is single-app, with no automatic retry.

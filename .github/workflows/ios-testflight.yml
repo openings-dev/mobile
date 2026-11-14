@@ -47,6 +47,8 @@ jobs:
         with:
           ruby-version: "3.3"
           bundler-cache: true
+      - name: Test simulator launch checks
+        run: python3 tests/native/test_ios_smoke.py
       - name: Test CI credential handling
         run: python3 tests/native/test_ios_ci.py
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
