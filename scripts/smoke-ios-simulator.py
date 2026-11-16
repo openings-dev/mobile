@@ -11,6 +11,25 @@ import subprocess
 import time
 
 
+def read_screen_text(identifier, screenshot, reader):
+    subprocess.run(["xcrun", "simctl", "io", identifier, "screenshot", str(screenshot)], check=True, timeout=30, capture_output=True)
+    return json.loads(subprocess.check_output([str(reader), str(screenshot)], text=True, timeout=30))
+
+
+def wait_for_interface(identifier, pid, screenshot, reader, attempts=12):
+    # Initial Remote Config and StoreKit lookups can outlast a five-second probe.
+    # A running process with a blank root view is not a successful app launch.
+    for _ in range(attempts):
+        time.sleep(5)
+        os.kill(pid, 0)
+        text = read_screen_text(identifier, screenshot, reader)
+        content = " ".join(text).casefold()
+        labels = ("discover", "saved jobs", "all countries", "with salary", "remote")
+        if sum(label in content for label in labels) >= 2:
+            return
+    raise RuntimeError("Openings interface did not reach its job search screen")
+
+
 def collect_diagnostics(identifier, executable, build_dir, started_at):
     diagnostics = build_dir / "ios-smoke"
     diagnostics.mkdir(parents=True, exist_ok=True)
@@ -61,6 +80,11 @@ def run_smoke(bundle_id, app_path, build_dir=Path("build")):
     subprocess.run(["xcrun", "simctl", "install", identifier, str(app_path)], check=True, timeout=180)
     diagnostics = build_dir / "ios-smoke"
     diagnostics.mkdir(parents=True, exist_ok=True)
+    reader = build_dir.resolve() / "ios-screen-reader"
+    subprocess.run([
+        "xcrun", "swiftc", "-module-cache-path", str(build_dir.resolve() / "ios-screen-reader-cache"),
+        str(Path(__file__).with_name("read-ios-screen.swift")), "-o", str(reader),
+    ], check=True, timeout=180)
     started_at = time.time()
     try:
         launch = subprocess.check_output(["xcrun", "simctl", "launch", "--terminate-running-process", identifier, bundle_id], text=True, timeout=60)
@@ -68,8 +92,7 @@ def run_smoke(bundle_id, app_path, build_dir=Path("build")):
         match = re.search(r": (\d+)\s*$", launch)
         if not match:
             raise RuntimeError("simctl did not return the launched process ID")
-        time.sleep(5)
-        os.kill(int(match.group(1)), 0)
+        wait_for_interface(identifier, int(match.group(1)), build_dir / "ios-smoke.png", reader)
     except Exception as error:
         (diagnostics / "failure.txt").write_text(f"{type(error).__name__}: {error}\n")
         raise

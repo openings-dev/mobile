@@ -48,6 +48,17 @@ class SimulatorSmokeTest(unittest.TestCase):
                 smoke.run_smoke("test.different", self.app, self.root / "build")
         run.assert_not_called()
 
+    def test_process_alive_with_blank_screen_never_passes_readiness(self):
+        with patch.object(smoke, "read_screen_text", return_value=["9:41"], create=True), patch.object(smoke.time, "sleep"), patch.object(smoke.os, "kill"):
+            with self.assertRaisesRegex(RuntimeError, "interface"):
+                smoke.wait_for_interface("device", 123, self.root / "screen.png", Path("reader"), attempts=2)
+
+    def test_waits_for_navigation_after_initial_loading_screen(self):
+        with patch.object(smoke, "read_screen_text", side_effect=[["9:41"], ["Discover Saved jobs", "Remote", "All countries"]], create=True) as screen, patch.object(smoke.time, "sleep"), patch.object(smoke.os, "kill") as alive:
+            smoke.wait_for_interface("device", 123, self.root / "screen.png", Path("reader"), attempts=2)
+        self.assertEqual(screen.call_count, 2)
+        self.assertEqual(alive.call_count, 2)
+
 
 if __name__ == "__main__":
     unittest.main()
