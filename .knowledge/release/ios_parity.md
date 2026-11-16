@@ -189,3 +189,19 @@ and archive. Local source checks (285 tests, lint, types, Expo Doctor 20/20),
 18 Fastlane tests and CocoaPods --deployment passed. CoreSimulator remains
 unavailable in the managed local executor, so these results do not prove launch
 success. The next Fastlane deployment is single-app, with no automatic retry.
+
+## iOS 27 scene lifecycle, November 16
+
+The previous CI candidate compiled with Xcode 27 but omitted the scene lifecycle
+required by that SDK. Enable the installed SDK 57 official
+`expo-build-properties` plugin with `ios.enableSceneSupport: true`. The generated
+AppDelegate now exposes its React Native factory to `EXExpoAppSceneDelegate`;
+Firebase configuration remains in application startup, before the scene starts
+React Native. Info.plist declares the scene delegate. No Firebase or other
+service was removed. See https://github.com/expo/expo/issues/46664 and the
+versioned SDK 57 build-properties documentation.
+
+Three native configuration regression tests cover the prebuild option, UIKit
+scene resolution and preserved Firebase initialization. The workflow runs them
+before compiling. Source checks do not prove simulator launch or TestFlight
+acceptance; those remain gated by the real CI launch and artifact checks.
