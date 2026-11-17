@@ -62,9 +62,9 @@ platform :ios do
       end
       output = build_app(workspace: File.join(project_root, "ios/Openings.xcworkspace"), scheme: "Openings", configuration: "Release", clean: true, disable_package_automatic_updates: true,
         export_method: "app-store", output_directory: File.dirname(identity[:path]), output_name: File.basename(identity[:path]),
-        codesigning_identity: ENV.fetch("IOS_SIGNING_IDENTITY"), export_team_id: OpeningsIosRelease::TEAM_ID,
+        export_team_id: OpeningsIosRelease::TEAM_ID,
         export_options: { signingStyle: "manual", teamID: OpeningsIosRelease::TEAM_ID, provisioningProfiles: profiles, manageAppVersionAndBuildNumber: false },
-        xcargs: Shellwords.join(["CURRENT_PROJECT_VERSION=#{identity[:build]}", "MARKETING_VERSION=#{identity[:version]}", "DEVELOPMENT_TEAM=#{OpeningsIosRelease::TEAM_ID}"]))
+        xcargs: Shellwords.join(["CURRENT_PROJECT_VERSION=#{identity[:build]}", "MARKETING_VERSION=#{identity[:version]}"]))
       UI.user_error!("Unexpected archive output path") unless output && File.expand_path(output) == identity[:path]
       report = OpeningsIosRelease.inspect_ipa(project_root, options, require_tested_hash: false, require_archive_manifest: false)
       report[:schema_version] = 1

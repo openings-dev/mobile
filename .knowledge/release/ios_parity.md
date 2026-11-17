@@ -205,3 +205,7 @@ Three native configuration regression tests cover the prebuild option, UIKit
 scene resolution and preserved Firebase initialization. The workflow runs them
 before compiling. Source checks do not prove simulator launch or TestFlight
 acceptance; those remain gated by the real CI launch and artifact checks.
+
+## Publication checks, November 17
+
+CI run 43934261426 rendered the search screen, but the smoke probe expected hidden navigation labels. The probe now recognizes the visible Search jobs and Stack / Technology controls as well as the country filter; blank screens still fail. Distribution identity and team are scoped to the app and extension targets instead of overriding dependency signing globally. Local Python and Fastlane regressions pass; a new signed archive and TestFlight acceptance remain unverified.

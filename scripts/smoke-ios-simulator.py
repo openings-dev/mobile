@@ -24,7 +24,7 @@ def wait_for_interface(identifier, pid, screenshot, reader, attempts=12):
         os.kill(pid, 0)
         text = read_screen_text(identifier, screenshot, reader)
         content = " ".join(text).casefold()
-        labels = ("discover", "saved jobs", "all countries", "with salary", "remote")
+        labels = ("search jobs", "stack / technology", "all countries", "discover", "saved jobs", "with salary", "remote")
         if sum(label in content for label in labels) >= 2:
             return
     raise RuntimeError("Openings interface did not reach its job search screen")

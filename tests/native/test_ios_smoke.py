@@ -53,6 +53,11 @@ class SimulatorSmokeTest(unittest.TestCase):
             with self.assertRaisesRegex(RuntimeError, "interface"):
                 smoke.wait_for_interface("device", 123, self.root / "screen.png", Path("reader"), attempts=2)
 
+    def test_current_search_screen_with_analytics_prompt_is_ready(self):
+        visible = ["openings.dev", "Search jobs", "All countries", "Stack / Technology", "More", "Improve Openings", "Decline analytics"]
+        with patch.object(smoke, "read_screen_text", return_value=visible), patch.object(smoke.time, "sleep"), patch.object(smoke.os, "kill"):
+            smoke.wait_for_interface("device", 123, self.root / "screen.png", Path("reader"), attempts=1)
+
     def test_waits_for_navigation_after_initial_loading_screen(self):
         with patch.object(smoke, "read_screen_text", side_effect=[["9:41"], ["Discover Saved jobs", "Remote", "All countries"]], create=True) as screen, patch.object(smoke.time, "sleep"), patch.object(smoke.os, "kill") as alive:
             smoke.wait_for_interface("device", 123, self.root / "screen.png", Path("reader"), attempts=2)
