@@ -20,7 +20,10 @@
         "AppStoreID": "6834098510"
       },
       "buildNumber": "1",
-      "icon": "./assets/images/icon.png",
+      "icon": {
+        "light": "./assets/images/ios-icon.png",
+        "dark": "./assets/images/ios-icon.png"
+      },
       "privacyManifests": {
         "NSPrivacyAccessedAPITypes": [
           {

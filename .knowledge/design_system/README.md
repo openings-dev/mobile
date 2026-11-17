@@ -36,3 +36,7 @@ keyboard behavior, and platform conventions.
 - Do not copy third-party logos, illustrations, layouts, or proprietary copy.
 - Do not describe an unimplemented logo asset, icon system, or component library as
   available in the mobile repository.
+
+## iOS launcher artwork
+
+The iOS launcher uses the canonical symbol geometry in `brand-wordmark/geometry.ts`, rendered white on ink with a 768px viewport inside a 1024px canvas. `npm run ios:icons:generate` regenerates the SVG/PNG and native catalog. Both light and dark appearances are explicit and opaque. `npm run ios:icons:verify` checks opacity, contrast, and mark size. Android and splash artwork retain their existing configuration.

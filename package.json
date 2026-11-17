@@ -35,7 +35,10 @@
     "security:audit": "node scripts/audit-public-readiness.mjs",
     "start": "expo start --dev-client",
     "test": "jest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "ios:icons:sync": "node scripts/sync-ios-icons.mjs",
+    "ios:icons:verify": "node --test tests/native/ios_icon_assets.test.mjs",
+    "ios:icons:generate": "node scripts/generate-ios-icon.mjs && npm run ios:icons:sync"
   },
   "dependencies": {
     "@expo-google-fonts/figtree": "0.4.1",
@@ -90,6 +93,7 @@
     "jest": "~29.7.0",
     "jest-expo": "~57.0.6",
     "react-test-renderer": "19.2.3",
+    "sharp": "0.35.3",
     "tailwindcss": "^3.4.19",
     "test-renderer": "1.2.0",
     "typescript": "~6.0.3"

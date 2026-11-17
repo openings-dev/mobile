@@ -69,7 +69,7 @@ interface ExpoConfig {
   ios?: {
     entitlements?: Record<string, unknown>;
     infoPlist?: Record<string, unknown>;
-    icon?: string;
+    icon?: string | { light: string; dark: string };
     googleServicesFile?: string;
     privacyManifests?: {
       NSPrivacyAccessedAPITypes?: {
@@ -169,7 +169,10 @@ describe("native application identity", () => {
     ];
 
     expect(expo.icon).toBe(expectedAssets[0]);
-    expect(expo.ios?.icon).toBe(expectedAssets[0]);
+    expect(expo.ios?.icon).toEqual({
+      light: "./assets/images/ios-icon.png",
+      dark: "./assets/images/ios-icon.png",
+    });
     expect(expo.android?.icon).toBe(expectedAssets[0]);
     expect(expo.android?.adaptiveIcon).toEqual({
       backgroundColor: "#F5F3EF",
