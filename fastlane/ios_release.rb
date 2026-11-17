@@ -136,7 +136,7 @@ module OpeningsIosRelease
         profile = parse_plist(runner.call("/usr/bin/security", "cms", "-D", "-i", File.join(app, "embedded.mobileprovision")), runner)
         validate_distribution!(profile, entitlements, identifier)
         prefix = File.join(directory, "certificate-#{identifier}-")
-        runner.call("/usr/bin/codesign", "-d", "--extract-certificates", prefix, app)
+        runner.call("/usr/bin/codesign", "-d", "--extract-certificates=#{prefix}", app)
         raise ArgumentError, "Missing signing certificate" unless File.file?("#{prefix}0")
         fingerprint = Digest::SHA256.file("#{prefix}0").hexdigest
         certificates = Array(profile["DeveloperCertificates"])

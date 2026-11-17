@@ -26,8 +26,10 @@ class IosReleaseTest < Minitest::Test
           "DeveloperCertificates" => [StringIO.new("synthetic signing certificate")] }.merge(@profile_changes).to_plist
       elsif args.include?("--entitlements")
         entitlements.to_plist
-      elsif args.include?("--extract-certificates")
-        File.binwrite("#{args[3]}0", "synthetic signing certificate")
+      elsif args.any? { |arg| arg.start_with?("--extract-certificates") }
+        flag = args.find { |arg| arg.start_with?("--extract-certificates=") }
+        raise ArgumentError, "codesign requires the optional certificate prefix joined with =" unless flag
+        File.binwrite("#{flag.split("=", 2).last}0", "synthetic signing certificate")
         ""
       else
         ""
