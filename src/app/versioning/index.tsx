@@ -5,8 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { useLocale } from "@/contexts/locale";
 import { useVersioning } from "@/contexts/versioning";
-
-const PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=dev.openings.mobile";
+import { getAppStoreUrl } from "@/services/versioning/store-url";
 
 export function VersioningScreen(): React.ReactNode {
   const { messages } = useLocale();
@@ -23,7 +22,7 @@ export function VersioningScreen(): React.ReactNode {
     setPending(true);
     try {
       const started = await startImmediateUpdate();
-      if (!started) await Linking.openURL(PLAY_STORE_URL);
+      if (!started) await Linking.openURL(getAppStoreUrl());
     } finally {
       setPending(false);
     }
@@ -58,7 +57,7 @@ export function VersioningScreen(): React.ReactNode {
           accessibilityLabel={copy.storeAction}
           accessibilityRole="link"
           className="mt-3 min-h-touch w-full items-center justify-center rounded-control border border-line bg-paper px-5"
-          onPress={() => void Linking.openURL(PLAY_STORE_URL)}
+          onPress={() => void Linking.openURL(getAppStoreUrl())}
           testID="versioning-open-store"
         >
           <Text className="font-body text-product-body font-semibold text-foreground">

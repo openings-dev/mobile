@@ -15,6 +15,10 @@ fastlane/screenshots/
 fastlane/test_output/
 *.apk
 *.aab
+*.ipa
+*.xcarchive/
+*.dSYM/
+*.dSYM.zip
 *.jks
 *.keystore
 *.p8
@@ -42,3 +46,7 @@ ios/GoogleService-Info.plist
 
 expo-env.d.ts
 # @end expo-cli
+
+# Python helper caches
+__pycache__/
+ios/Openings/GoogleService-Info.plist

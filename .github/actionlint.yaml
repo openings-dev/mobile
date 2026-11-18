@@ -1,0 +1,3 @@
+# Standard hosted label documented by GitHub; not yet in the installed actionlint catalog.
+self-hosted-runner:
+  labels: [xcode-27]

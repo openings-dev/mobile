@@ -69,7 +69,7 @@ interface ExpoConfig {
   ios?: {
     entitlements?: Record<string, unknown>;
     infoPlist?: Record<string, unknown>;
-    icon?: string;
+    icon?: string | { light: string; dark: string };
     googleServicesFile?: string;
     privacyManifests?: {
       NSPrivacyAccessedAPITypes?: {
@@ -98,15 +98,15 @@ describe("native application identity", () => {
     ) as { dependencies: Record<string, string> };
 
     expect(manifest.dependencies).toMatchObject({
-      expo: "~57.0.27",
+      expo: "~57.0.33",
       "expo-application": "~57.0.3",
-      "expo-constants": "~57.0.21",
-      "expo-dev-client": "~57.0.19",
+      "expo-constants": "~57.0.24",
+      "expo-dev-client": "~57.0.21",
       "expo-font": "~57.0.4",
-      "expo-linking": "~57.0.12",
+      "expo-linking": "~57.0.14",
       "expo-localization": "~57.0.2",
-      "expo-router": "~57.0.25",
-      "expo-splash-screen": "~57.0.9",
+      "expo-router": "~57.0.31",
+      "expo-splash-screen": "~57.0.11",
       "expo-system-ui": "~57.0.4",
     });
   });
@@ -123,10 +123,10 @@ describe("native application identity", () => {
       "@react-native-firebase/crashlytics",
       "@sentry/react-native/expo",
     ]));
-    expect(expo.platforms).toEqual(["android"]);
+    expect(expo.platforms).toEqual(["android", "ios"]);
     expect(expo.android?.googleServicesFile).toBe("./google-services.json");
-    expect(expo.ios?.googleServicesFile).toBeUndefined();
-    expect(expo.ios?.infoPlist).toBeUndefined();
+    expect(expo.ios?.googleServicesFile).toBe("./GoogleService-Info.plist");
+    expect(expo.ios?.infoPlist).toMatchObject({ AppStoreID: "6834098510" });
     expect(expo.ios?.entitlements).toBeUndefined();
 
     const oneSignalPlugin = expo.plugins?.find(
@@ -135,6 +135,7 @@ describe("native application identity", () => {
     );
     expect(oneSignalPlugin?.[1]).toMatchObject({
       mode: "production",
+      iPhoneDeploymentTarget: "16.4",
       smallIconAccentColor: "#187A68",
       smallIcons: ["./assets/images/ic_stat_onesignal_default.png"],
     });
@@ -168,7 +169,10 @@ describe("native application identity", () => {
     ];
 
     expect(expo.icon).toBe(expectedAssets[0]);
-    expect(expo.ios?.icon).toBe(expectedAssets[0]);
+    expect(expo.ios?.icon).toEqual({
+      light: "./assets/images/ios-icon.png",
+      dark: "./assets/images/ios-icon.png",
+    });
     expect(expo.android?.icon).toBe(expectedAssets[0]);
     expect(expo.android?.adaptiveIcon).toEqual({
       backgroundColor: "#F5F3EF",

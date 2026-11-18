@@ -1,4 +1,4 @@
-import { GooglePlayUpdateProvider } from "@/services/versioning/google-play-update.provider";
+import { StoreUpdateProvider } from "@/services/versioning/store-update.provider";
 
 function createSdk({
   flexibleAllowed = true,
@@ -23,10 +23,32 @@ function createSdk({
   };
 }
 
-describe("GooglePlayUpdateProvider", () => {
+describe("StoreUpdateProvider", () => {
+  it("offers App Store updates when iOS omits Android-only capability flags", async () => {
+    const sdk = {
+      checkForUpdate: jest.fn().mockResolvedValue({ updateAvailable: true, storeVersion: "0.2.0" }),
+      startUpdate: jest.fn().mockResolvedValue(true),
+    };
+    const provider = new StoreUpdateProvider(async () => sdk, () => "ios", () => true, jest.fn());
+
+    await expect(provider.checkAvailability()).resolves.toMatchObject({
+      available: true, flexibleAllowed: true, immediateAllowed: true, storeVersion: "0.2.0",
+    });
+    await expect(provider.startFlexibleUpdate()).resolves.toBe(true);
+    await expect(provider.startImmediateUpdate()).resolves.toBe(true);
+    expect(sdk.startUpdate).toHaveBeenCalledTimes(2);
+  });
+
+  it("does not start an iOS update when the store has no newer version", async () => {
+    const sdk = createSdk({ updateAvailable: false });
+    const provider = new StoreUpdateProvider(async () => sdk, () => "ios", () => true, jest.fn());
+    await expect(provider.startFlexibleUpdate()).resolves.toBe(false);
+    expect(sdk.startUpdate).not.toHaveBeenCalled();
+  });
+
   it("reports a compatible available store update", async () => {
     const sdk = createSdk();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -44,7 +66,7 @@ describe("GooglePlayUpdateProvider", () => {
 
   it("starts immediate and flexible updates with their matching mode", async () => {
     const sdk = createSdk();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -63,7 +85,7 @@ describe("GooglePlayUpdateProvider", () => {
       updateAvailable: false,
       updateInProgress: true,
     });
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -75,11 +97,12 @@ describe("GooglePlayUpdateProvider", () => {
   });
 
   it.each([
-    { platform: "ios", production: true },
+    { platform: "web", production: true },
+    { platform: "ios", production: false },
     { platform: "android", production: false },
-  ])("does not load the SDK outside Android production %#", async (input) => {
+  ])("does not load the SDK outside native production %#", async (input) => {
     const loadSdk = jest.fn();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       loadSdk,
       () => input.platform,
       () => input.production,
@@ -104,7 +127,7 @@ describe("GooglePlayUpdateProvider", () => {
       ),
     );
     const report = jest.fn();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -127,7 +150,7 @@ describe("GooglePlayUpdateProvider", () => {
       new Error("Failed to check for updates: Failed to bind to the service."),
     );
     const report = jest.fn();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -152,7 +175,7 @@ describe("GooglePlayUpdateProvider", () => {
       ),
     );
     const report = jest.fn();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -170,7 +193,7 @@ describe("GooglePlayUpdateProvider", () => {
       new Error("Failed to check for updates: Failed to bind to the service."),
     );
     const report = jest.fn();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => sdk,
       () => "android",
       () => true,
@@ -184,7 +207,7 @@ describe("GooglePlayUpdateProvider", () => {
 
   it("contains and reports native failures", async () => {
     const report = jest.fn();
-    const provider = new GooglePlayUpdateProvider(
+    const provider = new StoreUpdateProvider(
       async () => {
         throw new Error("Play unavailable");
       },

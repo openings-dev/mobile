@@ -1,0 +1,111 @@
+name: iOS TestFlight
+# Production signing runs in the private openings-dev/ios-release repository.
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: Version matching the release source
+        required: true
+        default: "0.1.1"
+        type: string
+      build_number:
+        description: Explicit unused Apple build number
+        required: true
+        default: "1"
+        type: string
+
+permissions:
+  contents: read
+  packages: read
+
+concurrency:
+  group: ios-testflight
+  cancel-in-progress: false
+
+jobs:
+  ios:
+    runs-on: xcode-27
+    timeout-minutes: 90
+    env:
+      VERSION_NAME: ${{ inputs.version_name || '0.1.1' }}
+      BUILD_NUMBER: ${{ inputs.build_number || '1' }}
+      FASTLANE_SKIP_UPDATE_CHECK: "1"
+      FASTLANE_OPT_OUT_USAGE: "1"
+      FASTLANE_HIDE_CHANGELOG: "1"
+      FASTLANE_DISABLE_COLORS: "1"
+      CI: "true"
+      USE_FRAMEWORKS: dynamic
+      NODE_AUTH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - name: Show native toolchain
+        run: xcodebuild -version
+      - uses: ruby/setup-ruby@bec3f19a76460dbe12f60def7d1a77585f07516c
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+      - name: Verify iOS 27 scene lifecycle
+        run: python3 tests/native/test_ios_scene.py
+      - name: Test simulator launch checks
+        run: python3 tests/native/test_ios_smoke.py
+      - name: Test CI credential handling
+        run: python3 tests/native/test_ios_ci.py
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38
+        with:
+          node-version: "24"
+          registry-url: https://npm.pkg.github.com
+          scope: "@openingshq"
+          package-manager-cache: false
+      - name: Install locked JavaScript dependencies
+        run: npm ci
+      - name: Restore this app's private iOS configuration
+        env:
+          IOS_CI_RUNTIME_JSON: ${{ secrets.IOS_CI_RUNTIME_JSON }}
+          IOS_CI_FIREBASE_PLIST_B64: ${{ secrets.IOS_CI_FIREBASE_PLIST_B64 }}
+          IOS_CI_P12_B64: ${{ secrets.IOS_CI_P12_B64 }}
+          IOS_CI_P12_PASSWORD: ${{ secrets.IOS_CI_P12_PASSWORD }}
+          IOS_CI_ASC_KEY_B64: ${{ secrets.IOS_CI_ASC_KEY_B64 }}
+          IOS_CI_ASC_KEY_ID: ${{ secrets.IOS_CI_ASC_KEY_ID }}
+          IOS_CI_ASC_ISSUER_ID: ${{ secrets.IOS_CI_ASC_ISSUER_ID }}
+          IOS_CI_APP_PROFILE_B64: ${{ secrets.IOS_CI_APP_PROFILE_B64 }}
+          IOS_CI_NOTIFICATION_PROFILE_B64: ${{ secrets.IOS_CI_NOTIFICATION_PROFILE_B64 }}
+        run: python3 scripts/prepare-ios-ci.py openings
+      - name: Prepare distribution signing with Fastlane
+        shell: bash
+        run: |
+          set -euo pipefail
+          bundle exec fastlane run create_keychain path:"$IOS_KEYCHAIN_PATH" password:"$IOS_KEYCHAIN_PASSWORD" default_keychain:false add_to_search_list:true unlock:true timeout:7200
+          bundle exec fastlane run import_certificate certificate_path:"$IOS_P12_PATH" certificate_password:"$IOS_P12_PASSWORD" keychain_name:trebla-ios-release keychain_path:"$IOS_KEYCHAIN_PATH" keychain_password:"$IOS_KEYCHAIN_PASSWORD" log_output:false
+          for task_profile in "$IOS_PROFILES_DIR"/*.mobileprovision; do
+            bundle exec fastlane run install_provisioning_profile path:"$task_profile"
+          done
+      - name: Install the reviewed native dependency lock
+        run: bundle exec pod install --project-directory=ios --deployment
+      - name: Verify Fastlane artifact checks
+        run: bundle exec ruby tests/native/ios_release_test.rb
+      - name: Verify source and compile the simulator app
+        run: bundle exec fastlane ios verify
+      - name: Launch a fresh simulator installation
+        run: python3 scripts/smoke-ios-simulator.py dev.openings.mobile build/ios-verify/Build/Products/Release-iphonesimulator/Openings.app
+      - name: Archive and inspect the distribution IPA
+        run: bundle exec fastlane ios archive version_name:"$VERSION_NAME" build_number:"$BUILD_NUMBER" ipa_path:"build/releases/Openings-${VERSION_NAME}-${BUILD_NUMBER}.ipa"
+      - name: Upload the validated candidate for internal TestFlight testing
+        shell: bash
+        run: |
+          set -euo pipefail
+          task_ipa="build/releases/Openings-${VERSION_NAME}-${BUILD_NUMBER}.ipa"
+          task_digest="$(shasum -a 256 "$task_ipa" | cut -d ' ' -f 1)"
+          bundle exec fastlane ios beta version_name:"$VERSION_NAME" build_number:"$BUILD_NUMBER" ipa_path:"$task_ipa" tested_sha256:"$task_digest"
+      - name: Remove ephemeral signing material
+        if: always()
+        shell: bash
+        run: |
+          if [[ -n "${IOS_KEYCHAIN_PATH:-}" ]]; then
+            bundle exec fastlane run delete_keychain path:"$IOS_KEYCHAIN_PATH" || true
+          fi
+          if [[ "${IOS_SECRETS_DIR:-}" == "$RUNNER_TEMP/trebla-ios-release" ]]; then
+            rm -rf -- "$IOS_SECRETS_DIR"
+          fi

@@ -1,10 +1,10 @@
-export type AndroidVersionRule = {
+export type AppVersionRule = {
   enabled: boolean;
   minimumBuildNumber: number;
   source: "default" | "remote" | "static";
 };
 
-export function parseAndroidBuildNumber(
+export function parseBuildNumber(
   value: string | number | null,
 ): number | null {
   if (value === null || value === "") return null;
@@ -13,14 +13,14 @@ export function parseAndroidBuildNumber(
   return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : null;
 }
 
-export function requiresAndroidUpdate(
-  rule: AndroidVersionRule,
+export function requiresAppUpdate(
+  rule: AppVersionRule,
   installedBuildVersion: string | null,
 ): boolean {
   if (!rule.enabled || rule.source !== "remote") return false;
 
-  const installedBuildNumber = parseAndroidBuildNumber(installedBuildVersion);
-  const minimumBuildNumber = parseAndroidBuildNumber(rule.minimumBuildNumber);
+  const installedBuildNumber = parseBuildNumber(installedBuildVersion);
+  const minimumBuildNumber = parseBuildNumber(rule.minimumBuildNumber);
   if (installedBuildNumber === null || minimumBuildNumber === null) return false;
 
   return installedBuildNumber < minimumBuildNumber;

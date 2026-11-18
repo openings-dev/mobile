@@ -7,25 +7,42 @@
     "icon": "./assets/images/icon.png",
     "orientation": "portrait",
     "userInterfaceStyle": "automatic",
-    "platforms": ["android"],
+    "platforms": [
+      "android",
+      "ios"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "dev.openings.mobile",
+      "appleTeamId": "VD2G3CWSCR",
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "infoPlist": {
+        "AppStoreID": "6834098510"
+      },
       "buildNumber": "1",
-      "icon": "./assets/images/icon.png",
+      "icon": {
+        "light": "./assets/images/ios-icon.png",
+        "dark": "./assets/images/ios-icon.png"
+      },
       "privacyManifests": {
         "NSPrivacyAccessedAPITypes": [
           {
             "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
-            "NSPrivacyAccessedAPITypeReasons": ["CA92.1"]
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
           },
           {
             "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
-            "NSPrivacyAccessedAPITypeReasons": ["C617.1"]
+            "NSPrivacyAccessedAPITypeReasons": [
+              "C617.1"
+            ]
           },
           {
             "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
-            "NSPrivacyAccessedAPITypeReasons": ["35F9.1"]
+            "NSPrivacyAccessedAPITypeReasons": [
+              "35F9.1"
+            ]
           }
         ],
         "NSPrivacyCollectedDataTypes": [],
@@ -49,12 +66,17 @@
         "onesignal-expo-plugin",
         {
           "mode": "production",
-          "smallIcons": ["./assets/images/ic_stat_onesignal_default.png"],
+          "iPhoneDeploymentTarget": "16.4",
+          "smallIcons": [
+            "./assets/images/ic_stat_onesignal_default.png"
+          ],
           "smallIconAccentColor": "#187A68"
         }
       ],
       "@react-native-firebase/app",
       "@react-native-firebase/crashlytics",
+      "./plugins/with-ios-firebase.cjs",
+      "./plugins/with-ios-release.cjs",
       "@sentry/react-native/expo",
       [
         "expo-router",
@@ -126,6 +148,14 @@
               "./node_modules/@expo-google-fonts/geist-mono/500Medium/GeistMono_500Medium.ttf",
               "./node_modules/@expo-google-fonts/geist-mono/600SemiBold/GeistMono_600SemiBold.ttf"
             ]
+          }
+        }
+      ],
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "enableSceneSupport": true
           }
         }
       ]

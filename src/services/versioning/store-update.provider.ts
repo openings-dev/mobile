@@ -9,7 +9,7 @@ type PlatformName = () => string;
 type ProductionStatus = () => boolean;
 type ErrorReporter = (error: Error) => void;
 
-export type GooglePlayUpdateAvailability = {
+export type StoreUpdateAvailability = {
   available: boolean;
   flexibleAllowed: boolean;
   immediateAllowed: boolean;
@@ -17,7 +17,7 @@ export type GooglePlayUpdateAvailability = {
   updateInProgress: boolean;
 };
 
-const NO_UPDATE: GooglePlayUpdateAvailability = {
+const NO_UPDATE: StoreUpdateAvailability = {
   available: false,
   flexibleAllowed: false,
   immediateAllowed: false,
@@ -41,7 +41,7 @@ function reportVersioningError(error: Error): void {
     .catch(() => undefined);
 }
 
-export class GooglePlayUpdateProvider {
+export class StoreUpdateProvider {
   constructor(
     private readonly loadSdk: LoadInAppUpdateSdk = () =>
       import("expo-in-app-updates"),
@@ -50,7 +50,7 @@ export class GooglePlayUpdateProvider {
     private readonly reportError: ErrorReporter = reportVersioningError,
   ) {}
 
-  async checkAvailability(): Promise<GooglePlayUpdateAvailability> {
+  async checkAvailability(): Promise<StoreUpdateAvailability> {
     if (!this.isSupportedRuntime()) return NO_UPDATE;
 
     try {
@@ -58,8 +58,8 @@ export class GooglePlayUpdateProvider {
       const result = await sdk.checkForUpdate();
       return {
         available: result.updateAvailable,
-        flexibleAllowed: result.flexibleAllowed === true,
-        immediateAllowed: result.immediateAllowed === true,
+        flexibleAllowed: this.getPlatform() === "ios" ? result.updateAvailable : result.flexibleAllowed === true,
+        immediateAllowed: this.getPlatform() === "ios" ? result.updateAvailable : result.immediateAllowed === true,
         storeVersion: result.storeVersion || null,
         updateInProgress: result.updateInProgress === true,
       };
@@ -78,7 +78,8 @@ export class GooglePlayUpdateProvider {
   }
 
   private isSupportedRuntime(): boolean {
-    return this.getPlatform() === "android" && this.isProduction();
+    const platform = this.getPlatform();
+    return (platform === "android" || platform === "ios") && this.isProduction();
   }
 
   private async startUpdate(mode: "flexible" | "immediate"): Promise<boolean> {
@@ -90,9 +91,9 @@ export class GooglePlayUpdateProvider {
       const allowed =
         availability.updateInProgress === true ||
         (availability.updateAvailable &&
-          (mode === "immediate"
+          (this.getPlatform() === "ios" || (mode === "immediate"
             ? availability.immediateAllowed === true
-            : availability.flexibleAllowed === true));
+            : availability.flexibleAllowed === true)));
       if (!allowed) return false;
       return await sdk.startUpdate(mode === "immediate");
     } catch (error) {
