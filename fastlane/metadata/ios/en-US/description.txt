@@ -1,0 +1,17 @@
+Find technology opportunities where communities already share them.
+
+Openings brings public job listings from GitHub community repositories into one focused, mobile-first experience. Search open roles, narrow the results with useful filters, and always return to the original public source before applying.
+
+WITH OPENINGS YOU CAN
+
+• Discover technology jobs from public GitHub communities
+• Filter by location, work model, seniority, technology, employment type, freshness, salary, and community
+• Review job details, source information, and publication context
+• Save interesting opportunities locally on your device
+• Explore active communities and the authors behind public listings
+• Use the app in English, Portuguese, Spanish, Italian, French, or German
+• Choose light, dark, or system appearance
+
+Openings is a discovery layer. It does not accept applications, verify employers, or guarantee that a listing is still available. Each opportunity links back to its original public source so you can confirm the details and continue there.
+
+No account is required. Saved jobs and preferences stay on your device.

@@ -1,0 +1,34 @@
+{
+  "captured_at": "2026-11-22",
+  "method": "Unedited PNG captures from the actual Release app running in dedicated Apple simulators. No generated or reconstructed UI.",
+  "devices": [
+    "iPhone 17, iOS 27.2",
+    "iPad Pro 13-inch (M5), iPadOS 27.2"
+  ],
+  "files": [
+    {
+      "file": "fastlane/screenshots/en-US/01-iPad-Jobs.png",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "bcda3fba48f753eb729294db1fd7e611f44be37b6b8923c189c8f7f98c86e17f"
+    },
+    {
+      "file": "fastlane/screenshots/en-US/01-iPhone-Jobs.png",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "c9ca931e8651e449678b0a406b912f3f890bdccd3dffc5a72fdb9b39cc815a78"
+    },
+    {
+      "file": "fastlane/screenshots/en-US/02-iPad-Details.png",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "3d0aab062247b93fb5b23866a0aeafad79ff94c55ee20c53bbf73520aeb28902"
+    },
+    {
+      "file": "fastlane/screenshots/en-US/02-iPhone-Details.png",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "8a8d01409f775f2222f57450758c1188954ed80f87cec491eb8cdfabdcdf0fc7"
+    }
+  ]
+}

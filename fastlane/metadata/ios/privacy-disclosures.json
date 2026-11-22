@@ -1,0 +1,65 @@
+{
+  "published_at": "2026-11-22",
+  "status": "PUBLISHED",
+  "source": "App Store Connect App Privacy, completed and publication confirmed in browser",
+  "data_types": [
+    {
+      "type": "Coarse Location",
+      "purposes": [
+        "ANALYTICS",
+        "APP_FUNCTIONALITY"
+      ],
+      "linked_to_identity": true,
+      "tracking": false
+    },
+    {
+      "type": "User ID",
+      "purposes": [
+        "ANALYTICS",
+        "APP_FUNCTIONALITY"
+      ],
+      "linked_to_identity": true,
+      "tracking": false
+    },
+    {
+      "type": "Device ID",
+      "purposes": [
+        "ANALYTICS",
+        "APP_FUNCTIONALITY"
+      ],
+      "linked_to_identity": true,
+      "tracking": false
+    },
+    {
+      "type": "Product Interaction",
+      "purposes": [
+        "ANALYTICS",
+        "APP_FUNCTIONALITY"
+      ],
+      "linked_to_identity": true,
+      "tracking": false
+    },
+    {
+      "type": "Crash Data",
+      "purposes": [
+        "APP_FUNCTIONALITY"
+      ],
+      "linked_to_identity": false,
+      "tracking": false
+    },
+    {
+      "type": "Other Diagnostic Data",
+      "purposes": [
+        "ANALYTICS",
+        "APP_FUNCTIONALITY"
+      ],
+      "linked_to_identity": false,
+      "tracking": false
+    }
+  ],
+  "basis": [
+    "Native integration configuration and bundled SDK privacy manifests",
+    "https://firebase.google.com/docs/ios/app-store-data-collection",
+    "https://firebase.google.com/docs/projects/manage-installations"
+  ]
+}
