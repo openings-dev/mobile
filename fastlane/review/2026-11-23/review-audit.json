@@ -3,7 +3,21 @@
   "appleIssue": "Guideline 2.1 - Information Needed",
   "findings": {
     "contentRights": "Source attribution and removal channel exist; permission/licensing evidence for indexed third-party listings has not been established. Awaiting owner documentation.",
-    "ugc": "App Store age declaration correctly identifies UGC. Reporting opens a GitHub issue and requires a GitHub account; no author blocking exists. Proposed local author blocking and email reporting await owner approval.",
-    "release": "Video attached and COMPLETE. App remains rejected; no resubmission attempted."
+    "ugc": "Email reporting with no-mail-client fallback and local author block/unblock implemented and visually tested; no report sent.",
+    "release": "Old build1 video is historical and superseded. New build2 workflow dispatched; physical recording and resubmission pending.",
+    "sourceAudit": "The data-pipeline README documents maintainer review of source communities and an MIT repository license. That does not, by itself, establish redistribution rights for third-party job authors. The website terms identify a correction/removal channel and support@openings.dev."
+  },
+  "currentCorrection": {
+    "source": "eed57ae81b577326a96a495ed7882b9ad1a7861c",
+    "visual": "Release iOS: email report, no-email-client fallback, author block664->663 and unblock663->664 passed. No report sent.",
+    "native": "Local iOSRelease and Androiddebug all default ABIs passed.",
+    "dependencyAudit": "Initial suspected decoder runtime blocker was retracted after actual initial/runtime linking integration proof. No dependency/source modifications needed for this advisory.",
+    "catalog": "PR7 merged:664->583;80 non-vacancies excluded,1 duplicate alias preserved,15 titles clarified,568 records unchanged.",
+    "pending": [
+      "new physical recording of build2",
+      "content-rights scope decision",
+      "final review notes and resubmission"
+    ],
+    "analytics": "Default off; drawer control visually activated and revoked, stayed off when drawer reopened.75 suites/298 tests and ExpoDoctor20/20 passed. Final iOS Release compiled."
   }
 }
