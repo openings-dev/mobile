@@ -99,3 +99,8 @@ describe("native navigation shell", () => {
     expect(header.getByLabelText("Open navigation menu")).toBeTruthy();
   });
 });
+
+jest.mock("@/services/telemetry/mixpanel-client", () => ({
+  enableAnalytics: jest.fn().mockResolvedValue(false),
+  disableAnalytics: jest.fn(),
+}));

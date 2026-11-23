@@ -31,3 +31,15 @@ The existing Expo Doctor patch baseline also required updates to expo-build-prop
 Final `npm run check` passed with user-authorized online Expo validation: lint,
 typecheck, 74 suites / 292 tests, and Expo Doctor 20/20. No native build or device
 review was performed by this delegated source task.
+
+## Follow-up: native analytics withdrawal
+
+Approved after policy/code review identified that the website consent switch cannot
+change native AsyncStorage consent. Add a compact accessible native analytics
+control to the existing drawer in all six locales. Persist choices through the
+existing consent service; revoke through native Mixpanel opt-out and identity reset.
+Reject late initialization after withdrawal and serialize re-enabling behind an
+unfinished initialization. Use behavioral tests for native reset, persistence,
+event suppression, stale initialization, re-enable, and discoverability. No new
+SDK, event, storage schema, or website deployment. Validate with npm run check;
+parent owns release/device validation.

@@ -81,6 +81,7 @@ describe("AppHeader", () => {
     expect(screen.queryByLabelText("Appearance")).toBeNull();
 
     await fireEvent.press(screen.getByLabelText("Open navigation menu"));
+    expect(screen.getByRole("switch", { name: "Optional product analytics" })).toBeTruthy();
     expect(screen.getByText("Jobs")).toBeTruthy();
     expect(screen.getByText("Communities")).toBeTruthy();
     expect(screen.getByText("Authors")).toBeTruthy();
@@ -164,3 +165,8 @@ describe("AppHeader", () => {
     expect(visibleNativeModalHosts).toHaveLength(1);
   });
 });
+
+jest.mock("@/services/telemetry/mixpanel-client", () => ({
+  enableAnalytics: jest.fn().mockResolvedValue(false),
+  disableAnalytics: jest.fn(),
+}));

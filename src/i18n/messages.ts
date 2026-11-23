@@ -10,12 +10,12 @@ const notificationConsentMessages = {
 } as const;
 
 const analyticsConsentMessages = {
-  en: { accept: "Allow analytics", decline: "Decline analytics", purpose: "Help us understand which Openings features are useful. We never send search text or personal information.", title: "Improve Openings" },
-  "pt-BR": { accept: "Permitir analytics", decline: "Recusar analytics", purpose: "Ajude a entender quais recursos do Openings são úteis. Nunca enviamos o texto das buscas nem informações pessoais.", title: "Ajude a melhorar o Openings" },
-  es: { accept: "Permitir analítica", decline: "Rechazar analítica", purpose: "Ayúdanos a entender qué funciones de Openings son útiles. Nunca enviamos búsquedas ni información personal.", title: "Mejora Openings" },
-  it: { accept: "Consenti analisi", decline: "Rifiuta analisi", purpose: "Aiutaci a capire quali funzioni di Openings sono utili. Non inviamo mai ricerche o informazioni personali.", title: "Migliora Openings" },
-  fr: { accept: "Autoriser l’analyse", decline: "Refuser l’analyse", purpose: "Aidez-nous à comprendre quelles fonctions d’Openings sont utiles. Nous n’envoyons jamais vos recherches ni d’informations personnelles.", title: "Améliorer Openings" },
-  de: { accept: "Analyse erlauben", decline: "Analyse ablehnen", purpose: "Hilf uns zu verstehen, welche Openings-Funktionen nützlich sind. Suchtexte und persönliche Informationen senden wir nie.", title: "Openings verbessern" },
+  en: { disable: "Disable analytics", preferenceTitle: "Optional product analytics", saveError: "Could not save this choice. Please try again.", accept: "Allow analytics", decline: "Decline analytics", purpose: "Help us understand which Openings features are useful. We never send search text or personal information.", title: "Improve Openings" },
+  "pt-BR": { disable: "Desativar analytics", preferenceTitle: "Analytics opcionais", saveError: "Não foi possível salvar esta escolha. Tente novamente.", accept: "Permitir analytics", decline: "Recusar analytics", purpose: "Ajude a entender quais recursos do Openings são úteis. Nunca enviamos o texto das buscas nem informações pessoais.", title: "Ajude a melhorar o Openings" },
+  es: { disable: "Desactivar analítica", preferenceTitle: "Analítica opcional", saveError: "No se pudo guardar esta elección. Inténtalo de nuevo.", accept: "Permitir analítica", decline: "Rechazar analítica", purpose: "Ayúdanos a entender qué funciones de Openings son útiles. Nunca enviamos búsquedas ni información personal.", title: "Mejora Openings" },
+  it: { disable: "Disattiva analisi", preferenceTitle: "Analisi facoltative", saveError: "Impossibile salvare questa scelta. Riprova.", accept: "Consenti analisi", decline: "Rifiuta analisi", purpose: "Aiutaci a capire quali funzioni di Openings sono utili. Non inviamo mai ricerche o informazioni personali.", title: "Migliora Openings" },
+  fr: { disable: "Désactiver l’analyse", preferenceTitle: "Analyse facultative", saveError: "Impossible d’enregistrer ce choix. Réessayez.", accept: "Autoriser l’analyse", decline: "Refuser l’analyse", purpose: "Aidez-nous à comprendre quelles fonctions d’Openings sont utiles. Nous n’envoyons jamais vos recherches ni d’informations personnelles.", title: "Améliorer Openings" },
+  de: { disable: "Analyse deaktivieren", preferenceTitle: "Optionale Produktanalyse", saveError: "Diese Auswahl konnte nicht gespeichert werden. Bitte versuche es erneut.", accept: "Analyse erlauben", decline: "Analyse ablehnen", purpose: "Hilf uns zu verstehen, welche Openings-Funktionen nützlich sind. Suchtexte und persönliche Informationen senden wir nie.", title: "Openings verbessern" },
 } as const;
 
 const versioningMessages = {

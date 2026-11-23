@@ -64,3 +64,9 @@ all job, author, related-job, community-job, and saved-list consumers. It withho
 all opportunities until block hydration finishes, including cached query results.
 Unreadable preferences fail closed through the localized app error boundary.
 The navigation drawer exposes blocked authors and individual restore controls.
+
+The navigation drawer exposes a native optional-analytics control independent of
+the website/WebView preference. Withdrawal persists denied consent, opts out the
+native Mixpanel client, clears its retained identity, and disconnects product-event
+forwarding without touching saved jobs. A cancelled initialization cannot opt back
+in after withdrawal; a later explicit grant waits for that initialization to settle.

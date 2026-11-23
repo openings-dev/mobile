@@ -18,6 +18,7 @@ import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { useBlockedAuthors } from "@/contexts/blocked-authors";
+import { AnalyticsPreference } from "@/components/analytics-preference";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { PreferencePopover, type PreferenceOption } from "@/components/preference-popover";
 import { SupportCard } from "@/components/support-card";
@@ -196,6 +197,7 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
                   </View> : null}
                 </View>
                 <SupportCard />
+                <AnalyticsPreference />
                 {notificationConsent === "granted" ? (
                   <Pressable
                     accessibilityLabel={messages.notificationConsent.disable}

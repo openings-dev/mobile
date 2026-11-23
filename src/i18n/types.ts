@@ -19,6 +19,9 @@ export interface FoundationMessages {
     originalReference: string;
   };
   analyticsConsent: {
+    disable: string;
+    preferenceTitle: string;
+    saveError: string;
     accept: string;
     decline: string;
     purpose: string;
