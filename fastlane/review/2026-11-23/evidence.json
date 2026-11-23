@@ -1,0 +1,22 @@
+{
+  "recordedOn": "2026-11-23",
+  "device": "iPhone 16 Pro",
+  "os": "iOS 27.2.1",
+  "physicalDevice": true,
+  "originalSha256": "6faa67e86f511a05de1d34a98ea91ab293d4e582ed77d0011f4a4547c3666a41",
+  "submittedFile": "Openings-0.1.1-1-iPhone16Pro.mp4",
+  "submittedSha256": "ab57ea1ecb6237595d6e01285352b987c162c68f3c77ff5b4cea126575ffc930",
+  "durationSeconds": 124.616667,
+  "processing": [
+    "Resized to 720 pixels wide",
+    "H.264 encoding",
+    "Audio omitted",
+    "Personal notification concealed in the first 3 seconds before app launch"
+  ],
+  "reviewStatus": "Not resubmitted; awaiting content-rights documentation",
+  "videoChecks": [
+    "Launch from Home Screen visible",
+    "Main workflow and settings/navigation demonstrated",
+    "No app UI fabricated"
+  ]
+}

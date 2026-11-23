@@ -1,0 +1,9 @@
+{
+  "date": "2026-11-23",
+  "appleIssue": "Guideline 2.1 - Information Needed",
+  "findings": {
+    "contentRights": "Source attribution and removal channel exist; permission/licensing evidence for indexed third-party listings has not been established. Awaiting owner documentation.",
+    "ugc": "App Store age declaration correctly identifies UGC. Reporting opens a GitHub issue and requires a GitHub account; no author blocking exists. Proposed local author blocking and email reporting await owner approval.",
+    "release": "Video attached and COMPLETE. App remains rejected; no resubmission attempted."
+  }
+}
