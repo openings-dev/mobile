@@ -1,0 +1,13 @@
+{
+  "verifiedAt": "2026-11-23T22:05:12.404376+00:00",
+  "version": "0.1.1",
+  "build": "2",
+  "sourceCommit": "eed57ae81b577326a96a495ed7882b9ad1a7861c",
+  "workflow": "https://github.com/openings-dev/ios-release/actions/runs/45269103426",
+  "workflowConclusion": "success",
+  "ipaSHA256": "c521ac48db4e805889295472d55246b2216a65a01e0be6ae84d59d97c83c5a37",
+  "appleBuildId": "be9f995e-0ca7-48be-8ab9-40a505ee2a5f",
+  "processingState": "VALID",
+  "physicalAcceptance": "pending Asgard reconnection",
+  "reviewSubmission": "not resubmitted; physical video and content-rights scope pending"
+}
