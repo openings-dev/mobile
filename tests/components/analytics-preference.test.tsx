@@ -43,15 +43,24 @@ it("revokes native analytics, persists denial, resets identity and stops events"
 });
 
 
-it("reports a persistence failure without claiming the choice changed", async () => {
+it("stops analytics immediately when denial cannot be persisted", async () => {
   await AsyncStorage.setItem("openings:analytics-consent", JSON.stringify({ version: 1, state: "granted" }));
+  await enableAnalytics();
   const screen = await render(<LocaleProvider><AnalyticsPreference /></LocaleProvider>);
   const control = await screen.findByRole("switch");
   await waitFor(() => expect(control.props.accessibilityState.checked).toBe(true));
   const write = jest.spyOn(AsyncStorage, "setItem").mockRejectedValueOnce(new Error("storage unavailable"));
   await fireEvent.press(control);
   expect(await screen.findByRole("alert")).toHaveTextContent("Could not save this choice. Please try again.");
-  expect(control.props.accessibilityState.checked).toBe(true);
-  expect(mockOptOut).not.toHaveBeenCalled();
+  expect(control.props.accessibilityState.checked).toBe(false);
+  expect(mockOptOut).toHaveBeenCalledTimes(1);
+  expect(mockReset).toHaveBeenCalledTimes(1);
+  sendProductEvent("Job Viewed", { jobId: "test" });
+  expect(mockTrack).not.toHaveBeenCalled();
+  expect(screen.getByText("Off for this session. Tap to retry saving your choice.")).toBeTruthy();
+  await fireEvent.press(screen.getByRole("switch"));
+  await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
+  expect(JSON.parse((await AsyncStorage.getItem("openings:analytics-consent"))!).state).toBe("denied");
+  expect(mockOptIn).toHaveBeenCalledTimes(1);
   write.mockRestore();
 });

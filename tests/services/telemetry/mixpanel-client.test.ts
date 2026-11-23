@@ -88,3 +88,19 @@ describe("Mixpanel client", () => {
     expect(mockReset).toHaveBeenCalled();
   });
 });
+
+it("does not honor a queued enable after a newer withdrawal", async () => {
+  process.env.EXPO_PUBLIC_MIXPANEL_TOKEN = "token";
+  resetMixpanelClientForTests();
+  mockOptIn.mockClear();
+  let finish!: () => void;
+  mockInit.mockImplementationOnce(() => new Promise<void>((resolve) => { finish = resolve; }));
+  const first = enableAnalytics();
+  disableAnalytics();
+  const second = enableAnalytics();
+  disableAnalytics();
+  finish();
+  expect(await first).toBe(false);
+  expect(await second).toBe(false);
+  expect(mockOptIn).not.toHaveBeenCalled();
+});

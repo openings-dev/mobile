@@ -70,3 +70,5 @@ the website/WebView preference. Withdrawal persists denied consent, opts out the
 native Mixpanel client, clears its retained identity, and disconnects product-event
 forwarding without touching saved jobs. A cancelled initialization cannot opt back
 in after withdrawal; a later explicit grant waits for that initialization to settle.
+
+Analytics withdrawal stops native tracking immediately. If saving denial fails, denial remains cached for the current session and the drawer offers a localized retry; it does not claim the preference will survive restart. Consent reads cannot overwrite newer choices, and a later withdrawal cancels queued initialization attempts.

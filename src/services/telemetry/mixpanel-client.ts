@@ -13,7 +13,8 @@ export async function enableAnalytics(): Promise<boolean> {
   if (client) return true;
   if (loading) {
     if (loadingGeneration === generation) return loading;
-    return loading.then(() => enableAnalytics());
+    const requestedGeneration = generation;
+    return loading.then(() => requestedGeneration === generation ? enableAnalytics() : false);
   }
   const startedGeneration = generation;
   loadingGeneration = startedGeneration;

@@ -21,6 +21,7 @@ export interface FoundationMessages {
   analyticsConsent: {
     disable: string;
     preferenceTitle: string;
+    retryDenial: string;
     saveError: string;
     accept: string;
     decline: string;

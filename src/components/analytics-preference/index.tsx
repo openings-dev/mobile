@@ -15,6 +15,7 @@ export function AnalyticsPreference(): React.ReactNode {
   const [consent, setConsent] = useState<AnalyticsConsentState | null>(null);
   const [pending, setPending] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [retryDenial, setRetryDenial] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -32,13 +33,18 @@ export function AnalyticsPreference(): React.ReactNode {
     setPending(true);
     setFailed(false);
     try {
-      const next = granted ? "denied" : "granted";
+      const next = granted || retryDenial ? "denied" : "granted";
+      if (next === "denied") {
+        disableAnalytics();
+        setConsent("denied");
+      }
       if (!await writeAnalyticsConsent(next)) {
         setFailed(true);
+        setRetryDenial(next === "denied");
         return;
       }
-      if (next === "denied") disableAnalytics();
-      else await enableAnalytics();
+      setRetryDenial(false);
+      if (next === "granted") await enableAnalytics();
     } finally {
       setPending(false);
     }
@@ -56,7 +62,7 @@ export function AnalyticsPreference(): React.ReactNode {
         onPress={() => void changePreference()}
       >
         <Text className="font-body text-label font-semibold text-foreground">{copy.preferenceTitle}</Text>
-        <Text className="font-body text-metadata text-muted-foreground">{granted ? copy.disable : copy.accept}</Text>
+        <Text className="font-body text-metadata text-muted-foreground">{retryDenial ? copy.retryDenial : granted ? copy.disable : copy.accept}</Text>
       </Pressable>
       {failed ? <Text accessibilityRole="alert" className="font-body text-metadata text-foreground">{copy.saveError}</Text> : null}
     </View>
