@@ -1,6 +1,7 @@
-import { fireEvent, render, waitFor } from "@testing-library/react-native";
-import { Linking, Share } from "react-native";
+import { act, fireEvent, render, waitFor } from "@testing-library/react-native";
+import { Alert, Linking, Share } from "react-native";
 
+import { BlockedAuthorsProvider } from "@/contexts/blocked-authors";
 import { JobDetailsScreen } from "@/app/jobs/details";
 import { LocaleProvider } from "@/contexts/locale";
 import { useCandidateState } from "@/contexts/candidate-state";
@@ -21,7 +22,7 @@ describe("JobDetailsScreen", () => {
     jest.mocked(useOpeningsCatalog).mockReturnValue({ communities: [], error: null, generatedAt: null, isIncremental: false, isLoading: false, isRefreshing: false, loadedPages: 1, opportunities: [makeOpportunity("gh_123", { dataProvenance: { location: "declared", salary: "unknown", seniority: "inferred", workModel: "declared" } })], refresh: jest.fn(), status: null, totalPages: 1, totalResults: 1 });
     const open = jest.spyOn(Linking, "openURL").mockResolvedValue(undefined);
     jest.spyOn(Share, "share").mockResolvedValue({ action: Share.sharedAction });
-    const screen = await render(<LocaleProvider><ThemeProvider><JobDetailsScreen id="gh_123" /></ThemeProvider></LocaleProvider>);
+    const screen = await render(<LocaleProvider><ThemeProvider><BlockedAuthorsProvider><JobDetailsScreen id="gh_123" /></BlockedAuthorsProvider></ThemeProvider></LocaleProvider>);
 
     expect(screen.getByText("Senior React Native Engineer")).toBeTruthy();
     expect(screen.getByText("React Native")).toBeTruthy();
@@ -36,7 +37,22 @@ describe("JobDetailsScreen", () => {
     await fireEvent.press(screen.getByText("Open original listing"));
     expect(open).toHaveBeenCalledWith("https://github.com/openings-dev/jobs/issues/gh_123");
     await fireEvent.press(screen.getByText("Actions"));
+    const dismiss0 = screen.getByTestId("job-detail-action-sheet").props.onDismiss;
     await fireEvent.press(screen.getByText("Share job"));
+    await act(async () => dismiss0());
     expect(Share.share).toHaveBeenCalled();
+    await fireEvent.press(screen.getByText("Actions"));
+    const dismiss1 = screen.getByTestId("job-detail-action-sheet").props.onDismiss;
+    await fireEvent.press(screen.getByText("Report a problem"));
+    await act(async () => dismiss1());
+    expect(await screen.findByText("support@openings.dev")).toBeTruthy();
+    await fireEvent.press(screen.getByText("Close"));
+    const alert = jest.spyOn(Alert, "alert");
+    await fireEvent.press(screen.getByText("Actions"));
+    const dismiss2 = screen.getByTestId("job-detail-action-sheet").props.onDismiss;
+    await fireEvent.press(screen.getByText("Block author"));
+    await act(async () => dismiss2());
+    expect(alert).toHaveBeenCalledWith("Block author", expect.stringContaining("@alice"), expect.any(Array));
+    alert.mockRestore();
   });
 });

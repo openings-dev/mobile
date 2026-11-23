@@ -53,3 +53,14 @@ Opportunity features represent initial loading, incremental loading, refresh,
 empty, offline, error, and success explicitly. Request owners must cancel obsolete
 work and prevent stale responses from overwriting a newer query. Do not fabricate
 fallback opportunities when the public data source fails.
+
+## Author blocking
+
+`BlockedAuthorsProvider` stores normalized GitHub author handles at
+`openings:blocked-authors` in AsyncStorage. Blocking and restoration commit storage
+before updating visible state, serialize writes, and surface failures to the user.
+Saved IDs remain untouched. The catalog derives an immutable filtered array for
+all job, author, related-job, community-job, and saved-list consumers. It withholds
+all opportunities until block hydration finishes, including cached query results.
+Unreadable preferences fail closed through the localized app error boundary.
+The navigation drawer exposes blocked authors and individual restore controls.

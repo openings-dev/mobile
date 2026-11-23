@@ -1,5 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { fireEvent, render } from "@testing-library/react-native";
+import { act, fireEvent, render } from "@testing-library/react-native";
 
 import { JobDetailActions } from "@/components/job-detail-actions";
 import { ThemeProvider } from "@/contexts/theme";
@@ -11,6 +11,7 @@ jest.mock("@react-native-async-storage/async-storage", () => ({
 
 const LABELS = {
   actions: "Actions",
+  blockAuthor: "Block author",
   closeActions: "Close job actions",
   openOriginal: "Open original listing",
   report: "Report a problem",
@@ -20,6 +21,7 @@ const LABELS = {
 
 async function renderActions(isSaved = false) {
   const actions = {
+    onBlockAuthor: jest.fn(),
     onOpenOriginal: jest.fn(),
     onReport: jest.fn(),
     onShare: jest.fn(),
@@ -83,6 +85,7 @@ describe("JobDetailActions", () => {
   });
 
   it.each([
+    ["Block author", "onBlockAuthor"],
     ["Share job", "onShare"],
     ["Save job", "onToggleSaved"],
     ["Report a problem", "onReport"],
@@ -90,8 +93,11 @@ describe("JobDetailActions", () => {
     const { actions, screen } = await renderActions();
 
     await fireEvent.press(screen.getByText("Actions"));
+    const onDismiss = screen.getByTestId("job-detail-action-sheet").props.onDismiss;
     await fireEvent.press(screen.getByText(label));
 
+    expect(actions[callback]).not.toHaveBeenCalled();
+    await act(async () => onDismiss());
     expect(actions[callback]).toHaveBeenCalledTimes(1);
     expect(screen.queryByText("Share job")).toBeNull();
   });

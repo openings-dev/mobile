@@ -3,6 +3,7 @@ import { fireEvent, render, waitFor, within } from "@testing-library/react-nativ
 import { StyleSheet } from "react-native";
 import { SafeAreaProvider, type Metrics } from "react-native-safe-area-context";
 
+import { BlockedAuthorsProvider } from "@/contexts/blocked-authors";
 import { AppHeader } from "@/components/app-header";
 import { LocaleProvider } from "@/contexts/locale";
 import { ThemeProvider } from "@/contexts/theme";
@@ -35,7 +36,7 @@ function renderAppHeader(metrics: Metrics = DEFAULT_METRICS) {
     <SafeAreaProvider initialMetrics={metrics}>
       <LocaleProvider>
         <ThemeProvider>
-          <AppHeader />
+          <BlockedAuthorsProvider><AppHeader /></BlockedAuthorsProvider>
         </ThemeProvider>
       </LocaleProvider>
     </SafeAreaProvider>,
@@ -48,6 +49,16 @@ describe("AppHeader", () => {
     resetNotificationConsentForTests();
     jest.mocked(AsyncStorage.getItem).mockResolvedValue(null);
     jest.mocked(AsyncStorage.setItem).mockResolvedValue();
+  });
+
+  it("restores a blocked author from the existing navigation menu", async () => {
+    jest.mocked(AsyncStorage.getItem).mockImplementation(async (key) => key === "openings:blocked-authors" ? '["alice"]' : null);
+    const screen = await renderAppHeader();
+    await fireEvent.press(await screen.findByLabelText("Open navigation menu"));
+    await fireEvent.press(screen.getByText("Blocked authors"));
+    await fireEvent.press(await screen.findByRole("button", { name: "Unblock @alice" }));
+    expect(await screen.findByText("No blocked authors.")).toBeTruthy();
+    expect(AsyncStorage.setItem).toHaveBeenCalledWith("openings:blocked-authors", "[]");
   });
 
   it("lets a granted user withdraw job alerts without leaving browsing", async () => {
