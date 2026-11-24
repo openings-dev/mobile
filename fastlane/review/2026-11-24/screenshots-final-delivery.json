@@ -1,0 +1,45 @@
+{
+  "verified_at": "2026-11-24T12:29:35Z",
+  "app": "openings",
+  "app_id": "6834098510",
+  "bundle_identifier": "dev.openings.mobile",
+  "version": "0.1.1",
+  "build": "1",
+  "app_store_state": "REJECTED",
+  "release_type": "AFTER_APPROVAL",
+  "content_rights_declaration": "USES_THIRD_PARTY_CONTENT",
+  "excluded_territories": [
+    "CHN"
+  ],
+  "territory_decision": "Owner explicitly approved excluding China mainland on 2026-11-22.",
+  "screenshots": [
+    {
+      "locale": "en-US",
+      "display_type": "APP_IPAD_PRO_3GEN_129",
+      "file": "01-iPad-Jobs.png",
+      "state": "COMPLETE",
+      "md5": "4a6b3923df205c943c8f51be61362043"
+    },
+    {
+      "locale": "en-US",
+      "display_type": "APP_IPAD_PRO_3GEN_129",
+      "file": "02-iPad-Details.png",
+      "state": "COMPLETE",
+      "md5": "e98514086669f3f660ac172ef0b23cce"
+    },
+    {
+      "locale": "en-US",
+      "display_type": "APP_IPHONE_61",
+      "file": "01-iPhone-Jobs.png",
+      "state": "COMPLETE",
+      "md5": "fd70d3ace396d3d156dc812df93ded73"
+    },
+    {
+      "locale": "en-US",
+      "display_type": "APP_IPHONE_61",
+      "file": "02-iPhone-Details.png",
+      "state": "COMPLETE",
+      "md5": "3c9c196ba9a4b4792d688f10b520d763"
+    }
+  ]
+}

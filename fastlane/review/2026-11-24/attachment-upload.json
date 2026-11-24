@@ -1,0 +1,14 @@
+{
+  "app": "dev.openings.mobile",
+  "attachment_id": "f5fe081a-6c9b-42a0-92f3-63f0c7fd86e1",
+  "filename": "Openings-0.1.1-2-review.zip",
+  "md5": "5655bb7d49d4ea6f1f9a3f1541cc3b15",
+  "sha256": "3c89eab57f5863160441431a61599cff39d9501438d39b16e395c69d561d1eee",
+  "delivery": {
+    "errors": [],
+    "warnings": null,
+    "state": "COMPLETE"
+  },
+  "uploaded_at": "2026-11-24T12:30:27Z",
+  "verifiedBy": "prepare-openings-resubmission.rb checked Apple state and MD5 before submission"
+}
