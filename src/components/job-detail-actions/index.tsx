@@ -1,20 +1,22 @@
 import {
   Bookmark,
+  UserRoundX,
   CircleAlert,
   ExternalLink,
   MoreHorizontal,
   Share2,
   X,
 } from "lucide-react-native";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type { LayoutChangeEvent } from "react-native";
-import { Modal, Pressable, Text, View } from "react-native";
+import { Modal, Platform, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { useAppTheme } from "@/contexts/theme";
 
 interface JobDetailActionLabels {
   actions: string;
+  blockAuthor: string;
   closeActions: string;
   openOriginal: string;
   report: string;
@@ -28,6 +30,7 @@ interface JobDetailActionsProps {
   onHeightChange?: (height: number) => void;
   onOpenOriginal: () => void;
   onReport: () => void;
+  onBlockAuthor: () => void;
   onShare: () => void;
   onToggleSaved: () => void;
 }
@@ -38,18 +41,21 @@ export function JobDetailActions({
   onHeightChange,
   onOpenOriginal,
   onReport,
+  onBlockAuthor,
   onShare,
   onToggleSaved,
 }: JobDetailActionsProps): React.ReactNode {
   const { theme } = useAppTheme();
   const [actionsVisible, setActionsVisible] = useState(false);
+  const pendingAction = useRef<(() => void) | null>(null);
   const closeActions = () => setActionsVisible(false);
   const handleLayout = (event: LayoutChangeEvent) => {
     onHeightChange?.(event.nativeEvent.layout.height);
   };
   const runAction = (action: () => void) => {
+    if (Platform.OS === "ios") pendingAction.current = action;
     closeActions();
-    action();
+    if (Platform.OS !== "ios") action();
   };
 
   return (
@@ -86,6 +92,11 @@ export function JobDetailActions({
 
       <Modal
         animationType="slide"
+        onDismiss={() => {
+          const action = pendingAction.current;
+          pendingAction.current = null;
+          action?.();
+        }}
         onRequestClose={closeActions}
         transparent
         testID="job-detail-action-sheet"
@@ -156,6 +167,10 @@ export function JobDetailActions({
                 <Text className="flex-1 font-body text-product-body font-medium text-muted-foreground">
                   {labels.report}
                 </Text>
+              </Pressable>
+              <Pressable accessibilityRole="button" className="min-h-[52px] flex-row items-center gap-3 border-t border-line px-3" onPress={() => runAction(onBlockAuthor)}>
+                <UserRoundX accessibilityElementsHidden color={theme.colors["muted-foreground"]} size={18} strokeWidth={1.8} />
+                <Text className="flex-1 font-body text-product-body font-medium text-muted-foreground">{labels.blockAuthor}</Text>
               </Pressable>
             </View>
           </SafeAreaView>

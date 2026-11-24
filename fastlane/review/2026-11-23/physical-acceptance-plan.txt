@@ -1,0 +1,10 @@
+PHYSICAL ACCEPTANCE — Openings0.1.1(2)
+Required: actual iPhone, updated OS, installed build2 verified in TestFlight. Await source-rights scope decision before final catalog demonstration.
+1. Begin on Home and launch Openings. Fetch catalog, search/filter and open an actual vacancy.
+2. Save job; inspect detail and open original source, then return.
+3. Actions > Report a problem: show support email, listing reference, email draft/fallback. Do not actually send a report.
+4. Actions > Block author: verify author's jobs disappear. Menu > Blocked authors: unblock and verify return.
+5. Menu > Optional product analytics: default off, enable, disable; leave off. Confirm menu choice remains off when reopened.
+6. Retain recording original + checksum. Compress only for delivery, preserve visible app flows. Record actual build/OS and observed behavior.
+Final review attachment: Apple API currently allows one attachment. Replace historical build1 evidence only after final deliverable is prepared. Combine rights evidence if an archive is supported, otherwise supply documents through review correspondence.
+Do not claim universal rights based on public availability. No resubmission before rights scope, final physical acceptance and attachment delivery are complete.

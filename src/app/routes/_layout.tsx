@@ -11,6 +11,7 @@ import { AnalyticsConsentBanner } from "@/components/analytics-consent-banner";
 import { NotificationConsentPrompt } from "@/components/notification-consent-prompt";
 import { NotificationNavigation } from "@/components/notification-navigation";
 import { OptionalUpdateBanner } from "@/components/optional-update-banner";
+import { BlockedAuthorsProvider } from "@/contexts/blocked-authors";
 import { CandidateStateProvider } from "@/contexts/candidate-state";
 import { LocaleProvider, useLocale } from "@/contexts/locale";
 import { OpeningsCatalogProvider } from "@/contexts/openings-catalog";
@@ -53,14 +54,16 @@ function RootContent(): React.ReactNode {
     >
       <QueryClientProvider client={queryClient}>
         <CandidateStateProvider>
-          <OpeningsCatalogProvider>
-            <StatusBar style={name === "dark" ? "light" : "dark"} />
-            <Stack screenOptions={{ headerShown: false }} />
-            <NotificationNavigation />
-            <NotificationConsentPrompt />
-            <AnalyticsConsentBanner />
-            <OptionalUpdateBanner />
-          </OpeningsCatalogProvider>
+          <BlockedAuthorsProvider>
+            <OpeningsCatalogProvider>
+              <StatusBar style={name === "dark" ? "light" : "dark"} />
+              <Stack screenOptions={{ headerShown: false }} />
+              <NotificationNavigation />
+              <NotificationConsentPrompt />
+              <AnalyticsConsentBanner />
+              <OptionalUpdateBanner />
+            </OpeningsCatalogProvider>
+          </BlockedAuthorsProvider>
         </CandidateStateProvider>
       </QueryClientProvider>
     </AppErrorBoundary>

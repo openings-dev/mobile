@@ -1,7 +1,7 @@
 import { useRouter } from "expo-router";
 import { MapPin, WalletCards } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { CatalogState } from "@/components/catalog-state";
@@ -9,7 +9,9 @@ import { DataConfidenceCard } from "@/components/data-confidence-card";
 import { DetailHeader } from "@/components/detail-header";
 import { EntityAvatar } from "@/components/entity-avatar";
 import { JobDetailActions } from "@/components/job-detail-actions";
+import { JobReport } from "@/components/job-report";
 import { OpportunityCard } from "@/components/opportunity-card";
+import { useBlockedAuthors } from "@/contexts/blocked-authors";
 import { useCandidateState } from "@/contexts/candidate-state";
 import { useLocale } from "@/contexts/locale";
 import { useOpeningsCatalog } from "@/contexts/openings-catalog";
@@ -55,18 +57,6 @@ function detailTagTextClasses(category: OpportunityCardTagCategory): string {
   return "font-body text-metadata text-muted-foreground";
 }
 
-function reportUrl(title: string, canonicalUrl: string, sourceUrl: string): string {
-  const issueTitle = `Job report: ${title}`;
-  const issueBody = [
-    "Please describe the problem with this listing.",
-    "",
-    `Openings URL: ${canonicalUrl}`,
-    `Original source: ${sourceUrl}`,
-  ].join("\n");
-
-  return `https://github.com/openings-dev/web/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
-}
-
 function ageBucket(createdAt: string): "0-7" | "8-30" | "31-90" | "91+" {
   const days = Math.max(0, (Date.now() - Date.parse(createdAt)) / 86_400_000);
   if (days <= 7) return "0-7";
@@ -88,6 +78,8 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
   const { theme } = useAppTheme();
   const catalog = useOpeningsCatalog();
   const candidate = useCandidateState();
+  const { blockAuthor } = useBlockedAuthors();
+  const [reportVisible, setReportVisible] = useState(false);
   const [dockHeight, setDockHeight] = useState(0);
   const item = catalog.opportunities.find(
     (opportunity) => opportunity.id === id,
@@ -130,7 +122,6 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
   const description = plainTextExcerpt(item.description) || messages.jobs.noDescription;
   const communityName = item.community.name || item.repository;
   const canonicalUrl = `https://openings.dev${buildJobRoute(item.id)}`;
-  const issueUrl = reportUrl(item.title, canonicalUrl, item.url);
 
   return (
     <SafeAreaView
@@ -305,6 +296,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
         isSaved={candidate.isSaved(item.id)}
         labels={{
           actions: messages.jobs.actions,
+          blockAuthor: messages.safety.blockAuthor,
           closeActions: messages.jobs.closeActions,
           openOriginal: messages.jobs.openOriginal,
           report: messages.jobs.reportProblem,
@@ -318,7 +310,17 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
           trackProductEvent("Original Listing Opened", { jobId: item.id, sourceCount: item.sources.length });
           void openHttpsUrl(item.url);
         }}
-        onReport={() => void openHttpsUrl(issueUrl)}
+        onBlockAuthor={() => Alert.alert(
+          messages.safety.blockAuthor,
+          messages.safety.blockConfirm.replace("{handle}", item.author.handle),
+          [
+            { text: messages.common.close, style: "cancel" },
+            { text: messages.safety.blockAuthor, style: "destructive", onPress: () => {
+              void blockAuthor(item.author.handle).then(() => router.back()).catch(() => Alert.alert(messages.safety.storageError));
+            } },
+          ],
+        )}
+        onReport={() => setReportVisible(true)}
         onShare={() => void shareUrl(item.title, canonicalUrl)}
         onToggleSaved={() => {
           const nextCount = candidate.isSaved(item.id)
@@ -328,6 +330,7 @@ export function JobDetailsScreen({ id }: JobDetailsScreenProps): React.ReactNode
           trackProductEvent("Job Saved", { jobId: item.id, savedCount: savedCountBucket(nextCount) });
         }}
       />
+      {reportVisible ? <JobReport canonicalUrl={canonicalUrl} sourceUrl={item.url} title={item.title} onClose={() => setReportVisible(false)} /> : null}
     </SafeAreaView>
   );
 }

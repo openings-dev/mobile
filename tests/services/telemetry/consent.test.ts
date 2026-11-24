@@ -35,3 +35,15 @@ describe("analytics consent", () => {
     unsubscribe();
   });
 });
+
+it("does not overwrite a newer denial with an older stored read", async () => {
+  resetAnalyticsConsentForTests();
+  let finish!: (value: string) => void;
+  const read = jest.spyOn(AsyncStorage, "getItem").mockImplementationOnce(() => new Promise((resolve) => { finish = resolve; }));
+  const pending = readAnalyticsConsent();
+  await writeAnalyticsConsent("denied");
+  finish(JSON.stringify({ version: 1, state: "granted" }));
+  expect(await pending).toBe("denied");
+  expect(await readAnalyticsConsent()).toBe("denied");
+  read.mockRestore();
+});

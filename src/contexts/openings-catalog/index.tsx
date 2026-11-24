@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 
+import { useBlockedAuthors } from "@/contexts/blocked-authors";
+import { visibleOpportunities } from "@/domain/blocked-authors";
 import type {
   CommunitiesPayload,
   CommunityStatusPayload,
@@ -39,6 +41,7 @@ const CatalogContext = createContext<CatalogContextValue | null>(null);
 export function OpeningsCatalogProvider({
   children,
 }: PropsWithChildren): React.ReactNode {
+  const { blockedHandles, hydrated } = useBlockedAuthors();
   const [progress, setProgress] = useState<{
     items: Opportunity[];
     loadedPages: number;
@@ -57,28 +60,55 @@ export function OpeningsCatalogProvider({
   });
   const catalog = query.data;
   const manifest: SnapshotManifest | undefined = catalog?.manifest ?? metadata?.manifest;
-  const opportunities = catalog?.opportunities ?? progress.items;
+  const sourceOpportunities = catalog?.opportunities ?? progress.items;
+  const opportunities = useMemo(
+    () => visibleOpportunities(sourceOpportunities, blockedHandles, hydrated),
+    [sourceOpportunities, blockedHandles, hydrated],
+  );
+  const communities = useMemo(() => {
+    if (!hydrated) return [];
+    const items = catalog?.communities.items ?? metadata?.communities.items ?? [];
+    if (blockedHandles.size === 0) return items;
+    const counts = new Map<string, { count: number; latest: string }>();
+    opportunities.forEach((item) => {
+      if (item.issueState !== "open") return;
+      const repositories = new Set([item.repository, ...item.sources.map((source) => source.repository)]);
+      repositories.forEach((repository) => {
+        const existing = counts.get(repository);
+        counts.set(repository, {
+          count: (existing?.count ?? 0) + 1,
+          latest: existing && Date.parse(existing.latest) > Date.parse(item.createdAt)
+            ? existing.latest : item.createdAt,
+        });
+      });
+    });
+    return items.map((item) => ({
+      ...item,
+      opportunitiesCount: counts.get(item.repository)?.count ?? 0,
+      lastPostedAt: counts.get(item.repository)?.latest ?? null,
+    }));
+  }, [blockedHandles, catalog, hydrated, metadata, opportunities]);
   const refresh = useCallback(async () => {
     setProgress({ items: [], loadedPages: 0, totalPages: manifest?.pages.length ?? 0 });
     await query.refetch();
   }, [manifest?.pages.length, query]);
   const value = useMemo<CatalogContextValue>(
     () => ({
-      communities: catalog?.communities.items ?? metadata?.communities.items ?? [],
+      communities,
       error: query.error instanceof Error ? query.error : null,
       generatedAt: manifest?.generatedAt ?? null,
       isIncremental:
         query.isPending && progress.items.length > 0 && progress.loadedPages < progress.totalPages,
-      isLoading: query.isPending && progress.items.length === 0,
+      isLoading: !hydrated || (query.isPending && progress.items.length === 0),
       isRefreshing: query.isFetching && !query.isPending,
       loadedPages: catalog ? manifest?.pages.length ?? 0 : progress.loadedPages,
       opportunities,
       refresh,
       status: catalog?.status ?? metadata?.status ?? null,
       totalPages: manifest?.pages.length ?? progress.totalPages,
-      totalResults: manifest?.totals.openOpportunities ?? opportunities.length,
+      totalResults: !hydrated || blockedHandles.size > 0 ? opportunities.length : manifest?.totals.openOpportunities ?? opportunities.length,
     }),
-    [catalog, manifest, metadata, opportunities, progress, query.error, query.isFetching, query.isPending, refresh],
+    [blockedHandles, hydrated, catalog, communities, manifest, metadata, opportunities, progress, query.error, query.isFetching, query.isPending, refresh],
   );
 
   return <CatalogContext.Provider value={value}>{children}</CatalogContext.Provider>;

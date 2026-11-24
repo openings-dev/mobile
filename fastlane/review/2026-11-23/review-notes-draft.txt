@@ -1,0 +1,17 @@
+DRAFT: DO NOT UPLOAD UNTIL BUILD 2 PHYSICAL VIDEO AND CONTENT-RIGHTS SCOPE ARE CONFIRMED.
+Response to Guideline 2.1
+
+1. Demonstration: [PENDING: attach and verify Openings-0.1.1-2-iPhone 16Pro.mp4 recorded on physical iPhone 16 Pro, iOS 27.2.1, beginning at app launch, including reporting/blocking/unblocking. Describe only actual recorded flows.]
+
+2. Purpose and audience: Openings helps people discover technology jobs from public GitHub community vacancy boards. It organizes listings, filters, communities and authors, and stores saved jobs on the device. It does not verify employers, guarantee availability, rank candidate suitability, handle applications or make hiring decisions.
+
+3. Access: No account, login, credentials, payment or sample files are required. Internet is needed to fetch the public catalog. On Jobs, search/filter, open a job, save it or open its original source. Communities and Authors are in the menu. A job's Actions > Report a problem provides support@openings.dev and copyable listing/source references, with an email-draft button and instructions if no mail client is available; no GitHub account is required. Nothing is sent automatically. Actions > Block author hides that author's jobs across device-local lists, including saved jobs. Navigation menu > Blocked authors lets the user unblock them. There is no app account to delete and no paid flow. Users cannot post jobs, comments or messages in the app.
+
+4. Services: Public JSON catalog snapshots come from raw.githubusercontent.com/openings-dev/data-pipeline. Original links open GitHub/the system browser. Firebase Remote Config supplies version configuration; Firebase Crashlytics and Sentry support diagnostics. Mixpanel usage analytics starts disabled; Navigation menu > Optional product analytics enables it and offers withdrawal in the same control. Notification display requires separate device permission; OneSignal initialization can still process technical installation data. Saved jobs/search terms are not sent as analytics properties. There is no runtime AI, authentication backend or payment service. Sharing uses the system share sheet.
+
+5. Regions: Features are consistent across supported storefronts. Listings depend on communities and filters, not geographic feature locks. The interface supports English, Portuguese, Spanish, Italian, French and German; original listing text remains in its source language. Mainland China is excluded.
+
+6. Content: [PENDING: final source scope and corresponding evidence. Preserve author/community attribution, original links and truthful license limitations. Do not claim that all public GitHub content is public domain or that code licenses automatically cover every third-party contribution.]
+
+Support: support@openings.dev | https://openings.dev/
+Privacy: https://openings.dev/privacy

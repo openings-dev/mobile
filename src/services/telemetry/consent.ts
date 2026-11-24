@@ -6,6 +6,7 @@ const STORAGE_KEY = "openings:analytics-consent";
 const STORAGE_VERSION = 1;
 const listeners = new Set<(state: AnalyticsConsentState) => void>();
 let cachedState: AnalyticsConsentState | null = null;
+let revision = 0;
 
 function parseConsent(raw: string | null): AnalyticsConsentState {
   if (!raw) return "undecided";
@@ -22,12 +23,14 @@ function parseConsent(raw: string | null): AnalyticsConsentState {
 
 export async function readAnalyticsConsent(): Promise<AnalyticsConsentState> {
   if (cachedState) return cachedState;
+  const startedRevision = revision;
   try {
-    cachedState = parseConsent(await AsyncStorage.getItem(STORAGE_KEY));
+    const stored = parseConsent(await AsyncStorage.getItem(STORAGE_KEY));
+    if (startedRevision === revision) cachedState = stored;
   } catch {
-    cachedState = "undecided";
+    if (startedRevision === revision) cachedState = "undecided";
   }
-  return cachedState;
+  return cachedState ?? "undecided";
 }
 
 export function getCachedAnalyticsConsent(): AnalyticsConsentState {
@@ -37,14 +40,21 @@ export function getCachedAnalyticsConsent(): AnalyticsConsentState {
 export async function writeAnalyticsConsent(
   state: Exclude<AnalyticsConsentState, "undecided">,
 ): Promise<boolean> {
+  const startedRevision = ++revision;
+  if (state === "denied") {
+    cachedState = state;
+    listeners.forEach((listener) => listener(state));
+  }
   try {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({
       state,
       updatedAt: new Date().toISOString(),
       version: STORAGE_VERSION,
     }));
-    cachedState = state;
-    listeners.forEach((listener) => listener(state));
+    if (startedRevision === revision) {
+      cachedState = state;
+      listeners.forEach((listener) => listener(state));
+    }
     return true;
   } catch {
     return false;
@@ -59,6 +69,7 @@ export function subscribeAnalyticsConsent(
 }
 
 export function resetAnalyticsConsentForTests(): void {
+  revision += 1;
   cachedState = null;
   listeners.clear();
 }

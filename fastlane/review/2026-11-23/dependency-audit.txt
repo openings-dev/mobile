@@ -1,0 +1,36 @@
+# Openings dependency audit — 2026-11-23
+
+Source: a84b843, npm audit online. 29 affected package nodes (1 critical, 16 high, 12 moderate), representing 16 distinct advisories, including inherited meta-vulnerabilities. No source or lockfile changes made for this triage. Offline npm audit incorrectly appears clean when no advisory cache is available; only online result used here.
+
+## Release conclusion
+
+No demonstrated blocking vulnerability in the currently used native release paths from this audit. This is scoped reachability triage, not a claim that every installed dependency is secure. Maintain a focused dependency maintenance follow-up. Do not use npm audit fix --force: suggested changes include Expo downgrade to52 and React Native Firebase downgrade to20, incompatible with the approved current baseline.
+
+The initial assessment that Expo Router made decode-uri-component reachable on native links is explicitly RETRACTED. It came from reading the vendored React Navigation default parser. Actual SDK57 getLinkingConfig supplies Expo's fork; fork/parseQueryParams uses URLSearchParams, and query-string.parse is commented out. The native hook uses the supplied parser both for getInitialState and URL subscription. A runtime Jest probe invoked real getLinkingConfig, URL extraction, cold-start handling, and runtime event handling using a malformed ~6KB query while query-string.parse was replaced with a throwing spy. Both paths succeeded; the spy was never called. Probe source and successful log: /private/tmp/openings-audit-router-probe.test.js and /private/tmp/openings-router-probe.log. Installed Expo fork uses query-string only for stringify. Existing app routes use encoded internal route builders; notification job IDs match /^gh_[0-9a-f]{24}$/.
+
+## Findings and constrained recommendations
+
+- **shell-quote1.10.0 (critical): development tools.** Dependency path react-native -> react-devtools-core -> shell-quote; React Native loads devtools only under __DEV__. Advisory requires attacker-controlled newline after a comment token passed to quote(), then executed by a shell. No app execution path found. Upgrade transitive shell-quote to>=1.11.0 in a focused lock refresh. https://github.com/advisories/GHSA-pqg4-j6r4-53mv
+- **decode-uri-component0.2.2 / query-string7.1.3 / expo-router57.0.32 (high): installed runtime dependency, vulnerable parsing method not reached by current native routing.** Native cold/runtime integration verified above. Follow Expo-compatible updates. Do not blindly override decoder to0.5.1: it is ESM, while current query-string synchronously requires and directly calls the export. https://github.com/advisories/GHSA-qr28-fpjm-wq7f and https://github.com/advisories/GHSA-vcc3-ghjq-m6fr
+- **@grpc/grpc-js1.9.16 and re2js2.8.6, inherited through firebase/Firestore into RNFirebase package nodes (high): unused Node Firestore/server paths.** App uses native Remote Config and Crashlytics; no Firestore API/server, getAuthContext, or user-defined RE2 execution in app source. gRPC advisory concerns server authentication or server error propagation, not native Firebase client configuration. Prefer future parent Firebase update that picks patched gRPC>=1.13.6 (or1.14.5 for1.14 branch), and re2js>=2.8.7; don't downgrade RNFirebase. https://github.com/advisories/GHSA-m9gg-hp2v-232j ; https://github.com/advisories/GHSA-f596-whhp-79r4 ; https://github.com/advisories/GHSA-gg6h-894w-4m9c
+- **uuid9.0.1 via Mixpanel (moderate): affected methods unused.** Installed Mixpanel uses v4() with no supplied output buffer; advisory is v3/v5/v6 with supplied buffers/offsets. No immediate Mixpanel major upgrade justified solely by this advisory. https://github.com/advisories/GHSA-w5hq-g745-h8pq
+- **sharp0.35.3 (high): development image generation only.** Used by scripts/generate-ios-icon.mjs on locally constructed SVG, not arbitrary user images in the app. Patch direct dev dependency to0.35.5 in maintenance. https://github.com/advisories/GHSA-rgj7-g3m4-5g8c ; https://github.com/advisories/GHSA-wq5f-xc86-pv6w
+- **source-map-js1.2.1 (high), postcss-selector-parser6.1.4 (moderate): Tailwind/PostCSS build tooling.** No untrusted CSS/source-map ingestion in shipped app. Narrow compatible patch refresh: source-map-js>=1.2.2 and postcss-selector-parser>=6.1.5. https://github.com/advisories/GHSA-68fv-2mgg-jv7q ; https://github.com/advisories/GHSA-rj75-hqrm-r3gf
+- **zod4.5.4 (high): eslint-plugin-react-hooks tooling.** App does not use Zod to validate job payloads. Compatible patch line update to>=4.6.6. https://github.com/advisories/GHSA-mrhx-c7xc-m3w5
+- **brace-expansion1.1.18 and5.0.9 (high), minimatch10.2.6 (moderate), inherited ESLint/Expo fingerprint package alerts:** build/lint glob matching, no app-supplied glob patterns. Patch brace-expansion1.x to>=1.1.21 and5.x to>=5.0.12; update ESLint parent dependencies compatibly. Minimatch fix needs>=11.0.1; avoid untested forced major override for Expo fingerprint (already has10.x). https://github.com/advisories/GHSA-q2hr-2g5m-vwhr ; https://github.com/advisories/GHSA-qhr7-859c-m2p7 ; https://github.com/advisories/GHSA-6j4f-fj2g-mc7p ; https://github.com/advisories/GHSA-g3hv-75wg-m249
+
+## Evidence
+
+Online JSON: /private/tmp/openings-audit-online.json
+Dependency ownership tree: /private/tmp/openings-audit-tree.txt
+Android native verification log: /private/tmp/openings-android-debug-review.log (result reported separately when complete)
+
+## Android verification result
+
+`./gradlew :app:assembleDebug` passed on a84b843 with updated Expo patches:
+BUILD SUCCESSFUL in13m40s;721 actionable tasks executed; exit0. All default ABIs
+compiled. This was existing credential-free contributor debug configuration
+(Firebase plugins disabled by its existing guard), not signed release/device
+validation. Dependency deprecation and D8 stack-map warnings did not fail the
+build. Generated untracked android/.kotlin cache moved outside checkout after
+completion. No source/lock/native project files changed by this triage.

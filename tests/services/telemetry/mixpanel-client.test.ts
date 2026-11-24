@@ -47,6 +47,37 @@ describe("Mixpanel client", () => {
     expect(mockOptIn).toHaveBeenCalledTimes(1);
   });
 
+  it("does not resume tracking when initialization finishes after withdrawal", async () => {
+    process.env.EXPO_PUBLIC_MIXPANEL_TOKEN = "token";
+    let finish!: () => void;
+    mockInit.mockImplementationOnce(() => new Promise<void>((resolve) => { finish = resolve; }));
+    const enabling = enableAnalytics();
+    disableAnalytics();
+    finish();
+    expect(await enabling).toBe(false);
+    expect(mockOptIn).not.toHaveBeenCalled();
+    expect(mockOptOut).toHaveBeenCalledTimes(1);
+    expect(mockReset).toHaveBeenCalledTimes(1);
+    sendProductEvent("Job Viewed", { jobId: "test" });
+    expect(mockTrack).not.toHaveBeenCalled();
+  });
+
+  it("waits for cancelled initialization before allowing a new choice", async () => {
+    process.env.EXPO_PUBLIC_MIXPANEL_TOKEN = "token";
+    let finish!: () => void;
+    mockInit.mockImplementationOnce(() => new Promise<void>((resolve) => { finish = resolve; }));
+    const first = enableAnalytics();
+    disableAnalytics();
+    const second = enableAnalytics();
+    expect(mockInit).toHaveBeenCalledTimes(1);
+    finish();
+    expect(await first).toBe(false);
+    expect(await second).toBe(true);
+    expect(mockOptIn).toHaveBeenCalledTimes(1);
+    sendProductEvent("Job Viewed", { jobId: "test" });
+    expect(mockTrack).toHaveBeenCalledTimes(1);
+  });
+
   it("tracks through the initialized client and clears identity on disable", async () => {
     process.env.EXPO_PUBLIC_MIXPANEL_TOKEN = "token";
     await enableAnalytics();
@@ -56,4 +87,20 @@ describe("Mixpanel client", () => {
     expect(mockOptOut).toHaveBeenCalled();
     expect(mockReset).toHaveBeenCalled();
   });
+});
+
+it("does not honor a queued enable after a newer withdrawal", async () => {
+  process.env.EXPO_PUBLIC_MIXPANEL_TOKEN = "token";
+  resetMixpanelClientForTests();
+  mockOptIn.mockClear();
+  let finish!: () => void;
+  mockInit.mockImplementationOnce(() => new Promise<void>((resolve) => { finish = resolve; }));
+  const first = enableAnalytics();
+  disableAnalytics();
+  const second = enableAnalytics();
+  disableAnalytics();
+  finish();
+  expect(await first).toBe(false);
+  expect(await second).toBe(false);
+  expect(mockOptIn).not.toHaveBeenCalled();
 });

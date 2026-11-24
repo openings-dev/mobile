@@ -1,0 +1,34 @@
+{
+  "captured_at": "2026-11-24",
+  "method": "Unedited actual app PNG captures: physical iPhone 16 Pro build 2 and final Release iPad simulator. Restricted catalog verified as 147 jobs.",
+  "devices": [
+    "iPhone 16 Pro, iOS 27.2.1",
+    "iPad Pro 13-inch (M5), iPadOS 27.2"
+  ],
+  "files": [
+    {
+      "file": "fastlane/screenshots/en-US/01-iPad-Jobs.png",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "9d1ef902df0fbefe3346320cd068803e4c284f73fa2cb4f0094e89673e1fa340"
+    },
+    {
+      "file": "fastlane/screenshots/en-US/01-iPhone-Jobs.png",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "a1bd1c1f183970c9a21b4d3297cb83cef8bcf91eac392ec523cf9784151ae2b1"
+    },
+    {
+      "file": "fastlane/screenshots/en-US/02-iPad-Details.png",
+      "width": 2064,
+      "height": 2752,
+      "sha256": "5383d84b3973adbd73101e3d1e64f75fc923e619107cca580e826e18f0dfe8a6"
+    },
+    {
+      "file": "fastlane/screenshots/en-US/02-iPhone-Details.png",
+      "width": 1206,
+      "height": 2622,
+      "sha256": "bc5e1b652489eba02216bfb43a3979e6cf9d1f4c3184c263018f7f0084d153de"
+    }
+  ]
+}

@@ -14,9 +14,11 @@ import {
   X,
 } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Modal, Pressable, ScrollView, Text, View } from "react-native";
+import { Alert, Modal, Pressable, ScrollView, Text, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
+import { useBlockedAuthors } from "@/contexts/blocked-authors";
+import { AnalyticsPreference } from "@/components/analytics-preference";
 import { BrandWordmark } from "@/components/brand-wordmark";
 import { PreferencePopover, type PreferenceOption } from "@/components/preference-popover";
 import { SupportCard } from "@/components/support-card";
@@ -52,6 +54,9 @@ interface AppDrawerProps {
 
 export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode {
   const router = useRouter();
+  const { blockedHandles, hydrated, unblockAuthor } = useBlockedAuthors();
+  const [blockedOpen, setBlockedOpen] = useState(false);
+  const [unblockPending, setUnblockPending] = useState<string | null>(null);
   const insets = useSafeAreaInsets();
   const { locale, messages, setLocale } = useLocale();
   const { name, preference, setPreference, theme } = useAppTheme();
@@ -83,6 +88,7 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
   ] as const;
 
   const close = () => {
+    setBlockedOpen(false);
     setLanguageOpen(false);
     setAppearanceOpen(false);
     onClose();
@@ -177,7 +183,21 @@ export function AppDrawer({ onClose, visible }: AppDrawerProps): React.ReactNode
                     );
                   })}
                 </View>
+                <View className="gap-2">
+                  <Pressable accessibilityRole="button" accessibilityState={{ expanded: blockedOpen }} className="min-h-11 justify-center rounded-control px-3" onPress={() => setBlockedOpen(!blockedOpen)}>
+                    <Text className="font-body text-product-body font-medium text-foreground">{messages.safety.blockedAuthors}</Text>
+                  </Pressable>
+                  {blockedOpen ? <View className="gap-2 px-3">
+                    <Text className="font-body text-metadata text-muted-foreground">{messages.safety.blockedDescription}</Text>
+                    {blockedHandles.size === 0 ? <Text className="font-body text-metadata text-muted-foreground">{hydrated ? messages.safety.noneBlocked : messages.common.loading}</Text> : null}
+                    {[...blockedHandles].sort().map((handle) => <Pressable key={handle} accessibilityRole="button" className="min-h-11 justify-center rounded-control border border-line bg-paper px-3 py-2 disabled:opacity-50" disabled={unblockPending !== null} onPress={() => {
+                      setUnblockPending(handle);
+                      void unblockAuthor(handle).catch(() => Alert.alert(messages.safety.storageError)).finally(() => setUnblockPending(null));
+                    }}><Text className="font-body text-label text-foreground">{messages.safety.unblock.replace("{handle}", handle)}</Text></Pressable>)}
+                  </View> : null}
+                </View>
                 <SupportCard />
+                <AnalyticsPreference />
                 {notificationConsent === "granted" ? (
                   <Pressable
                     accessibilityLabel={messages.notificationConsent.disable}

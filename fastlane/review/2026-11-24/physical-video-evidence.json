@@ -1,0 +1,14 @@
+{
+  "device": "Asgard / iPhone 16 Pro",
+  "os": "27.2.1",
+  "version": "0.1.1",
+  "build": "2",
+  "rawSha256": "43829a75db9a0fa26847f77285a95f5a44cbff14b512aef89bfbf1964cc1dd34",
+  "deliverySha256": "029a11e1e06b8da4a03bcceb1fe44240e0cb54a4525815631b9a709f86ac3537",
+  "removedIntervalSeconds": [
+    75,
+    91
+  ],
+  "reason": "Unrelated personal notification",
+  "catalogJobs": 147
+}

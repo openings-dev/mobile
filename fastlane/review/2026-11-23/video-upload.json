@@ -1,0 +1,18 @@
+{
+  "app": "dev.openings.mobile",
+  "version": "0.1.1",
+  "version_id": "0a837c4c-df93-4152-a693-7d333277662e",
+  "review_detail_id": "60a9ab29-5303-4f7b-acd0-e73e05e3df3a",
+  "attachment_id": "af5d215f-7687-4235-b4f4-6311dc6e416b",
+  "filename": "Openings-0.1.1-1-iPhone16Pro.mp4",
+  "md5": "e91fdf227de9e06a52c832724afee936",
+  "sha256": "ab57ea1ecb6237595d6e01285352b987c162c68f3c77ff5b4cea126575ffc930",
+  "bytes": 4094834,
+  "delivery": {
+    "state": "COMPLETE",
+    "errors": [],
+    "warnings": null
+  },
+  "uploaded_at": "2026-11-23T20:17:26Z",
+  "verified_at": "2026-11-23T20:20:25.391448+00:00"
+}

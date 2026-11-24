@@ -1,7 +1,28 @@
 import type { SupportedLocale } from "@openingshq/core";
 
 export interface FoundationMessages {
+  safety: {
+    blockAuthor: string;
+    blockConfirm: string;
+    blockedAuthors: string;
+    blockedDescription: string;
+    noneBlocked: string;
+    unblock: string;
+    storageError: string;
+    reportTitle: string;
+    reportHelp: string;
+    openEmail: string;
+    emailError: string;
+    emailSubject: string;
+    emailBody: string;
+    listingReference: string;
+    originalReference: string;
+  };
   analyticsConsent: {
+    disable: string;
+    preferenceTitle: string;
+    retryDenial: string;
+    saveError: string;
     accept: string;
     decline: string;
     purpose: string;

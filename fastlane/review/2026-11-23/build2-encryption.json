@@ -1,0 +1,10 @@
+{
+  "id": "be9f995e-0ca7-48be-8ab9-40a505ee2a5f",
+  "bundle": "dev.openings.mobile",
+  "version": "0.1.1",
+  "build": "2",
+  "usesNonExemptEncryption": false,
+  "internal": "READY_FOR_BETA_TESTING",
+  "external": "READY_FOR_BETA_SUBMISSION",
+  "basis": "Same HTTPS/system networking as reviewed build1; no product custom cryptography added."
+}

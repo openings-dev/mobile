@@ -50,3 +50,12 @@ above the bottom safe area.
 Deep links and outbound GitHub links are security boundaries. Internal routes encode
 stable IDs, repositories, and handles. External actions accept deliberate HTTPS
 destinations only. The application scheme is `openings`.
+
+## Listing safety actions
+
+Job actions include a local author-block confirmation and reporting by email to
+`support@openings.dev`. The report sheet displays selectable support address,
+Openings URL, and original URL, so webmail and devices without an email client
+remain supported. Opening a draft does not send a report. Report content and block
+handles are not tracked. On iOS, secondary actions wait for native sheet dismissal
+before presenting another sheet, alert, or share dialog.
